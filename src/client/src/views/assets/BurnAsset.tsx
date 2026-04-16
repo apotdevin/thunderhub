@@ -14,13 +14,15 @@ export const BurnAsset: FC = () => {
   const [confirmed, setConfirmed] = useState(false);
 
   const { data: assetBalances } = useGetTapBalancesQuery({
-    variables: { groupBy: TapBalanceGroupBy.AssetId },
+    variables: { group_by: TapBalanceGroupBy.AssetId },
   });
 
-  const knownAssets = (assetBalances?.getTapBalances?.balances || [])
-    .filter(b => b.assetId && b.balance && Number(b.balance) > 0)
+  const knownAssets = (
+    assetBalances?.taproot_assets?.get_balances?.balances || []
+  )
+    .filter(b => b.asset_id && b.balance && Number(b.balance) > 0)
     .map(b => ({
-      assetId: b.assetId!,
+      assetId: b.asset_id!,
       name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
     }));
@@ -43,7 +45,7 @@ export const BurnAsset: FC = () => {
   const handleBurn = () => {
     if (!selectedAsset || !amount || !confirmed) return;
     burnAsset({
-      variables: { assetId: selectedAsset, amount },
+      variables: { asset_id: selectedAsset, amount },
     });
   };
 

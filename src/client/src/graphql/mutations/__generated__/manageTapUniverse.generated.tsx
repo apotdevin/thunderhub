@@ -9,7 +9,10 @@ export type AddTapFederationServerMutationVariables = Types.Exact<{
 
 export type AddTapFederationServerMutation = {
   __typename?: 'Mutation';
-  addTapFederationServer: boolean;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    add_federation_server: boolean;
+  };
 };
 
 export type RemoveTapFederationServerMutationVariables = Types.Exact<{
@@ -18,7 +21,10 @@ export type RemoveTapFederationServerMutationVariables = Types.Exact<{
 
 export type RemoveTapFederationServerMutation = {
   __typename?: 'Mutation';
-  removeTapFederationServer: boolean;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    remove_federation_server: boolean;
+  };
 };
 
 export type SyncTapUniverseMutationVariables = Types.Exact<{
@@ -27,15 +33,20 @@ export type SyncTapUniverseMutationVariables = Types.Exact<{
 
 export type SyncTapUniverseMutation = {
   __typename?: 'Mutation';
-  syncTapUniverse: {
-    __typename?: 'TapSyncResult';
-    syncedUniverses: Array<string>;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    sync_universe: {
+      __typename?: 'TapSyncResult';
+      synced_universes: Array<string>;
+    };
   };
 };
 
 export const AddTapFederationServerDocument = gql`
   mutation AddTapFederationServer($host: String!) {
-    addTapFederationServer(host: $host)
+    taproot_assets {
+      add_federation_server(host: $host)
+    }
   }
 `;
 export type AddTapFederationServerMutationFn = Apollo.MutationFunction<
@@ -83,7 +94,9 @@ export type AddTapFederationServerMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const RemoveTapFederationServerDocument = gql`
   mutation RemoveTapFederationServer($host: String!) {
-    removeTapFederationServer(host: $host)
+    taproot_assets {
+      remove_federation_server(host: $host)
+    }
   }
 `;
 export type RemoveTapFederationServerMutationFn = Apollo.MutationFunction<
@@ -132,8 +145,10 @@ export type RemoveTapFederationServerMutationOptions =
   >;
 export const SyncTapUniverseDocument = gql`
   mutation SyncTapUniverse($host: String!) {
-    syncTapUniverse(host: $host) {
-      syncedUniverses
+    taproot_assets {
+      sync_universe(host: $host) {
+        synced_universes
+      }
     }
   }
 `;

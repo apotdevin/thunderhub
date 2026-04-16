@@ -1,14 +1,16 @@
 import { gql } from '@apollo/client';
 
 export const NEW_TAP_ADDRESS = gql`
-  mutation NewTapAddress($assetId: String, $groupKey: String, $amt: Int!) {
-    newTapAddress(assetId: $assetId, groupKey: $groupKey, amt: $amt) {
-      encoded
-      assetId
-      amount
-      scriptKey
-      internalKey
-      taprootOutputKey
+  mutation NewTapAddress($asset_id: String, $group_key: String, $amt: Int!) {
+    taproot_assets {
+      new_address(asset_id: $asset_id, group_key: $group_key, amt: $amt) {
+        encoded
+        asset_id
+        amount
+        script_key
+        internal_key
+        taproot_output_key
+      }
     }
   }
 `;

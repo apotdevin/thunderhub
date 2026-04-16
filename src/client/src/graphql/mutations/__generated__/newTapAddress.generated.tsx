@@ -4,33 +4,38 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type NewTapAddressMutationVariables = Types.Exact<{
-  assetId?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  groupKey?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  asset_id?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  group_key?: Types.InputMaybe<Types.Scalars['String']['input']>;
   amt: Types.Scalars['Int']['input'];
 }>;
 
 export type NewTapAddressMutation = {
   __typename?: 'Mutation';
-  newTapAddress: {
-    __typename?: 'TapAddress';
-    encoded: string;
-    assetId: string;
-    amount: string;
-    scriptKey: string;
-    internalKey: string;
-    taprootOutputKey: string;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    new_address: {
+      __typename?: 'TapAddress';
+      encoded: string;
+      asset_id: string;
+      amount: string;
+      script_key: string;
+      internal_key: string;
+      taproot_output_key: string;
+    };
   };
 };
 
 export const NewTapAddressDocument = gql`
-  mutation NewTapAddress($assetId: String, $groupKey: String, $amt: Int!) {
-    newTapAddress(assetId: $assetId, groupKey: $groupKey, amt: $amt) {
-      encoded
-      assetId
-      amount
-      scriptKey
-      internalKey
-      taprootOutputKey
+  mutation NewTapAddress($asset_id: String, $group_key: String, $amt: Int!) {
+    taproot_assets {
+      new_address(asset_id: $asset_id, group_key: $group_key, amt: $amt) {
+        encoded
+        asset_id
+        amount
+        script_key
+        internal_key
+        taproot_output_key
+      }
     }
   }
 `;
@@ -52,8 +57,8 @@ export type NewTapAddressMutationFn = Apollo.MutationFunction<
  * @example
  * const [newTapAddressMutation, { data, loading, error }] = useNewTapAddressMutation({
  *   variables: {
- *      assetId: // value for 'assetId'
- *      groupKey: // value for 'groupKey'
+ *      asset_id: // value for 'asset_id'
+ *      group_key: // value for 'group_key'
  *      amt: // value for 'amt'
  *   },
  * });

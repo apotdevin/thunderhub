@@ -4,19 +4,24 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type SendTapAssetMutationVariables = Types.Exact<{
-  tapAddrs:
+  tap_addrs:
     | Array<Types.Scalars['String']['input']>
     | Types.Scalars['String']['input'];
 }>;
 
 export type SendTapAssetMutation = {
   __typename?: 'Mutation';
-  sendTapAsset: boolean;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    send_asset: boolean;
+  };
 };
 
 export const SendTapAssetDocument = gql`
-  mutation SendTapAsset($tapAddrs: [String!]!) {
-    sendTapAsset(tapAddrs: $tapAddrs)
+  mutation SendTapAsset($tap_addrs: [String!]!) {
+    taproot_assets {
+      send_asset(tap_addrs: $tap_addrs)
+    }
   }
 `;
 export type SendTapAssetMutationFn = Apollo.MutationFunction<
@@ -37,7 +42,7 @@ export type SendTapAssetMutationFn = Apollo.MutationFunction<
  * @example
  * const [sendTapAssetMutation, { data, loading, error }] = useSendTapAssetMutation({
  *   variables: {
- *      tapAddrs: // value for 'tapAddrs'
+ *      tap_addrs: // value for 'tap_addrs'
  *   },
  * });
  */

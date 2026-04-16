@@ -33,7 +33,7 @@ export const PortfolioDistribution: FC = () => {
 
   const { data: balancesData, loading: balancesLoading } =
     useGetTapBalancesQuery({
-      variables: { groupBy: TapBalanceGroupBy.GroupKey },
+      variables: { group_by: TapBalanceGroupBy.GroupKey },
     });
 
   const { data: supportedData, loading: supportedLoading } =
@@ -70,7 +70,8 @@ export const PortfolioDistribution: FC = () => {
     string,
     { usd: number; precision: number; symbol: string }
   >();
-  for (const asset of supportedData?.getTapSupportedAssets?.list || []) {
+  for (const asset of supportedData?.rails?.get_tap_supported_assets?.list ||
+    []) {
     const price = asset.prices?.usd;
     if (price == null) continue;
     const entry = {
@@ -85,9 +86,10 @@ export const PortfolioDistribution: FC = () => {
   // Compute taproot asset USD values
   const tapAssets: Omit<PortfolioAsset, 'percentage'>[] = [];
 
-  for (const entry of balancesData?.getTapBalances?.balances || []) {
+  for (const entry of balancesData?.taproot_assets?.get_balances?.balances ||
+    []) {
     const priceEntry =
-      priceMap.get(entry.groupKey || '') || priceMap.get(entry.assetId || '');
+      priceMap.get(entry.group_key || '') || priceMap.get(entry.asset_id || '');
     if (!priceEntry || !entry.balance) continue;
 
     const usdValue =

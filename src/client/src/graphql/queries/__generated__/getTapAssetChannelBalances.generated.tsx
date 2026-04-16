@@ -4,33 +4,38 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetTapAssetChannelBalancesQueryVariables = Types.Exact<{
-  peerPubkey?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  peer_pubkey?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type GetTapAssetChannelBalancesQuery = {
   __typename?: 'Query';
-  getTapAssetChannelBalances: Array<{
-    __typename?: 'TapAssetChannelBalance';
-    channelPoint: string;
-    partnerPublicKey: string;
-    assetId: string;
-    groupKey?: string | null;
-    localBalance: string;
-    remoteBalance: string;
-    capacity: string;
-  }>;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    get_asset_channel_balances: Array<{
+      __typename?: 'TapAssetChannelBalance';
+      channel_point: string;
+      partner_public_key: string;
+      asset_id: string;
+      group_key?: string | null;
+      local_balance: string;
+      remote_balance: string;
+      capacity: string;
+    }>;
+  };
 };
 
 export const GetTapAssetChannelBalancesDocument = gql`
-  query GetTapAssetChannelBalances($peerPubkey: String) {
-    getTapAssetChannelBalances(peerPubkey: $peerPubkey) {
-      channelPoint
-      partnerPublicKey
-      assetId
-      groupKey
-      localBalance
-      remoteBalance
-      capacity
+  query GetTapAssetChannelBalances($peer_pubkey: String) {
+    taproot_assets {
+      get_asset_channel_balances(peer_pubkey: $peer_pubkey) {
+        channel_point
+        partner_public_key
+        asset_id
+        group_key
+        local_balance
+        remote_balance
+        capacity
+      }
     }
   }
 `;
@@ -47,7 +52,7 @@ export const GetTapAssetChannelBalancesDocument = gql`
  * @example
  * const { data, loading, error } = useGetTapAssetChannelBalancesQuery({
  *   variables: {
- *      peerPubkey: // value for 'peerPubkey'
+ *      peer_pubkey: // value for 'peer_pubkey'
  *   },
  * });
  */

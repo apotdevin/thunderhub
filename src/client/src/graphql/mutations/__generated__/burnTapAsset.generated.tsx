@@ -4,18 +4,23 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type BurnTapAssetMutationVariables = Types.Exact<{
-  assetId: Types.Scalars['String']['input'];
+  asset_id: Types.Scalars['String']['input'];
   amount: Types.Scalars['String']['input'];
 }>;
 
 export type BurnTapAssetMutation = {
   __typename?: 'Mutation';
-  burnTapAsset: boolean;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    burn_asset: boolean;
+  };
 };
 
 export const BurnTapAssetDocument = gql`
-  mutation BurnTapAsset($assetId: String!, $amount: String!) {
-    burnTapAsset(assetId: $assetId, amount: $amount)
+  mutation BurnTapAsset($asset_id: String!, $amount: String!) {
+    taproot_assets {
+      burn_asset(asset_id: $asset_id, amount: $amount)
+    }
   }
 `;
 export type BurnTapAssetMutationFn = Apollo.MutationFunction<
@@ -36,7 +41,7 @@ export type BurnTapAssetMutationFn = Apollo.MutationFunction<
  * @example
  * const [burnTapAssetMutation, { data, loading, error }] = useBurnTapAssetMutation({
  *   variables: {
- *      assetId: // value for 'assetId'
+ *      asset_id: // value for 'asset_id'
  *      amount: // value for 'amount'
  *   },
  * });

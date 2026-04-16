@@ -27,22 +27,22 @@ registerEnumType(TapBalanceGroupBy, { name: 'TapBalanceGroupBy' });
 @ObjectType()
 export class TapAssetGenesis {
   @Field()
-  genesisPoint: string;
+  genesis_point: string;
 
   @Field()
   name: string;
 
   @Field()
-  metaHash: string;
+  meta_hash: string;
 
   @Field()
-  assetId: string;
+  asset_id: string;
 
   @Field(() => TapAssetType)
-  assetType: TapAssetType;
+  asset_type: TapAssetType;
 
   @Field(() => Int)
-  outputIndex: number;
+  output_index: number;
 }
 
 // ─── Asset ──────────────────────────────────────────────────────
@@ -50,28 +50,28 @@ export class TapAssetGenesis {
 @ObjectType()
 export class TapAsset {
   @Field(() => TapAssetGenesis, { nullable: true })
-  assetGenesis?: TapAssetGenesis;
+  asset_genesis?: TapAssetGenesis;
 
   @Field()
   amount: string;
 
   @Field(() => Int)
-  lockTime: number;
+  lock_time: number;
 
   @Field(() => Int)
-  relativeLockTime: number;
+  relative_lock_time: number;
 
   @Field(() => Int)
-  scriptVersion: number;
+  script_version: number;
 
   @Field()
-  scriptKey: string;
+  script_key: string;
 
   @Field()
-  isSpent: boolean;
+  is_spent: boolean;
 
   @Field()
-  isBurn: boolean;
+  is_burn: boolean;
 }
 
 @ObjectType()
@@ -85,10 +85,10 @@ export class TapAssetList {
 @ObjectType()
 export class TapAssetBalanceEntry {
   @Field({ nullable: true })
-  assetId?: string;
+  asset_id?: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field(() => [String], { nullable: true })
   names?: string[];
@@ -111,25 +111,25 @@ export class TapAddress {
   encoded: string;
 
   @Field()
-  assetId: string;
+  asset_id: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field()
   amount: string;
 
   @Field()
-  assetType: string;
+  asset_type: string;
 
   @Field()
-  scriptKey: string;
+  script_key: string;
 
   @Field()
-  internalKey: string;
+  internal_key: string;
 
   @Field()
-  taprootOutputKey: string;
+  taproot_output_key: string;
 }
 
 // ─── Transfer ───────────────────────────────────────────────────
@@ -137,10 +137,10 @@ export class TapAddress {
 @ObjectType()
 export class TapTransferInput {
   @Field()
-  anchorPoint: string;
+  anchor_point: string;
 
   @Field()
-  assetId: string;
+  asset_id: string;
 
   @Field()
   amount: string;
@@ -149,31 +149,31 @@ export class TapTransferInput {
 @ObjectType()
 export class TapTransferOutput {
   @Field()
-  assetId: string;
+  asset_id: string;
 
   @Field()
   amount: string;
 
   @Field()
-  scriptKeyIsLocal: boolean;
+  script_key_is_local: boolean;
 
   @Field()
-  outputType: string;
+  output_type: string;
 }
 
 @ObjectType()
 export class TapTransfer {
   @Field()
-  anchorTxHash: string;
+  anchor_tx_hash: string;
 
   @Field(() => Int)
-  anchorTxHeightHint: number;
+  anchor_tx_height_hint: number;
 
   @Field()
-  anchorTxChainFees: string;
+  anchor_tx_chain_fees: string;
 
   @Field()
-  transferTimestamp: string;
+  transfer_timestamp: string;
 
   @Field()
   label: string;
@@ -196,13 +196,13 @@ export class TapTransferList {
 @ObjectType()
 export class TapMintResponse {
   @Field()
-  batchKey: string;
+  batch_key: string;
 }
 
 @ObjectType()
 export class TapFinalizeBatchResponse {
   @Field()
-  batchKey: string;
+  batch_key: string;
 }
 
 // ─── Universe ───────────────────────────────────────────────────
@@ -210,22 +210,22 @@ export class TapFinalizeBatchResponse {
 @ObjectType()
 export class TapUniverseInfo {
   @Field()
-  runtimeId: string;
+  runtime_id: string;
 }
 
 @ObjectType()
 export class TapUniverseStats {
   @Field(() => Int)
-  numTotalAssets: number;
+  num_total_assets: number;
 
   @Field(() => Int)
-  numTotalSyncs: number;
+  num_total_syncs: number;
 
   @Field(() => Int)
-  numTotalProofs: number;
+  num_total_proofs: number;
 
   @Field(() => Int)
-  numTotalGroups: number;
+  num_total_groups: number;
 }
 
 @ObjectType()
@@ -234,16 +234,16 @@ export class TapUniverseAsset {
   name?: string;
 
   @Field({ nullable: true })
-  assetId?: string;
+  asset_id?: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field()
-  proofType: string;
+  proof_type: string;
 
   @Field()
-  totalSupply: string;
+  total_supply: string;
 }
 
 @ObjectType()
@@ -264,7 +264,7 @@ export class TapFederationServer {
 @ObjectType()
 export class TapFederationServerList {
   @Field({ nullable: true })
-  nodeAddress?: string;
+  node_address?: string;
 
   @Field(() => [TapFederationServer])
   servers: TapFederationServer[];
@@ -273,22 +273,22 @@ export class TapFederationServerList {
 @ObjectType()
 export class TapSyncResult {
   @Field(() => [String])
-  syncedUniverses: string[];
+  synced_universes: string[];
 }
 
 @InputType()
 export class TapAssetInvoiceInput {
   @Field()
-  assetAmount: string;
+  asset_amount: string;
 
   @Field({ nullable: true })
-  assetId?: string;
+  asset_id?: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field({ nullable: true })
-  peerPubkey?: string;
+  peer_pubkey?: string;
 
   @Field({ nullable: true })
   memo?: string;
@@ -309,61 +309,61 @@ export class TapMintAssetInput {
   precision: number;
 
   @Field(() => TapAssetType, { defaultValue: TapAssetType.NORMAL })
-  assetType: TapAssetType;
+  asset_type: TapAssetType;
 
   @Field({ defaultValue: true })
   grouped: boolean;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 }
 
 @InputType()
 export class TapFundChannelInput {
   @Field()
-  peerPubkey: string;
+  peer_pubkey: string;
 
   @Field()
-  assetAmount: string;
+  asset_amount: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field({ nullable: true })
-  assetId?: string;
+  asset_id?: string;
 
   @Field(() => Int, { nullable: true })
-  feeRateSatPerVbyte?: number;
+  fee_rate_sat_per_vbyte?: number;
 
   @Field(() => Int, { nullable: true })
-  pushSat?: number;
+  push_sat?: number;
 
   @Field({ nullable: true })
-  universeHost?: string;
+  universe_host?: string;
 }
 
 @ObjectType()
 export class TapAssetInvoiceResponse {
   @Field()
-  paymentRequest: string;
+  payment_request: string;
 
   @Field()
-  rHash: string;
+  r_hash: string;
 
   @Field()
-  addIndex: string;
+  add_index: string;
 
   @Field()
-  paymentAddr: string;
+  payment_addr: string;
 
   @Field({ nullable: true })
-  assetId?: string;
+  asset_id?: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field()
-  assetAmount: string;
+  asset_amount: string;
 }
 
 @ObjectType()
@@ -372,29 +372,37 @@ export class TapFundChannelResponse {
   txid: string;
 
   @Field(() => Int)
-  outputIndex: number;
+  output_index: number;
 }
 
 @ObjectType()
 export class TapAssetChannelBalance {
   @Field()
-  channelPoint: string;
+  channel_point: string;
 
   @Field()
-  partnerPublicKey: string;
+  partner_public_key: string;
 
   @Field()
-  assetId: string;
+  asset_id: string;
 
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
 
   @Field()
-  localBalance: string;
+  local_balance: string;
 
   @Field()
-  remoteBalance: string;
+  remote_balance: string;
 
   @Field()
   capacity: string;
 }
+
+// ─── Namespace containers ───────────────────────────────────────
+
+@ObjectType()
+export class TaprootAssetsQueries {}
+
+@ObjectType()
+export class TaprootAssetsMutations {}

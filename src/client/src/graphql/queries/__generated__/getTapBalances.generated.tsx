@@ -4,31 +4,36 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetTapBalancesQueryVariables = Types.Exact<{
-  groupBy?: Types.InputMaybe<Types.TapBalanceGroupBy>;
+  group_by?: Types.InputMaybe<Types.TapBalanceGroupBy>;
 }>;
 
 export type GetTapBalancesQuery = {
   __typename?: 'Query';
-  getTapBalances: {
-    __typename?: 'TapBalances';
-    balances: Array<{
-      __typename?: 'TapAssetBalanceEntry';
-      assetId?: string | null;
-      groupKey?: string | null;
-      names?: Array<string> | null;
-      balance: string;
-    }>;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    get_balances: {
+      __typename?: 'TapBalances';
+      balances: Array<{
+        __typename?: 'TapAssetBalanceEntry';
+        asset_id?: string | null;
+        group_key?: string | null;
+        names?: Array<string> | null;
+        balance: string;
+      }>;
+    };
   };
 };
 
 export const GetTapBalancesDocument = gql`
-  query GetTapBalances($groupBy: TapBalanceGroupBy) {
-    getTapBalances(groupBy: $groupBy) {
-      balances {
-        assetId
-        groupKey
-        names
-        balance
+  query GetTapBalances($group_by: TapBalanceGroupBy) {
+    taproot_assets {
+      get_balances(group_by: $group_by) {
+        balances {
+          asset_id
+          group_key
+          names
+          balance
+        }
       }
     }
   }
@@ -46,7 +51,7 @@ export const GetTapBalancesDocument = gql`
  * @example
  * const { data, loading, error } = useGetTapBalancesQuery({
  *   variables: {
- *      groupBy: // value for 'groupBy'
+ *      group_by: // value for 'group_by'
  *   },
  * });
  */

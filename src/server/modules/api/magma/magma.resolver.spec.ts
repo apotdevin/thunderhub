@@ -23,7 +23,12 @@ jest.mock('../amboss/amboss.service', () => ({
   AmbossService: jest.fn(),
 }));
 
-import { MagmaResolver, MagmaOrderQueriesResolver } from './magma.resolver';
+import {
+  MagmaResolver,
+  MagmaOrderQueriesResolver,
+  MagmaQueriesResolver,
+  RailsQueriesResolver,
+} from './magma.resolver';
 
 describe('MagmaResolver', () => {
   const userId = { id: 'test-user-id' } as UserId;
@@ -42,25 +47,24 @@ describe('MagmaResolver', () => {
     resolveTradeUrl: jest.fn(),
   };
 
-  let resolver: MagmaResolver;
-
   beforeEach(() => {
     jest.clearAllMocks();
     mockAmbossTokenService.get.mockResolvedValue('token123');
     mockAmbossTokenService.getOrCreate.mockResolvedValue('token123');
     mockAmbossService.resolveTradeUrl.mockResolvedValue(tradeUrl);
-    resolver = new MagmaResolver(
-      {} as never,
-      {} as never,
-      mockFetchService as never,
-      { syncForAccount: jest.fn() } as never,
-      mockAmbossTokenService as never,
-      mockAmbossService as never,
-      mockLogger as never
-    );
   });
 
-  describe('getTapOffers', () => {
+  describe('MagmaQueriesResolver.get_tap_offers', () => {
+    let queriesResolver: MagmaQueriesResolver;
+
+    beforeEach(() => {
+      queriesResolver = new MagmaQueriesResolver(
+        mockFetchService as never,
+        mockAmbossService as never,
+        mockLogger as never
+      );
+    });
+
     it('maps API response to offer list', async () => {
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
         data: {
@@ -85,7 +89,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapOffers(userId, {
+      const result = await queriesResolver.get_tap_offers(userId, {
         ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
         sortBy: TapOfferSortBy.RATE,
@@ -109,7 +113,7 @@ describe('MagmaResolver', () => {
         error: new Error('network error'),
       });
 
-      const result = await resolver.getTapOffers(userId, {
+      const result = await queriesResolver.get_tap_offers(userId, {
         ambossAssetId: 'asset123',
         transactionType: TapTransactionType.SALE,
       });
@@ -129,7 +133,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      await resolver.getTapOffers(userId, {
+      await queriesResolver.get_tap_offers(userId, {
         ambossAssetId: 'asset123',
         transactionType: TapTransactionType.PURCHASE,
       });
@@ -147,7 +151,19 @@ describe('MagmaResolver', () => {
     });
   });
 
-  describe('getTapSupportedAssets', () => {
+  describe('RailsQueriesResolver.get_tap_supported_assets', () => {
+    let railsResolver: RailsQueriesResolver;
+    const mockTapFederationService = { syncForAccount: jest.fn() };
+
+    beforeEach(() => {
+      railsResolver = new RailsQueriesResolver(
+        mockFetchService as never,
+        mockTapFederationService as never,
+        mockAmbossService as never,
+        mockLogger as never
+      );
+    });
+
     it('maps API response to supported asset list', async () => {
       mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
         data: {
@@ -174,7 +190,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await railsResolver.get_tap_supported_assets(userId);
 
       expect(result.totalCount).toBe(1);
       expect(result.list).toHaveLength(1);
@@ -195,7 +211,7 @@ describe('MagmaResolver', () => {
         error: new Error('timeout'),
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await railsResolver.get_tap_supported_assets(userId);
 
       expect(result).toEqual({ list: [], totalCount: 0 });
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -219,7 +235,7 @@ describe('MagmaResolver', () => {
         error: undefined,
       });
 
-      const result = await resolver.getTapSupportedAssets(userId);
+      const result = await railsResolver.get_tap_supported_assets(userId);
 
       expect(result.list[0]).toEqual({
         id: 'asset-2',
@@ -308,7 +324,6 @@ describe('MagmaResolver', () => {
         mockTapdNodeService as never,
         mockNodeService as never,
         mockFetchService as never,
-        { syncForAccount: jest.fn() } as never,
         mockAmbossTokenService as never,
         mockAmbossService as never,
         mockLogger as never

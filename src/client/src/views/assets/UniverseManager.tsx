@@ -48,13 +48,15 @@ export const UniverseManager: FC = () => {
   const [syncUniverse, { loading: syncing }] = useSyncTapUniverseMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
-      const count = data.syncTapUniverse?.syncedUniverses?.length || 0;
+      const count =
+        data.taproot_assets?.sync_universe?.synced_universes?.length || 0;
       toast.success(`Synced ${count} universe(s)`);
     },
   });
 
-  const nodeAddress = data?.getTapFederationServers?.nodeAddress;
-  const servers = data?.getTapFederationServers?.servers || [];
+  const nodeAddress =
+    data?.taproot_assets?.get_federation_servers?.node_address;
+  const servers = data?.taproot_assets?.get_federation_servers?.servers || [];
 
   const handleCopyNodeAddress = () => {
     if (nodeAddress) {

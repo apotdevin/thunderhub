@@ -52,7 +52,7 @@ export const TradingOffers: FC = () => {
     });
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: TapBalanceGroupBy.GroupKey },
+    variables: { group_by: TapBalanceGroupBy.GroupKey },
   });
 
   const { data: allChannelsData } = useGetChannelsWithPeersQuery({
@@ -60,26 +60,28 @@ export const TradingOffers: FC = () => {
   });
   const { data: allAssetChannelsData } = useGetTapAssetChannelBalancesQuery();
 
-  const allSupported = supportedData?.getTapSupportedAssets?.list || [];
-  const balances = balancesData?.getTapBalances?.balances || [];
+  const allSupported =
+    supportedData?.rails?.get_tap_supported_assets?.list || [];
+  const balances = balancesData?.taproot_assets?.get_balances?.balances || [];
   const ownedGroupKeys = new Set(
-    balances.filter(b => b.groupKey).map(b => b.groupKey!)
+    balances.filter(b => b.group_key).map(b => b.group_key!)
   );
   const ownedAssetIds = new Set(
-    balances.filter(b => !b.groupKey && b.assetId).map(b => b.assetId!)
+    balances.filter(b => !b.group_key && b.asset_id).map(b => b.asset_id!)
   );
 
   // Build asset channel indexes for trading partner detection
   const { assetChannelsByAssetId, assetChannelsByGroupKey } = useMemo(() => {
     const byAssetId = new Map<string, Set<string>>();
     const byGroupKey = new Map<string, Set<string>>();
-    for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
-      if (!byAssetId.has(ac.assetId)) byAssetId.set(ac.assetId, new Set());
-      byAssetId.get(ac.assetId)?.add(ac.partnerPublicKey);
-      if (ac.groupKey) {
-        if (!byGroupKey.has(ac.groupKey))
-          byGroupKey.set(ac.groupKey, new Set());
-        byGroupKey.get(ac.groupKey)?.add(ac.partnerPublicKey);
+    for (const ac of allAssetChannelsData?.taproot_assets
+      ?.get_asset_channel_balances || []) {
+      if (!byAssetId.has(ac.asset_id)) byAssetId.set(ac.asset_id, new Set());
+      byAssetId.get(ac.asset_id)?.add(ac.partner_public_key);
+      if (ac.group_key) {
+        if (!byGroupKey.has(ac.group_key))
+          byGroupKey.set(ac.group_key, new Set());
+        byGroupKey.get(ac.group_key)?.add(ac.partner_public_key);
       }
     }
     return {
@@ -90,10 +92,11 @@ export const TradingOffers: FC = () => {
 
   const btcChannelPubkeys = useMemo(() => {
     const assetChannelCountByPubkey = new Map<string, number>();
-    for (const ac of allAssetChannelsData?.getTapAssetChannelBalances || []) {
+    for (const ac of allAssetChannelsData?.taproot_assets
+      ?.get_asset_channel_balances || []) {
       assetChannelCountByPubkey.set(
-        ac.partnerPublicKey,
-        (assetChannelCountByPubkey.get(ac.partnerPublicKey) || 0) + 1
+        ac.partner_public_key,
+        (assetChannelCountByPubkey.get(ac.partner_public_key) || 0) + 1
       );
     }
     const totalChannelCountByPubkey = new Map<string, number>();
@@ -185,8 +188,8 @@ export const TradingOffers: FC = () => {
     onError: err => toast.error(getErrorContent(err)),
   });
 
-  const offers = offersData?.getTapOffers?.list || [];
-  const totalCount = offersData?.getTapOffers?.totalCount || 0;
+  const offers = offersData?.magma?.get_tap_offers?.list || [];
+  const totalCount = offersData?.magma?.get_tap_offers?.totalCount || 0;
 
   const toggleSort = (field: TapOfferSortBy) => {
     if (sortBy === field) {

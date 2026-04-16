@@ -19,25 +19,26 @@ export const SendAsset: FC = () => {
     useDecodeTapAddressLazyQuery();
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: TapBalanceGroupBy.GroupKey },
+    variables: { group_by: TapBalanceGroupBy.GroupKey },
   });
 
   const { data: supportedData } = useGetTapSupportedAssetsQuery();
 
   const nameMap = new Map(
-    (balancesData?.getTapBalances?.balances || [])
-      .filter(b => b.assetId || b.groupKey)
+    (balancesData?.taproot_assets?.get_balances?.balances || [])
+      .filter(b => b.asset_id || b.group_key)
       .flatMap(b => {
         const entries: [string, string][] = [];
         const label = b.names?.join(', ') || 'Unknown';
-        if (b.assetId) entries.push([b.assetId, label]);
-        if (b.groupKey) entries.push([b.groupKey, label]);
+        if (b.asset_id) entries.push([b.asset_id, label]);
+        if (b.group_key) entries.push([b.group_key, label]);
         return entries;
       })
   );
 
   const precisionMap = new Map<string, number>();
-  for (const asset of supportedData?.getTapSupportedAssets?.list || []) {
+  for (const asset of supportedData?.rails?.get_tap_supported_assets?.list ||
+    []) {
     if (asset.assetId) precisionMap.set(asset.assetId, asset.precision);
     if (asset.groupKey) precisionMap.set(asset.groupKey, asset.precision);
   }
@@ -70,10 +71,10 @@ export const SendAsset: FC = () => {
       toast.error('Address is required');
       return;
     }
-    sendAsset({ variables: { tapAddrs: [address] } });
+    sendAsset({ variables: { tap_addrs: [address] } });
   };
 
-  const addrInfo = decoded?.decodeTapAddress;
+  const addrInfo = decoded?.taproot_assets?.decode_address;
 
   return (
     <Card>
@@ -112,16 +113,16 @@ export const SendAsset: FC = () => {
             !decodeError &&
             (() => {
               const assetName =
-                (addrInfo.groupKey && nameMap.get(addrInfo.groupKey)) ||
-                (addrInfo.assetId && nameMap.get(addrInfo.assetId)) ||
+                (addrInfo.group_key && nameMap.get(addrInfo.group_key)) ||
+                (addrInfo.asset_id && nameMap.get(addrInfo.asset_id)) ||
                 null;
 
               const precision =
-                (addrInfo.assetId
-                  ? precisionMap.get(addrInfo.assetId)
+                (addrInfo.asset_id
+                  ? precisionMap.get(addrInfo.asset_id)
                   : undefined) ??
-                (addrInfo.groupKey
-                  ? precisionMap.get(addrInfo.groupKey)
+                (addrInfo.group_key
+                  ? precisionMap.get(addrInfo.group_key)
                   : undefined) ??
                 0;
 
@@ -141,21 +142,21 @@ export const SendAsset: FC = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Type</span>
-                    <span>{addrInfo.assetType || 'NORMAL'}</span>
+                    <span>{addrInfo.asset_type || 'NORMAL'}</span>
                   </div>
-                  {addrInfo.groupKey && (
+                  {addrInfo.group_key && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Group Key</span>
                       <span className="font-mono truncate max-w-[200px]">
-                        {addrInfo.groupKey}
+                        {addrInfo.group_key}
                       </span>
                     </div>
                   )}
-                  {addrInfo.assetId && (
+                  {addrInfo.asset_id && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Asset ID</span>
                       <span className="font-mono truncate max-w-[200px]">
-                        {addrInfo.assetId}
+                        {addrInfo.asset_id}
                       </span>
                     </div>
                   )}

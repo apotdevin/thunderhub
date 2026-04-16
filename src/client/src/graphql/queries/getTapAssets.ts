@@ -2,23 +2,25 @@ import { gql } from '@apollo/client';
 
 export const GET_TAP_ASSETS = gql`
   query GetTapAssets {
-    getTapAssets {
-      assets {
-        assetGenesis {
-          genesisPoint
-          name
-          metaHash
-          assetId
-          assetType
-          outputIndex
+    taproot_assets {
+      get_assets {
+        assets {
+          asset_genesis {
+            genesis_point
+            name
+            meta_hash
+            asset_id
+            asset_type
+            output_index
+          }
+          amount
+          lock_time
+          relative_lock_time
+          script_version
+          script_key
+          is_spent
+          is_burn
         }
-        amount
-        lockTime
-        relativeLockTime
-        scriptVersion
-        scriptKey
-        isSpent
-        isBurn
       }
     }
   }

@@ -9,16 +9,21 @@ export type FinalizeTapBatchMutationVariables = Types.Exact<{
 
 export type FinalizeTapBatchMutation = {
   __typename?: 'Mutation';
-  finalizeTapBatch: {
-    __typename?: 'TapFinalizeBatchResponse';
-    batchKey: string;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    finalize_batch: {
+      __typename?: 'TapFinalizeBatchResponse';
+      batch_key: string;
+    };
   };
 };
 
 export const FinalizeTapBatchDocument = gql`
   mutation FinalizeTapBatch {
-    finalizeTapBatch {
-      batchKey
+    taproot_assets {
+      finalize_batch {
+        batch_key
+      }
     }
   }
 `;

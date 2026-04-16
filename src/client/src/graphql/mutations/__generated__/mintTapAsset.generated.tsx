@@ -9,13 +9,18 @@ export type MintTapAssetMutationVariables = Types.Exact<{
 
 export type MintTapAssetMutation = {
   __typename?: 'Mutation';
-  mintTapAsset: { __typename?: 'TapMintResponse'; batchKey: string };
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    mint_asset: { __typename?: 'TapMintResponse'; batch_key: string };
+  };
 };
 
 export const MintTapAssetDocument = gql`
   mutation MintTapAsset($input: TapMintAssetInput!) {
-    mintTapAsset(input: $input) {
-      batchKey
+    taproot_assets {
+      mint_asset(input: $input) {
+        batch_key
+      }
     }
   }
 `;

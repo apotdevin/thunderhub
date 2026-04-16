@@ -9,26 +9,31 @@ export type GetTapUniverseAssetsQueryVariables = Types.Exact<{
 
 export type GetTapUniverseAssetsQuery = {
   __typename?: 'Query';
-  getTapUniverseAssets: {
-    __typename?: 'TapUniverseAssetList';
-    assets: Array<{
-      __typename?: 'TapUniverseAsset';
-      name?: string | null;
-      assetId?: string | null;
-      groupKey?: string | null;
-      totalSupply: string;
-    }>;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    get_universe_assets: {
+      __typename?: 'TapUniverseAssetList';
+      assets: Array<{
+        __typename?: 'TapUniverseAsset';
+        name?: string | null;
+        asset_id?: string | null;
+        group_key?: string | null;
+        total_supply: string;
+      }>;
+    };
   };
 };
 
 export const GetTapUniverseAssetsDocument = gql`
   query GetTapUniverseAssets {
-    getTapUniverseAssets {
-      assets {
-        name
-        assetId
-        groupKey
-        totalSupply
+    taproot_assets {
+      get_universe_assets {
+        assets {
+          name
+          asset_id
+          group_key
+          total_supply
+        }
       }
     }
   }

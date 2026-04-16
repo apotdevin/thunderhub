@@ -543,6 +543,7 @@ type MagmaPendingOrders {
 }
 
 type MagmaQueries {
+  get_tap_offers(input: GetTapOffersInput!): TapTradeOfferList!
   orders: MagmaOrderQueries!
 }
 
@@ -552,11 +553,7 @@ type MessageType {
 
 type Mutation {
   addPeer(isTemporary: Boolean, publicKey: String, socket: String, url: String): Boolean!
-  addTapAssetInvoice(input: TapAssetInvoiceInput!): TapAssetInvoiceResponse!
-  addTapFederationServer(host: String!): Boolean!
   bakeSuperMacaroon(input: BakeSuperMacaroonInput!): SuperMacaroon!
-  burnTapAsset(amount: String!, assetId: String!): Boolean!
-  cancelTapBatch: Boolean!
   claimBoltzTransaction(destination: String!, fee: Float!, id: String!, lockupAddress: String!, preimage: String!, privateKey: String!, redeem: String!): String!
   closeChannel(forceClose: Boolean, id: String!, targetConfirmations: Float, tokensPerVByte: Float): OpenOrCloseChannel!
   createAddress(type: String! = "p2tr"): String!
@@ -565,8 +562,6 @@ type Mutation {
   createMacaroon(permissions: NetworkInfoInput!): CreateMacaroon!
   executeTrade(input: ExecuteTradeInput!): ExecuteTradeResult!
   fetchLnUrl(url: String!): LnUrlRequest!
-  finalizeTapBatch: TapFinalizeBatchResponse!
-  fundTapAssetChannel(input: TapFundChannelInput!): TapFundChannelResponse!
   keysend(destination: String, message: String, tokens: Float!): PayInvoice!
   lnUrlAuth(url: String!): AuthResponse!
   lnUrlChannel(callback: String!, k1: String!, uri: String!): String!
@@ -575,20 +570,16 @@ type Mutation {
   loginAmboss: Boolean!
   logout: Boolean!
   magma: MagmaMutations!
-  mintTapAsset(input: TapMintAssetInput!): TapMintResponse!
-  newTapAddress(amt: Int, assetId: String, groupKey: String): TapAddress!
   openChannel(input: OpenChannelParams!): OpenOrCloseChannel!
   pay(max_fee: Float!, max_paths: Float!, out: [String!], request: String!): Boolean!
   public: PublicMutation!
   purchaseLiquidity(amount_cents: String!): Boolean!
   pushBackup: Boolean!
   removePeer(publicKey: String): Boolean!
-  removeTapFederationServer(host: String!): Boolean!
   removeTwofaSecret(token: String!): Boolean!
-  sendTapAsset(tapAddrs: [String!]!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
   setupTradePartner(input: SetupTradePartnerInput!): SetupTradePartnerResult!
-  syncTapUniverse(host: String!): TapSyncResult!
+  taproot_assets: TaprootAssetsMutations!
   team: TeamMutations!
   toggleConfig(field: ConfigFields!): Boolean!
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
@@ -842,7 +833,6 @@ type PublicQueries {
 }
 
 type Query {
-  decodeTapAddress(addr: String!): TapAddress!
   getAccount: ServerAccount!
   getAmbossLoginToken(redirect_url: String): String!
   getAmbossUser: AmbossUser
@@ -873,16 +863,6 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
-  getTapAssetChannelBalances(peerPubkey: String): [TapAssetChannelBalance!]!
-  getTapAssets: TapAssetList!
-  getTapBalances(groupBy: TapBalanceGroupBy = GROUP_KEY): TapBalances!
-  getTapFederationServers: TapFederationServerList!
-  getTapOffers(input: GetTapOffersInput!): TapTradeOfferList!
-  getTapSupportedAssets: TapSupportedAssetList!
-  getTapTransfers: TapTransferList!
-  getTapUniverseAssets: TapUniverseAssetList!
-  getTapUniverseInfo: TapUniverseInfo!
-  getTapUniverseStats: TapUniverseStats!
   getTimeHealth: ChannelsTimeHealth!
   getTradeQuote(input: TradeQuoteInput!): TradeQuoteResult!
   getTwofaSecret: TwofaResult!
@@ -893,12 +873,18 @@ type Query {
   magma: MagmaQueries!
   node: CurrentNode!
   public: PublicQueries!
+  rails: RailsQueries!
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
+  taproot_assets: TaprootAssetsQueries!
   user: UserQueries!
   verifyBackup(backup: String!): Boolean!
   verifyBackups(backup: String!): Boolean!
   verifyMessage(message: String!, signature: String!): String!
+}
+
+type RailsQueries {
+  get_tap_supported_assets: TapSupportedAssetList!
 }
 
 type Route {
@@ -967,69 +953,69 @@ type SuperMacaroon {
 
 type TapAddress {
   amount: String!
-  assetId: String!
-  assetType: String!
+  asset_id: String!
+  asset_type: String!
   encoded: String!
-  groupKey: String
-  internalKey: String!
-  scriptKey: String!
-  taprootOutputKey: String!
+  group_key: String
+  internal_key: String!
+  script_key: String!
+  taproot_output_key: String!
 }
 
 type TapAsset {
   amount: String!
-  assetGenesis: TapAssetGenesis
-  isBurn: Boolean!
-  isSpent: Boolean!
-  lockTime: Int!
-  relativeLockTime: Int!
-  scriptKey: String!
-  scriptVersion: Int!
+  asset_genesis: TapAssetGenesis
+  is_burn: Boolean!
+  is_spent: Boolean!
+  lock_time: Int!
+  relative_lock_time: Int!
+  script_key: String!
+  script_version: Int!
 }
 
 type TapAssetBalanceEntry {
-  assetId: String
+  asset_id: String
   balance: String!
-  groupKey: String
+  group_key: String
   names: [String!]
 }
 
 type TapAssetChannelBalance {
-  assetId: String!
+  asset_id: String!
   capacity: String!
-  channelPoint: String!
-  groupKey: String
-  localBalance: String!
-  partnerPublicKey: String!
-  remoteBalance: String!
+  channel_point: String!
+  group_key: String
+  local_balance: String!
+  partner_public_key: String!
+  remote_balance: String!
 }
 
 type TapAssetGenesis {
-  assetId: String!
-  assetType: TapAssetType!
-  genesisPoint: String!
-  metaHash: String!
+  asset_id: String!
+  asset_type: TapAssetType!
+  genesis_point: String!
+  meta_hash: String!
   name: String!
-  outputIndex: Int!
+  output_index: Int!
 }
 
 input TapAssetInvoiceInput {
-  assetAmount: String!
-  assetId: String
+  asset_amount: String!
+  asset_id: String
   expiry: Int
-  groupKey: String
+  group_key: String
   memo: String
-  peerPubkey: String
+  peer_pubkey: String
 }
 
 type TapAssetInvoiceResponse {
-  addIndex: String!
-  assetAmount: String!
-  assetId: String
-  groupKey: String
-  paymentAddr: String!
-  paymentRequest: String!
-  rHash: String!
+  add_index: String!
+  asset_amount: String!
+  asset_id: String
+  group_key: String
+  payment_addr: String!
+  payment_request: String!
+  r_hash: String!
 }
 
 type TapAssetList {
@@ -1061,40 +1047,40 @@ type TapFederationServer {
 }
 
 type TapFederationServerList {
-  nodeAddress: String
+  node_address: String
   servers: [TapFederationServer!]!
 }
 
 type TapFinalizeBatchResponse {
-  batchKey: String!
+  batch_key: String!
 }
 
 input TapFundChannelInput {
-  assetAmount: String!
-  assetId: String
-  feeRateSatPerVbyte: Int
-  groupKey: String
-  peerPubkey: String!
-  pushSat: Int
-  universeHost: String
+  asset_amount: String!
+  asset_id: String
+  fee_rate_sat_per_vbyte: Int
+  group_key: String
+  peer_pubkey: String!
+  push_sat: Int
+  universe_host: String
 }
 
 type TapFundChannelResponse {
-  outputIndex: Int!
+  output_index: Int!
   txid: String!
 }
 
 input TapMintAssetInput {
   amount: String!
-  assetType: TapAssetType! = NORMAL
-  groupKey: String
+  asset_type: TapAssetType! = NORMAL
+  group_key: String
   grouped: Boolean! = true
   name: String!
   precision: Int!
 }
 
 type TapMintResponse {
-  batchKey: String!
+  batch_key: String!
 }
 
 enum TapOfferSortBy {
@@ -1124,7 +1110,7 @@ type TapSupportedAssetList {
 }
 
 type TapSyncResult {
-  syncedUniverses: [String!]!
+  synced_universes: [String!]!
 }
 
 type TapTradeOffer {
@@ -1157,19 +1143,19 @@ enum TapTransactionType {
 }
 
 type TapTransfer {
-  anchorTxChainFees: String!
-  anchorTxHash: String!
-  anchorTxHeightHint: Int!
+  anchor_tx_chain_fees: String!
+  anchor_tx_hash: String!
+  anchor_tx_height_hint: Int!
   inputs: [TapTransferInput!]!
   label: String!
   outputs: [TapTransferOutput!]!
-  transferTimestamp: String!
+  transfer_timestamp: String!
 }
 
 type TapTransferInput {
   amount: String!
-  anchorPoint: String!
-  assetId: String!
+  anchor_point: String!
+  asset_id: String!
 }
 
 type TapTransferList {
@@ -1178,17 +1164,17 @@ type TapTransferList {
 
 type TapTransferOutput {
   amount: String!
-  assetId: String!
-  outputType: String!
-  scriptKeyIsLocal: Boolean!
+  asset_id: String!
+  output_type: String!
+  script_key_is_local: Boolean!
 }
 
 type TapUniverseAsset {
-  assetId: String
-  groupKey: String
+  asset_id: String
+  group_key: String
   name: String
-  proofType: String!
-  totalSupply: String!
+  proof_type: String!
+  total_supply: String!
 }
 
 type TapUniverseAssetList {
@@ -1196,14 +1182,40 @@ type TapUniverseAssetList {
 }
 
 type TapUniverseInfo {
-  runtimeId: String!
+  runtime_id: String!
 }
 
 type TapUniverseStats {
-  numTotalAssets: Int!
-  numTotalGroups: Int!
-  numTotalProofs: Int!
-  numTotalSyncs: Int!
+  num_total_assets: Int!
+  num_total_groups: Int!
+  num_total_proofs: Int!
+  num_total_syncs: Int!
+}
+
+type TaprootAssetsMutations {
+  add_asset_invoice(input: TapAssetInvoiceInput!): TapAssetInvoiceResponse!
+  add_federation_server(host: String!): Boolean!
+  burn_asset(amount: String!, asset_id: String!): Boolean!
+  cancel_batch: Boolean!
+  finalize_batch: TapFinalizeBatchResponse!
+  fund_asset_channel(input: TapFundChannelInput!): TapFundChannelResponse!
+  mint_asset(input: TapMintAssetInput!): TapMintResponse!
+  new_address(amt: Int, asset_id: String, group_key: String): TapAddress!
+  remove_federation_server(host: String!): Boolean!
+  send_asset(tap_addrs: [String!]!): Boolean!
+  sync_universe(host: String!): TapSyncResult!
+}
+
+type TaprootAssetsQueries {
+  decode_address(addr: String!): TapAddress!
+  get_asset_channel_balances(peer_pubkey: String): [TapAssetChannelBalance!]!
+  get_assets: TapAssetList!
+  get_balances(group_by: TapBalanceGroupBy = GROUP_KEY): TapBalances!
+  get_federation_servers: TapFederationServerList!
+  get_transfers: TapTransferList!
+  get_universe_assets: TapUniverseAssetList!
+  get_universe_info: TapUniverseInfo!
+  get_universe_stats: TapUniverseStats!
 }
 
 type TeamMutations {

@@ -7,49 +7,54 @@ export type GetTapAssetsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetTapAssetsQuery = {
   __typename?: 'Query';
-  getTapAssets: {
-    __typename?: 'TapAssetList';
-    assets: Array<{
-      __typename?: 'TapAsset';
-      amount: string;
-      lockTime: number;
-      relativeLockTime: number;
-      scriptVersion: number;
-      scriptKey: string;
-      isSpent: boolean;
-      isBurn: boolean;
-      assetGenesis?: {
-        __typename?: 'TapAssetGenesis';
-        genesisPoint: string;
-        name: string;
-        metaHash: string;
-        assetId: string;
-        assetType: Types.TapAssetType;
-        outputIndex: number;
-      } | null;
-    }>;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    get_assets: {
+      __typename?: 'TapAssetList';
+      assets: Array<{
+        __typename?: 'TapAsset';
+        amount: string;
+        lock_time: number;
+        relative_lock_time: number;
+        script_version: number;
+        script_key: string;
+        is_spent: boolean;
+        is_burn: boolean;
+        asset_genesis?: {
+          __typename?: 'TapAssetGenesis';
+          genesis_point: string;
+          name: string;
+          meta_hash: string;
+          asset_id: string;
+          asset_type: Types.TapAssetType;
+          output_index: number;
+        } | null;
+      }>;
+    };
   };
 };
 
 export const GetTapAssetsDocument = gql`
   query GetTapAssets {
-    getTapAssets {
-      assets {
-        assetGenesis {
-          genesisPoint
-          name
-          metaHash
-          assetId
-          assetType
-          outputIndex
+    taproot_assets {
+      get_assets {
+        assets {
+          asset_genesis {
+            genesis_point
+            name
+            meta_hash
+            asset_id
+            asset_type
+            output_index
+          }
+          amount
+          lock_time
+          relative_lock_time
+          script_version
+          script_key
+          is_spent
+          is_burn
         }
-        amount
-        lockTime
-        relativeLockTime
-        scriptVersion
-        scriptKey
-        isSpent
-        isBurn
       }
     }
   }

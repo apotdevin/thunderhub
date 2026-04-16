@@ -12,9 +12,8 @@ jest.mock('../../security/security.types', () => ({}));
 
 // Now safe to import the resolvers
 import {
-  TapdResolver,
-  TapAssetGenesisResolver,
-  TapAssetResolver,
+  TaprootAssetsMutationsResolver,
+  TaprootAssetsQueriesResolver,
 } from './tapd.resolver';
 
 const mockService = () => ({
@@ -44,19 +43,22 @@ type MockService = ReturnType<typeof mockService>;
 
 const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 
-describe('TapdResolver', () => {
-  let resolver: TapdResolver;
+describe('TaprootAssetsQueriesResolver', () => {
+  let resolver: TaprootAssetsQueriesResolver;
   let service: MockService;
   const userId = { id: 'test-user-id' } as any;
 
   beforeEach(() => {
     service = mockService();
     mockLogger.error.mockClear();
-    resolver = new TapdResolver(service as never, mockLogger as never);
+    resolver = new TaprootAssetsQueriesResolver(
+      service as never,
+      mockLogger as never
+    );
   });
 
-  describe('getTapAssets', () => {
-    it('returns raw assets from the service', async () => {
+  describe('get_assets', () => {
+    it('returns assets mapped to snake_case', async () => {
       const rawAsset = {
         assetGenesis: {
           genesisPoint: 'txid:0',
@@ -76,19 +78,35 @@ describe('TapdResolver', () => {
       };
       service.listAssets.mockResolvedValue({ assets: [rawAsset] });
 
-      const result = await resolver.getTapAssets(userId);
+      const result = await resolver.get_assets(userId);
 
       expect(result.assets).toHaveLength(1);
-      expect(result.assets[0]).toBe(rawAsset);
+      expect(result.assets[0]).toEqual({
+        asset_genesis: {
+          genesis_point: 'txid:0',
+          name: 'TestCoin',
+          meta_hash: 'ab',
+          asset_id: 'cd',
+          asset_type: TapAssetType.NORMAL,
+          output_index: 0,
+        },
+        amount: '1000',
+        lock_time: 0,
+        relative_lock_time: 0,
+        script_version: 0,
+        script_key: 'ef',
+        is_spent: false,
+        is_burn: false,
+      });
     });
 
     it('throws GraphQLError when the service call fails', async () => {
       service.listAssets.mockRejectedValue(new Error('connection failed'));
-      await expect(resolver.getTapAssets(userId)).rejects.toThrow(GraphQLError);
+      await expect(resolver.get_assets(userId)).rejects.toThrow(GraphQLError);
     });
   });
 
-  describe('getTapBalances', () => {
+  describe('get_balances', () => {
     it('returns balances grouped by assetId', async () => {
       service.listBalances.mockResolvedValue({
         assetBalances: {
@@ -100,15 +118,15 @@ describe('TapdResolver', () => {
         },
       });
 
-      const result = await resolver.getTapBalances(
+      const result = await resolver.get_balances(
         userId,
         TapBalanceGroupBy.ASSET_ID
       );
 
       expect(result.balances).toHaveLength(1);
       expect(result.balances[0]).toEqual({
-        assetId: 'abc123',
-        groupKey: 'aa',
+        asset_id: 'abc123',
+        group_key: 'aa',
         names: ['TestCoin'],
         balance: '500',
       });
@@ -136,14 +154,14 @@ describe('TapdResolver', () => {
           },
         });
 
-      const result = await resolver.getTapBalances(
+      const result = await resolver.get_balances(
         userId,
         TapBalanceGroupBy.GROUP_KEY
       );
 
       expect(result.balances).toHaveLength(1);
       expect(result.balances[0]).toEqual({
-        groupKey: groupKeyHex,
+        group_key: groupKeyHex,
         names: ['TestCoin'],
         balance: '1000',
       });
@@ -176,13 +194,13 @@ describe('TapdResolver', () => {
           },
         });
 
-      const result = await resolver.getTapBalances(
+      const result = await resolver.get_balances(
         userId,
         TapBalanceGroupBy.GROUP_KEY
       );
 
       expect(result.balances).toHaveLength(1);
-      expect(result.balances[0].groupKey).toBe(groupKeyHex);
+      expect(result.balances[0].group_key).toBe(groupKeyHex);
       expect(result.balances[0].balance).toBe('3000');
       expect(result.balances[0].names).toHaveLength(2);
       expect(result.balances[0].names).toContain('AlphaToken');
@@ -216,7 +234,7 @@ describe('TapdResolver', () => {
           },
         });
 
-      const result = await resolver.getTapBalances(
+      const result = await resolver.get_balances(
         userId,
         TapBalanceGroupBy.GROUP_KEY
       );
@@ -234,21 +252,21 @@ describe('TapdResolver', () => {
         })
         .mockRejectedValueOnce(new Error('lookup failed'));
 
-      const result = await resolver.getTapBalances(
+      const result = await resolver.get_balances(
         userId,
         TapBalanceGroupBy.GROUP_KEY
       );
 
       expect(result.balances).toHaveLength(1);
       expect(result.balances[0]).toEqual({
-        groupKey: 'groupkey1',
+        group_key: 'groupkey1',
         names: null,
         balance: '500',
       });
     });
   });
 
-  describe('getTapTransfers', () => {
+  describe('get_transfers', () => {
     it('serializes transfers with nested inputs and outputs', async () => {
       service.listTransfers.mockResolvedValue({
         transfers: [
@@ -277,12 +295,12 @@ describe('TapdResolver', () => {
         ],
       });
 
-      const result = await resolver.getTapTransfers(userId);
+      const result = await resolver.get_transfers(userId);
 
       expect(result.transfers).toHaveLength(1);
-      expect(result.transfers[0].anchorTxHash).toBe('deadbeef');
-      expect(result.transfers[0].inputs[0].assetId).toBe('aa');
-      expect(result.transfers[0].outputs[0].assetId).toBe('bb');
+      expect(result.transfers[0].anchor_tx_hash).toBe('deadbeef');
+      expect(result.transfers[0].inputs[0].asset_id).toBe('aa');
+      expect(result.transfers[0].outputs[0].asset_id).toBe('bb');
     });
 
     it('falls back to empty string when bufToHex returns undefined', async () => {
@@ -307,26 +325,78 @@ describe('TapdResolver', () => {
         ],
       });
 
-      const result = await resolver.getTapTransfers(userId);
-      expect(result.transfers[0].anchorTxHash).toBe('');
-      expect(result.transfers[0].outputs[0].assetId).toBe('');
+      const result = await resolver.get_transfers(userId);
+      expect(result.transfers[0].anchor_tx_hash).toBe('');
+      expect(result.transfers[0].outputs[0].asset_id).toBe('');
     });
   });
 
-  describe('newTapAddress', () => {
-    it('throws when both assetId and groupKey are provided', async () => {
+  describe('get_universe_assets', () => {
+    it('uses BigInt for total_supply to avoid precision loss', async () => {
+      const assetId =
+        'abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1';
+      service.universeAssetRoots.mockResolvedValue({
+        universeRoots: {
+          [assetId]: {
+            id: { proofType: 'PROOF_TYPE_ISSUANCE' },
+            assetName: 'BigAsset',
+            amountsByAssetId: {
+              id1: '9007199254740993',
+            },
+          },
+        },
+      });
+      service.listAssets.mockResolvedValue({ assets: [] });
+
+      const result = await resolver.get_universe_assets(userId);
+
+      expect(result.assets[0].total_supply).toBe('9007199254740993');
+    });
+  });
+
+  describe('get_federation_servers', () => {
+    it('includes node address from account', async () => {
+      service.getAccount.mockReturnValue({ socket: 'host:10029' });
+      service.listFederationServers.mockResolvedValue({
+        servers: [{ host: 'server1', id: 1 }],
+      });
+
+      const result = await resolver.get_federation_servers(userId);
+
+      expect(result.node_address).toBe('host:10029');
+      expect(result.servers).toHaveLength(1);
+    });
+  });
+});
+
+describe('TaprootAssetsMutationsResolver', () => {
+  let resolver: TaprootAssetsMutationsResolver;
+  let service: MockService;
+  const userId = { id: 'test-user-id' } as any;
+
+  beforeEach(() => {
+    service = mockService();
+    mockLogger.error.mockClear();
+    resolver = new TaprootAssetsMutationsResolver(
+      service as never,
+      mockLogger as never
+    );
+  });
+
+  describe('new_address', () => {
+    it('throws when both asset_id and group_key are provided', async () => {
       await expect(
-        resolver.newTapAddress(userId, 'asset1', 'group1', 100)
+        resolver.new_address(userId, 'asset1', 'group1', 100)
       ).rejects.toThrow(GraphQLError);
     });
 
-    it('throws when neither assetId nor groupKey is provided', async () => {
+    it('throws when neither asset_id nor group_key is provided', async () => {
       await expect(
-        resolver.newTapAddress(userId, undefined, undefined, 100)
+        resolver.new_address(userId, undefined, undefined, 100)
       ).rejects.toThrow(GraphQLError);
     });
 
-    it('creates an address with assetId', async () => {
+    it('creates an address with asset_id', async () => {
       service.newAddr.mockResolvedValue({
         encoded: 'tap1...',
         assetId: Buffer.from('aa', 'hex'),
@@ -336,7 +406,7 @@ describe('TapdResolver', () => {
         taprootOutputKey: Buffer.from('dd', 'hex'),
       });
 
-      const result = await resolver.newTapAddress(
+      const result = await resolver.new_address(
         userId,
         'asset1',
         undefined,
@@ -344,10 +414,10 @@ describe('TapdResolver', () => {
       );
 
       expect(result.encoded).toBe('tap1...');
-      expect(result.assetId).toBe('aa');
+      expect(result.asset_id).toBe('aa');
     });
 
-    it('creates an address with groupKey', async () => {
+    it('creates an address with group_key', async () => {
       service.newAddr.mockResolvedValue({
         encoded: 'tap1group...',
         assetId: Buffer.from('aa', 'hex'),
@@ -357,7 +427,7 @@ describe('TapdResolver', () => {
         taprootOutputKey: Buffer.from('dd', 'hex'),
       });
 
-      const result = await resolver.newTapAddress(
+      const result = await resolver.new_address(
         userId,
         undefined,
         'group1',
@@ -375,41 +445,41 @@ describe('TapdResolver', () => {
     });
   });
 
-  describe('addTapAssetInvoice', () => {
-    it('throws when neither assetId nor groupKey is provided', async () => {
+  describe('add_asset_invoice', () => {
+    it('throws when neither asset_id nor group_key is provided', async () => {
       await expect(
-        resolver.addTapAssetInvoice(userId, { assetAmount: '100' })
+        resolver.add_asset_invoice(userId, { asset_amount: '100' })
       ).rejects.toThrow(GraphQLError);
     });
 
-    it('throws when assetAmount is zero', async () => {
+    it('throws when asset_amount is zero', async () => {
       await expect(
-        resolver.addTapAssetInvoice(userId, {
-          assetAmount: '0',
-          assetId: 'asset1',
+        resolver.add_asset_invoice(userId, {
+          asset_amount: '0',
+          asset_id: 'asset1',
         })
-      ).rejects.toThrow('assetAmount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive number');
     });
 
-    it('throws when assetAmount is negative', async () => {
+    it('throws when asset_amount is negative', async () => {
       await expect(
-        resolver.addTapAssetInvoice(userId, {
-          assetAmount: '-5',
-          assetId: 'asset1',
+        resolver.add_asset_invoice(userId, {
+          asset_amount: '-5',
+          asset_id: 'asset1',
         })
-      ).rejects.toThrow('assetAmount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive number');
     });
 
-    it('throws when assetAmount is not a valid number', async () => {
+    it('throws when asset_amount is not a valid number', async () => {
       await expect(
-        resolver.addTapAssetInvoice(userId, {
-          assetAmount: 'abc',
-          assetId: 'asset1',
+        resolver.add_asset_invoice(userId, {
+          asset_amount: 'abc',
+          asset_id: 'asset1',
         })
-      ).rejects.toThrow('assetAmount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive number');
     });
 
-    it('returns invoice response with assetId', async () => {
+    it('returns invoice response with asset_id', async () => {
       service.addAssetInvoice.mockResolvedValue({
         invoiceResult: {
           paymentRequest: 'lntap1...',
@@ -426,20 +496,20 @@ describe('TapdResolver', () => {
         },
       });
 
-      const result = await resolver.addTapAssetInvoice(userId, {
-        assetAmount: '100',
-        assetId: 'asset1',
+      const result = await resolver.add_asset_invoice(userId, {
+        asset_amount: '100',
+        asset_id: 'asset1',
       });
 
-      expect(result.paymentRequest).toBe('lntap1...');
-      expect(result.rHash).toBe('aabb');
-      expect(result.addIndex).toBe('42');
-      expect(result.paymentAddr).toBe('ccdd');
-      expect(result.assetId).toBe('ee');
-      expect(result.assetAmount).toBe('100');
+      expect(result.payment_request).toBe('lntap1...');
+      expect(result.r_hash).toBe('aabb');
+      expect(result.add_index).toBe('42');
+      expect(result.payment_addr).toBe('ccdd');
+      expect(result.asset_id).toBe('ee');
+      expect(result.asset_amount).toBe('100');
     });
 
-    it('returns invoice response with groupKey', async () => {
+    it('returns invoice response with group_key', async () => {
       service.addAssetInvoice.mockResolvedValue({
         invoiceResult: {
           paymentRequest: 'lntap1...',
@@ -456,13 +526,13 @@ describe('TapdResolver', () => {
         },
       });
 
-      const result = await resolver.addTapAssetInvoice(userId, {
-        assetAmount: '200',
-        groupKey: 'group1',
+      const result = await resolver.add_asset_invoice(userId, {
+        asset_amount: '200',
+        group_key: 'group1',
       });
 
-      expect(result.groupKey).toBe('ff');
-      expect(result.assetAmount).toBe('200');
+      expect(result.group_key).toBe('ff');
+      expect(result.asset_amount).toBe('200');
       expect(service.addAssetInvoice).toHaveBeenCalledWith({
         id: userId.id,
         assetId: undefined,
@@ -480,29 +550,29 @@ describe('TapdResolver', () => {
         acceptedBuyQuote: null,
       });
 
-      const result = await resolver.addTapAssetInvoice(userId, {
-        assetAmount: '50',
-        assetId: 'asset1',
+      const result = await resolver.add_asset_invoice(userId, {
+        asset_amount: '50',
+        asset_id: 'asset1',
       });
 
-      expect(result.paymentRequest).toBe('');
-      expect(result.rHash).toBe('');
-      expect(result.addIndex).toBe('0');
-      expect(result.paymentAddr).toBe('');
-      expect(result.assetAmount).toBe('50');
+      expect(result.payment_request).toBe('');
+      expect(result.r_hash).toBe('');
+      expect(result.add_index).toBe('0');
+      expect(result.payment_addr).toBe('');
+      expect(result.asset_amount).toBe('50');
     });
 
     it('throws GraphQLError when the service call fails', async () => {
       service.addAssetInvoice.mockRejectedValue(new Error('rpc failed'));
       await expect(
-        resolver.addTapAssetInvoice(userId, {
-          assetAmount: '100',
-          assetId: 'asset1',
+        resolver.add_asset_invoice(userId, {
+          asset_amount: '100',
+          asset_id: 'asset1',
         })
       ).rejects.toThrow(GraphQLError);
     });
 
-    it('passes optional peerPubkey, memo, and expiry', async () => {
+    it('passes optional peer_pubkey, memo, and expiry', async () => {
       service.addAssetInvoice.mockResolvedValue({
         invoiceResult: {
           paymentRequest: 'lntap1...',
@@ -513,10 +583,10 @@ describe('TapdResolver', () => {
         acceptedBuyQuote: { assetSpec: {}, assetMaxAmount: '100' },
       });
 
-      await resolver.addTapAssetInvoice(userId, {
-        assetAmount: '100',
-        assetId: 'asset1',
-        peerPubkey: 'peer1',
+      await resolver.add_asset_invoice(userId, {
+        asset_amount: '100',
+        asset_id: 'asset1',
+        peer_pubkey: 'peer1',
         memo: 'test memo',
         expiry: 3600,
       });
@@ -533,70 +603,70 @@ describe('TapdResolver', () => {
     });
   });
 
-  describe('fundTapAssetChannel', () => {
-    it('throws when both assetId and groupKey are provided', async () => {
+  describe('fund_asset_channel', () => {
+    it('throws when both asset_id and group_key are provided', async () => {
       await expect(
-        resolver.fundTapAssetChannel(userId, {
-          peerPubkey: 'pubkey',
-          assetAmount: '100',
-          groupKey: 'group1',
-          assetId: 'asset1',
+        resolver.fund_asset_channel(userId, {
+          peer_pubkey: 'pubkey',
+          asset_amount: '100',
+          group_key: 'group1',
+          asset_id: 'asset1',
         })
       ).rejects.toThrow(GraphQLError);
     });
 
-    it('throws when neither assetId nor groupKey is provided', async () => {
+    it('throws when neither asset_id nor group_key is provided', async () => {
       await expect(
-        resolver.fundTapAssetChannel(userId, {
-          peerPubkey: 'pubkey',
-          assetAmount: '100',
+        resolver.fund_asset_channel(userId, {
+          peer_pubkey: 'pubkey',
+          asset_amount: '100',
         })
       ).rejects.toThrow(GraphQLError);
     });
 
-    it('throws when assetAmount is not a valid number', async () => {
+    it('throws when asset_amount is not a valid number', async () => {
       await expect(
-        resolver.fundTapAssetChannel(userId, {
-          peerPubkey: 'pubkey',
-          assetAmount: 'abc',
-          groupKey: 'group1',
+        resolver.fund_asset_channel(userId, {
+          peer_pubkey: 'pubkey',
+          asset_amount: 'abc',
+          group_key: 'group1',
         })
-      ).rejects.toThrow('assetAmount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive number');
     });
 
-    it('funds a channel with groupKey', async () => {
+    it('funds a channel with group_key', async () => {
       service.fundAssetChannel.mockResolvedValue({
         txid: 'txid123',
         outputIndex: 0,
       });
 
-      const result = await resolver.fundTapAssetChannel(userId, {
-        peerPubkey: 'pubkey',
-        assetAmount: '100',
-        groupKey: 'group1',
+      const result = await resolver.fund_asset_channel(userId, {
+        peer_pubkey: 'pubkey',
+        asset_amount: '100',
+        group_key: 'group1',
       });
 
-      expect(result).toEqual({ txid: 'txid123', outputIndex: 0 });
+      expect(result).toEqual({ txid: 'txid123', output_index: 0 });
     });
   });
 
-  describe('mintTapAsset', () => {
+  describe('mint_asset', () => {
     const baseInput = {
       name: 'TestCoin',
       amount: '1000',
-      assetType: TapAssetType.NORMAL,
+      asset_type: TapAssetType.NORMAL,
       grouped: true,
       precision: 0,
     };
 
-    it('returns batchKey as hex', async () => {
+    it('returns batch_key as hex', async () => {
       service.mintAsset.mockResolvedValue({
         pendingBatch: { batchKey: Buffer.from('aabb', 'hex') },
       });
 
-      const result = await resolver.mintTapAsset(userId, baseInput);
+      const result = await resolver.mint_asset(userId, baseInput);
 
-      expect(result.batchKey).toBe('aabb');
+      expect(result.batch_key).toBe('aabb');
     });
 
     it('forwards precision as decimalDisplay to the service', async () => {
@@ -604,7 +674,7 @@ describe('TapdResolver', () => {
         pendingBatch: { batchKey: Buffer.from('aabb', 'hex') },
       });
 
-      await resolver.mintTapAsset(userId, { ...baseInput, precision: 2 });
+      await resolver.mint_asset(userId, { ...baseInput, precision: 2 });
 
       expect(service.mintAsset).toHaveBeenCalledWith(
         expect.objectContaining({ decimalDisplay: 2 })
@@ -613,78 +683,55 @@ describe('TapdResolver', () => {
 
     it('rejects precision above 18', async () => {
       await expect(
-        resolver.mintTapAsset(userId, { ...baseInput, precision: 19 })
+        resolver.mint_asset(userId, { ...baseInput, precision: 19 })
       ).rejects.toThrow(GraphQLError);
       expect(service.mintAsset).not.toHaveBeenCalled();
     });
 
     it('rejects negative precision', async () => {
       await expect(
-        resolver.mintTapAsset(userId, { ...baseInput, precision: -1 })
+        resolver.mint_asset(userId, { ...baseInput, precision: -1 })
       ).rejects.toThrow(GraphQLError);
       expect(service.mintAsset).not.toHaveBeenCalled();
     });
   });
 
-  describe('finalizeTapBatch', () => {
-    it('returns batchKey as hex', async () => {
+  describe('finalize_batch', () => {
+    it('returns batch_key as hex', async () => {
       service.finalizeBatch.mockResolvedValue({
         batch: { batchKey: Buffer.from('ccdd', 'hex') },
       });
 
-      const result = await resolver.finalizeTapBatch(userId);
-      expect(result.batchKey).toBe('ccdd');
+      const result = await resolver.finalize_batch(userId);
+      expect(result.batch_key).toBe('ccdd');
     });
   });
 
-  describe('cancelTapBatch', () => {
+  describe('cancel_batch', () => {
     it('returns true on success', async () => {
       service.cancelBatch.mockResolvedValue({});
-      const result = await resolver.cancelTapBatch(userId);
+      const result = await resolver.cancel_batch(userId);
       expect(result).toBe(true);
     });
   });
 
-  describe('sendTapAsset', () => {
+  describe('send_asset', () => {
     it('returns true on success', async () => {
       service.sendAsset.mockResolvedValue({});
-      const result = await resolver.sendTapAsset(userId, ['tap1...']);
+      const result = await resolver.send_asset(userId, ['tap1...']);
       expect(result).toBe(true);
     });
   });
 
-  describe('burnTapAsset', () => {
+  describe('burn_asset', () => {
     it('returns true on success', async () => {
       service.burnAsset.mockResolvedValue({});
-      const result = await resolver.burnTapAsset(userId, 'assetId', '10');
+      const result = await resolver.burn_asset(userId, 'assetId', '10');
       expect(result).toBe(true);
     });
   });
 
-  describe('getTapUniverseAssets', () => {
-    it('uses BigInt for totalSupply to avoid precision loss', async () => {
-      const assetId =
-        'abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1';
-      service.universeAssetRoots.mockResolvedValue({
-        universeRoots: {
-          [assetId]: {
-            id: { proofType: 'PROOF_TYPE_ISSUANCE' },
-            assetName: 'BigAsset',
-            amountsByAssetId: {
-              id1: '9007199254740993',
-            },
-          },
-        },
-      });
-      service.listAssets.mockResolvedValue({ assets: [] });
-
-      const result = await resolver.getTapUniverseAssets(userId);
-
-      expect(result.assets[0].totalSupply).toBe('9007199254740993');
-    });
-  });
-
-  describe('syncTapUniverse', () => {
+  describe('sync_universe', () => {
     it('returns synced universe identifiers', async () => {
       service.syncUniverse.mockResolvedValue({
         syncedUniverses: [
@@ -696,8 +743,8 @@ describe('TapdResolver', () => {
         ],
       });
 
-      const result = await resolver.syncTapUniverse(userId, 'host:10029');
-      expect(result.syncedUniverses).toEqual(['aabb']);
+      const result = await resolver.sync_universe(userId, 'host:10029');
+      expect(result.synced_universes).toEqual(['aabb']);
     });
 
     it('falls back to unknown when assetId is missing', async () => {
@@ -705,60 +752,8 @@ describe('TapdResolver', () => {
         syncedUniverses: [{ newAssetRoot: null }],
       });
 
-      const result = await resolver.syncTapUniverse(userId, 'host:10029');
-      expect(result.syncedUniverses).toEqual(['unknown']);
+      const result = await resolver.sync_universe(userId, 'host:10029');
+      expect(result.synced_universes).toEqual(['unknown']);
     });
-  });
-
-  describe('getTapFederationServers', () => {
-    it('includes node address from account', async () => {
-      service.getAccount.mockReturnValue({ socket: 'host:10029' });
-      service.listFederationServers.mockResolvedValue({
-        servers: [{ host: 'server1', id: 1 }],
-      });
-
-      const result = await resolver.getTapFederationServers(userId);
-
-      expect(result.nodeAddress).toBe('host:10029');
-      expect(result.servers).toHaveLength(1);
-    });
-  });
-});
-
-describe('TapAssetGenesisResolver', () => {
-  const genesisResolver = new TapAssetGenesisResolver();
-
-  it('converts metaHash buffer to hex', () => {
-    const genesis = { metaHash: Buffer.from('ab', 'hex') } as never;
-    expect(genesisResolver.metaHash(genesis)).toBe('ab');
-  });
-
-  it('converts assetId buffer to hex', () => {
-    const genesis = { assetId: Buffer.from('cd', 'hex') } as never;
-    expect(genesisResolver.assetId(genesis)).toBe('cd');
-  });
-
-  it('maps assetType string to enum', () => {
-    const genesis = { assetType: 'COLLECTIBLE' } as never;
-    expect(genesisResolver.assetType(genesis)).toBe(TapAssetType.COLLECTIBLE);
-  });
-
-  it('defaults unknown assetType to NORMAL', () => {
-    const genesis = { assetType: 'UNKNOWN' } as never;
-    expect(genesisResolver.assetType(genesis)).toBe(TapAssetType.NORMAL);
-  });
-});
-
-describe('TapAssetResolver', () => {
-  const assetResolver = new TapAssetResolver();
-
-  it('converts amount to string', () => {
-    const asset = { amount: '1000' } as never;
-    expect(assetResolver.amount(asset)).toBe('1000');
-  });
-
-  it('converts scriptKey buffer to hex', () => {
-    const asset = { scriptKey: Buffer.from('ef', 'hex') } as never;
-    expect(assetResolver.scriptKey(asset)).toBe('ef');
   });
 });

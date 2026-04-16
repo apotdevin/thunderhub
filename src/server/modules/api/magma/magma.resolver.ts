@@ -30,6 +30,7 @@ import {
   MagmaQueries,
   MagmaOrderQueries,
   MagmaMutations,
+  RailsQueries,
 } from './magma.types';
 import {
   getOffersQuery,
@@ -90,139 +91,10 @@ export class MagmaResolver {
     private tapdNodeService: TapdNodeService,
     private nodeService: NodeService,
     private fetchService: FetchService,
-    private tapFederationService: TapFederationService,
     private ambossTokenService: AmbossTokenService,
     private ambossService: AmbossService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
-
-  // ── Trading Offers ──
-
-  @Query(() => TapTradeOfferList)
-  async getTapOffers(
-    @CurrentUser() user: UserId,
-    @Args('input') input: GetTapOffersInput
-  ) {
-    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      public: {
-        offers: {
-          list: TradeApiOffer[];
-          total_count: number;
-        };
-      };
-    }>(tradeUrl, getOffersQuery, {
-      input: {
-        asset_id: input.ambossAssetId,
-        transaction_type: input.transactionType,
-        ...(input.sortBy ? { sort_by: input.sortBy } : {}),
-        ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
-        ...(input.minAmount ? { min_amount: input.minAmount } : {}),
-        ...(input.limit || input.offset
-          ? {
-              page: {
-                limit: input.limit || 20,
-                offset: input.offset || 0,
-              },
-            }
-          : {}),
-      },
-    });
-
-    if (error || !data?.public?.offers) {
-      if (error) {
-        this.logger.error('Error fetching trade offers', { error });
-      } else {
-        this.logger.warn(
-          'Trade API returned unexpected data shape for offers',
-          { data }
-        );
-      }
-      return { list: [], totalCount: 0 };
-    }
-
-    const offers = data.public.offers;
-
-    return {
-      list: offers.list.map(o => ({
-        id: o.id,
-        magmaOfferId: o.magma_offer_id,
-        node: {
-          alias: o.node?.alias,
-          pubkey: o.node?.pubkey,
-          sockets: o.node?.sockets || [],
-        },
-        rate: {
-          displayAmount: o.rate?.display_amount,
-          fullAmount: o.rate?.full_amount,
-        },
-        available: {
-          displayAmount: o.available?.display_amount,
-          fullAmount: o.available?.full_amount,
-        },
-      })),
-      totalCount: offers.total_count,
-    };
-  }
-
-  @Query(() => TapSupportedAssetList)
-  async getTapSupportedAssets(@CurrentUser() user: UserId) {
-    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      public: {
-        assets: {
-          supported: {
-            list: TradeApiSupportedAsset[];
-            total_count: number;
-          };
-        };
-      };
-    }>(tradeUrl, getSupportedAssetsQuery);
-
-    if (error || !data?.public?.assets?.supported) {
-      if (error) {
-        this.logger.error('Error fetching supported assets', { error });
-      } else {
-        this.logger.warn(
-          'Trade API returned unexpected data shape for supported assets',
-          { data }
-        );
-      }
-      return { list: [], totalCount: 0 };
-    }
-
-    const assets = data.public.assets.supported;
-
-    const universeHosts = [
-      ...new Set(
-        assets.list
-          .map(a => a.taproot_asset_details?.universe)
-          .filter((h): h is string => !!h)
-      ),
-    ];
-
-    if (universeHosts.length) {
-      this.tapFederationService
-        .syncForAccount(user.id, universeHosts)
-        .catch(() => {});
-    }
-
-    return {
-      list: assets.list.map(a => ({
-        id: a.id,
-        symbol: a.symbol || '',
-        description: a.description,
-        precision: a.precision ?? 0,
-        assetId: a.taproot_asset_details?.asset_id,
-        groupKey: a.taproot_asset_details?.group_key,
-        universeHost: a.taproot_asset_details?.universe,
-        prices: a.prices ?? null,
-      })),
-      totalCount: assets.total_count,
-    };
-  }
 
   // ── Trade Partner Setup ──
 
@@ -535,9 +407,161 @@ export class MagmaQueryRoot {
 
 @Resolver(() => MagmaQueries)
 export class MagmaQueriesResolver {
+  constructor(
+    private fetchService: FetchService,
+    private ambossService: AmbossService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
+
   @ResolveField(() => MagmaOrderQueries)
   orders(): MagmaOrderQueries {
     return {} as any;
+  }
+
+  @ResolveField(() => TapTradeOfferList)
+  async get_tap_offers(
+    @CurrentUser() user: UserId,
+    @Args('input') input: GetTapOffersInput
+  ) {
+    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      public: {
+        offers: {
+          list: TradeApiOffer[];
+          total_count: number;
+        };
+      };
+    }>(tradeUrl, getOffersQuery, {
+      input: {
+        asset_id: input.ambossAssetId,
+        transaction_type: input.transactionType,
+        ...(input.sortBy ? { sort_by: input.sortBy } : {}),
+        ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
+        ...(input.minAmount ? { min_amount: input.minAmount } : {}),
+        ...(input.limit || input.offset
+          ? {
+              page: {
+                limit: input.limit || 20,
+                offset: input.offset || 0,
+              },
+            }
+          : {}),
+      },
+    });
+
+    if (error || !data?.public?.offers) {
+      if (error) {
+        this.logger.error('Error fetching trade offers', { error });
+      } else {
+        this.logger.warn(
+          'Trade API returned unexpected data shape for offers',
+          { data }
+        );
+      }
+      return { list: [], totalCount: 0 };
+    }
+
+    const offers = data.public.offers;
+
+    return {
+      list: offers.list.map(o => ({
+        id: o.id,
+        magmaOfferId: o.magma_offer_id,
+        node: {
+          alias: o.node?.alias,
+          pubkey: o.node?.pubkey,
+          sockets: o.node?.sockets || [],
+        },
+        rate: {
+          displayAmount: o.rate?.display_amount,
+          fullAmount: o.rate?.full_amount,
+        },
+        available: {
+          displayAmount: o.available?.display_amount,
+          fullAmount: o.available?.full_amount,
+        },
+      })),
+      totalCount: offers.total_count,
+    };
+  }
+}
+
+// ── Rails (RailsX Trade) Query Namespace ──
+
+@Resolver()
+export class RailsQueryRoot {
+  @Query(() => RailsQueries)
+  rails(): RailsQueries {
+    return {} as any;
+  }
+}
+
+@Resolver(() => RailsQueries)
+export class RailsQueriesResolver {
+  constructor(
+    private fetchService: FetchService,
+    private tapFederationService: TapFederationService,
+    private ambossService: AmbossService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
+  ) {}
+
+  @ResolveField(() => TapSupportedAssetList)
+  async get_tap_supported_assets(@CurrentUser() user: UserId) {
+    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      public: {
+        assets: {
+          supported: {
+            list: TradeApiSupportedAsset[];
+            total_count: number;
+          };
+        };
+      };
+    }>(tradeUrl, getSupportedAssetsQuery);
+
+    if (error || !data?.public?.assets?.supported) {
+      if (error) {
+        this.logger.error('Error fetching supported assets', { error });
+      } else {
+        this.logger.warn(
+          'Trade API returned unexpected data shape for supported assets',
+          { data }
+        );
+      }
+      return { list: [], totalCount: 0 };
+    }
+
+    const assets = data.public.assets.supported;
+
+    const universeHosts = [
+      ...new Set(
+        assets.list
+          .map(a => a.taproot_asset_details?.universe)
+          .filter((h): h is string => !!h)
+      ),
+    ];
+
+    if (universeHosts.length) {
+      this.tapFederationService
+        .syncForAccount(user.id, universeHosts)
+        .catch(() => {});
+    }
+
+    return {
+      list: assets.list.map(a => ({
+        id: a.id,
+        symbol: a.symbol || '',
+        description: a.description,
+        precision: a.precision ?? 0,
+        assetId: a.taproot_asset_details?.asset_id,
+        groupKey: a.taproot_asset_details?.group_key,
+        universeHost: a.taproot_asset_details?.universe,
+        prices: a.prices ?? null,
+      })),
+      totalCount: assets.total_count,
+    };
   }
 }
 

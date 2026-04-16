@@ -9,18 +9,23 @@ export type FundTapAssetChannelMutationVariables = Types.Exact<{
 
 export type FundTapAssetChannelMutation = {
   __typename?: 'Mutation';
-  fundTapAssetChannel: {
-    __typename?: 'TapFundChannelResponse';
-    txid: string;
-    outputIndex: number;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsMutations';
+    fund_asset_channel: {
+      __typename?: 'TapFundChannelResponse';
+      txid: string;
+      output_index: number;
+    };
   };
 };
 
 export const FundTapAssetChannelDocument = gql`
   mutation FundTapAssetChannel($input: TapFundChannelInput!) {
-    fundTapAssetChannel(input: $input) {
-      txid
-      outputIndex
+    taproot_assets {
+      fund_asset_channel(input: $input) {
+        txid
+        output_index
+      }
     }
   }
 `;

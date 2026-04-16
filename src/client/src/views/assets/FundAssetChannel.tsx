@@ -16,13 +16,15 @@ export const FundAssetChannel: FC = () => {
   const [pushSat, setPushSat] = useState('');
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: TapBalanceGroupBy.GroupKey },
+    variables: { group_by: TapBalanceGroupBy.GroupKey },
   });
 
-  const knownGroups = (balancesData?.getTapBalances?.balances || [])
-    .filter(b => b.groupKey && b.balance && Number(b.balance) > 0)
+  const knownGroups = (
+    balancesData?.taproot_assets?.get_balances?.balances || []
+  )
+    .filter(b => b.group_key && b.balance && Number(b.balance) > 0)
     .map(b => ({
-      groupKey: b.groupKey!,
+      groupKey: b.group_key!,
       name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
     }));
@@ -34,7 +36,7 @@ export const FundAssetChannel: FC = () => {
   const [fundChannel, { loading }] = useFundTapAssetChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
-      const txid = data.fundTapAssetChannel?.txid;
+      const txid = data.taproot_assets?.fund_asset_channel?.txid;
       toast.success(`Asset channel funded! TX: ${txid?.slice(0, 16)}...`);
       setPeerPubkey('');
       setAssetAmount('');
@@ -52,11 +54,11 @@ export const FundAssetChannel: FC = () => {
     fundChannel({
       variables: {
         input: {
-          peerPubkey,
-          assetAmount,
-          groupKey: selectedGroup,
-          feeRateSatPerVbyte: feeRate ? parseInt(feeRate, 10) : undefined,
-          pushSat: pushSat ? parseInt(pushSat, 10) : undefined,
+          peer_pubkey: peerPubkey,
+          asset_amount: assetAmount,
+          group_key: selectedGroup,
+          fee_rate_sat_per_vbyte: feeRate ? parseInt(feeRate, 10) : undefined,
+          push_sat: pushSat ? parseInt(pushSat, 10) : undefined,
         },
       },
     });

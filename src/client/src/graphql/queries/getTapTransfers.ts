@@ -2,23 +2,25 @@ import { gql } from '@apollo/client';
 
 export const GET_TAP_TRANSFERS = gql`
   query GetTapTransfers {
-    getTapTransfers {
-      transfers {
-        anchorTxHash
-        anchorTxHeightHint
-        anchorTxChainFees
-        transferTimestamp
-        label
-        inputs {
-          anchorPoint
-          assetId
-          amount
-        }
-        outputs {
-          assetId
-          amount
-          scriptKeyIsLocal
-          outputType
+    taproot_assets {
+      get_transfers {
+        transfers {
+          anchor_tx_hash
+          anchor_tx_height_hint
+          anchor_tx_chain_fees
+          transfer_timestamp
+          label
+          inputs {
+            anchor_point
+            asset_id
+            amount
+          }
+          outputs {
+            asset_id
+            amount
+            script_key_is_local
+            output_type
+          }
         }
       }
     }

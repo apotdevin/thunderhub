@@ -9,35 +9,40 @@ export type GetTapSupportedAssetsQueryVariables = Types.Exact<{
 
 export type GetTapSupportedAssetsQuery = {
   __typename?: 'Query';
-  getTapSupportedAssets: {
-    __typename?: 'TapSupportedAssetList';
-    list: Array<{
-      __typename?: 'TapSupportedAsset';
-      id: string;
-      symbol: string;
-      description?: string | null;
-      precision: number;
-      assetId?: string | null;
-      groupKey?: string | null;
-      universeHost?: string | null;
-      prices?: { __typename?: 'TapAssetPrice'; usd?: number | null } | null;
-    }>;
+  rails: {
+    __typename?: 'RailsQueries';
+    get_tap_supported_assets: {
+      __typename?: 'TapSupportedAssetList';
+      list: Array<{
+        __typename?: 'TapSupportedAsset';
+        id: string;
+        symbol: string;
+        description?: string | null;
+        precision: number;
+        assetId?: string | null;
+        groupKey?: string | null;
+        universeHost?: string | null;
+        prices?: { __typename?: 'TapAssetPrice'; usd?: number | null } | null;
+      }>;
+    };
   };
 };
 
 export const GetTapSupportedAssetsDocument = gql`
   query GetTapSupportedAssets {
-    getTapSupportedAssets {
-      list {
-        id
-        symbol
-        description
-        precision
-        assetId
-        groupKey
-        universeHost
-        prices {
-          usd
+    rails {
+      get_tap_supported_assets {
+        list {
+          id
+          symbol
+          description
+          precision
+          assetId
+          groupKey
+          universeHost
+          prices {
+            usd
+          }
         }
       }
     }

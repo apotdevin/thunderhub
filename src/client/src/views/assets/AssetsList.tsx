@@ -53,7 +53,7 @@ export const AssetsList: FC = () => {
 
   const { data: balancesData, loading: balancesLoading } =
     useGetTapBalancesQuery({
-      variables: { groupBy },
+      variables: { group_by: groupBy },
       onError: error => toast.error(getErrorContent(error)),
     });
 
@@ -61,7 +61,8 @@ export const AssetsList: FC = () => {
 
   const priceMap = new Map<string, { usd: number; precision: number }>();
   const supportedKeys = new Set<string>();
-  for (const asset of supportedData?.getTapSupportedAssets?.list || []) {
+  for (const asset of supportedData?.rails?.get_tap_supported_assets?.list ||
+    []) {
     const price = asset.prices?.usd;
     if (price != null) {
       const entry = { usd: price, precision: asset.precision };
@@ -89,8 +90,8 @@ export const AssetsList: FC = () => {
     );
   }
 
-  const assets = assetsData?.getTapAssets?.assets || [];
-  const balances = balancesData?.getTapBalances?.balances || [];
+  const assets = assetsData?.taproot_assets?.get_assets?.assets || [];
+  const balances = balancesData?.taproot_assets?.get_balances?.balances || [];
 
   if (assets.length === 0 && balances.length === 0) {
     return (
@@ -124,14 +125,14 @@ export const AssetsList: FC = () => {
         {balances.map((entry, i) => {
           const keyValue =
             groupBy === TapBalanceGroupBy.GroupKey
-              ? entry.groupKey || entry.assetId
-              : entry.assetId;
+              ? entry.group_key || entry.asset_id
+              : entry.asset_id;
           const keyLabel =
             groupBy === TapBalanceGroupBy.GroupKey ? 'Group key' : 'Asset ID';
 
           const priceEntry =
-            priceMap.get(entry.groupKey || '') ||
-            priceMap.get(entry.assetId || '');
+            priceMap.get(entry.group_key || '') ||
+            priceMap.get(entry.asset_id || '');
           const usdValue =
             priceEntry && entry.balance
               ? (Number(entry.balance) / 10 ** priceEntry.precision) *
@@ -139,8 +140,8 @@ export const AssetsList: FC = () => {
               : null;
 
           const isAmbossListed =
-            supportedKeys.has(entry.assetId || '') ||
-            supportedKeys.has(entry.groupKey || '');
+            supportedKeys.has(entry.asset_id || '') ||
+            supportedKeys.has(entry.group_key || '');
 
           return (
             <Card key={`${keyValue}-${i}`}>
@@ -163,7 +164,7 @@ export const AssetsList: FC = () => {
                       <CopyableKey label={keyLabel} value={keyValue} />
                     )}
                     {groupBy === TapBalanceGroupBy.GroupKey &&
-                      entry.groupKey && (
+                      entry.group_key && (
                         <span className="text-[10px] text-muted-foreground/60">
                           Group
                         </span>

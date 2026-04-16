@@ -141,26 +141,6 @@ export class CancelMagmaOrderResult {
   success: boolean;
 }
 
-// ─── Namespace types ─────────────────────────────────────────────
-
-@ObjectType()
-export class MagmaOrderQueries {
-  @Field(() => MagmaPendingOrders, { nullable: true })
-  find_many?: MagmaPendingOrders;
-}
-
-@ObjectType()
-export class MagmaQueries {
-  @Field(() => MagmaOrderQueries)
-  orders: MagmaOrderQueries;
-}
-
-@ObjectType()
-export class MagmaMutations {
-  @Field(() => CancelMagmaOrderResult)
-  cancel_order: CancelMagmaOrderResult;
-}
-
 // ─── Enums ──────────────────────────────────────────────────────
 
 export enum TapTransactionType {
@@ -401,3 +381,32 @@ export type SetupTradePartnerAuto = {
   payMagma: void;
   outboundChannel: { txid: string; outputIndex: number } | undefined;
 };
+
+// ─── Namespace types ─────────────────────────────────────────────
+
+@ObjectType()
+export class MagmaOrderQueries {
+  @Field(() => MagmaPendingOrders, { nullable: true })
+  find_many?: MagmaPendingOrders;
+}
+
+@ObjectType()
+export class MagmaQueries {
+  @Field(() => MagmaOrderQueries)
+  orders: MagmaOrderQueries;
+
+  @Field(() => TapTradeOfferList)
+  get_tap_offers: TapTradeOfferList;
+}
+
+@ObjectType()
+export class MagmaMutations {
+  @Field(() => CancelMagmaOrderResult)
+  cancel_order: CancelMagmaOrderResult;
+}
+
+@ObjectType()
+export class RailsQueries {
+  @Field(() => TapSupportedAssetList)
+  get_tap_supported_assets: TapSupportedAssetList;
+}

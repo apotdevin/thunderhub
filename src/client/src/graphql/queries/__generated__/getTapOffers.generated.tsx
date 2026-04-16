@@ -9,54 +9,59 @@ export type GetTapOffersQueryVariables = Types.Exact<{
 
 export type GetTapOffersQuery = {
   __typename?: 'Query';
-  getTapOffers: {
-    __typename?: 'TapTradeOfferList';
-    totalCount: number;
-    list: Array<{
-      __typename?: 'TapTradeOffer';
-      id: string;
-      magmaOfferId: string;
-      node: {
-        __typename?: 'TapTradeOfferNode';
-        alias?: string | null;
-        pubkey?: string | null;
-        sockets: Array<string>;
-      };
-      rate: {
-        __typename?: 'TapTradeOfferAmount';
-        displayAmount: string;
-        fullAmount: string;
-      };
-      available: {
-        __typename?: 'TapTradeOfferAmount';
-        displayAmount: string;
-        fullAmount: string;
-      };
-    }>;
+  magma: {
+    __typename?: 'MagmaQueries';
+    get_tap_offers: {
+      __typename?: 'TapTradeOfferList';
+      totalCount: number;
+      list: Array<{
+        __typename?: 'TapTradeOffer';
+        id: string;
+        magmaOfferId: string;
+        node: {
+          __typename?: 'TapTradeOfferNode';
+          alias?: string | null;
+          pubkey?: string | null;
+          sockets: Array<string>;
+        };
+        rate: {
+          __typename?: 'TapTradeOfferAmount';
+          displayAmount: string;
+          fullAmount: string;
+        };
+        available: {
+          __typename?: 'TapTradeOfferAmount';
+          displayAmount: string;
+          fullAmount: string;
+        };
+      }>;
+    };
   };
 };
 
 export const GetTapOffersDocument = gql`
   query GetTapOffers($input: GetTapOffersInput!) {
-    getTapOffers(input: $input) {
-      list {
-        id
-        magmaOfferId
-        node {
-          alias
-          pubkey
-          sockets
+    magma {
+      get_tap_offers(input: $input) {
+        list {
+          id
+          magmaOfferId
+          node {
+            alias
+            pubkey
+            sockets
+          }
+          rate {
+            displayAmount
+            fullAmount
+          }
+          available {
+            displayAmount
+            fullAmount
+          }
         }
-        rate {
-          displayAmount
-          fullAmount
-        }
-        available {
-          displayAmount
-          fullAmount
-        }
+        totalCount
       }
-      totalCount
     }
   }
 `;

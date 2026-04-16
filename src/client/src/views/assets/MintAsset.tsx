@@ -19,20 +19,22 @@ export const MintAsset: FC = () => {
   const [batchKey, setBatchKey] = useState<string | null>(null);
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: TapBalanceGroupBy.GroupKey },
+    variables: { group_by: TapBalanceGroupBy.GroupKey },
   });
 
-  const existingGroups = (balancesData?.getTapBalances?.balances || [])
-    .filter(b => b.groupKey)
+  const existingGroups = (
+    balancesData?.taproot_assets?.get_balances?.balances || []
+  )
+    .filter(b => b.group_key)
     .map(b => ({
-      key: b.groupKey!,
+      key: b.group_key!,
       name: b.names?.[0] || 'Unknown',
     }));
 
   const [mintAsset, { loading: minting }] = useMintTapAssetMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
-      const key = data.mintTapAsset?.batchKey;
+      const key = data.taproot_assets?.mint_asset?.batch_key;
       if (key) {
         setBatchKey(key);
         toast.success('Asset added to batch');
@@ -73,9 +75,9 @@ export const MintAsset: FC = () => {
         input: {
           name,
           amount,
-          assetType,
+          asset_type: assetType,
           grouped,
-          groupKey: groupKey || null,
+          group_key: groupKey || null,
           precision: parsedPrecision,
         },
       },

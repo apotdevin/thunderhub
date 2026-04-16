@@ -629,7 +629,12 @@ export type MagmaPendingOrders = {
 
 export type MagmaQueries = {
   __typename?: 'MagmaQueries';
+  get_tap_offers: TapTradeOfferList;
   orders: MagmaOrderQueries;
+};
+
+export type MagmaQueriesGet_Tap_OffersArgs = {
+  input: GetTapOffersInput;
 };
 
 export type MessageType = {
@@ -640,11 +645,7 @@ export type MessageType = {
 export type Mutation = {
   __typename?: 'Mutation';
   addPeer: Scalars['Boolean']['output'];
-  addTapAssetInvoice: TapAssetInvoiceResponse;
-  addTapFederationServer: Scalars['Boolean']['output'];
   bakeSuperMacaroon: SuperMacaroon;
-  burnTapAsset: Scalars['Boolean']['output'];
-  cancelTapBatch: Scalars['Boolean']['output'];
   claimBoltzTransaction: Scalars['String']['output'];
   closeChannel: OpenOrCloseChannel;
   createAddress: Scalars['String']['output'];
@@ -653,8 +654,6 @@ export type Mutation = {
   createMacaroon: CreateMacaroon;
   executeTrade: ExecuteTradeResult;
   fetchLnUrl: LnUrlRequest;
-  finalizeTapBatch: TapFinalizeBatchResponse;
-  fundTapAssetChannel: TapFundChannelResponse;
   keysend: PayInvoice;
   lnUrlAuth: AuthResponse;
   lnUrlChannel: Scalars['String']['output'];
@@ -663,20 +662,16 @@ export type Mutation = {
   loginAmboss: Scalars['Boolean']['output'];
   logout: Scalars['Boolean']['output'];
   magma: MagmaMutations;
-  mintTapAsset: TapMintResponse;
-  newTapAddress: TapAddress;
   openChannel: OpenOrCloseChannel;
   pay: Scalars['Boolean']['output'];
   public: PublicMutation;
   purchaseLiquidity: Scalars['Boolean']['output'];
   pushBackup: Scalars['Boolean']['output'];
   removePeer: Scalars['Boolean']['output'];
-  removeTapFederationServer: Scalars['Boolean']['output'];
   removeTwofaSecret: Scalars['Boolean']['output'];
-  sendTapAsset: Scalars['Boolean']['output'];
   sendToAddress: ChainAddressSend;
   setupTradePartner: SetupTradePartnerResult;
-  syncTapUniverse: TapSyncResult;
+  taproot_assets: TaprootAssetsMutations;
   team: TeamMutations;
   toggleConfig: Scalars['Boolean']['output'];
   updateFees: Scalars['Boolean']['output'];
@@ -691,21 +686,8 @@ export type MutationAddPeerArgs = {
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type MutationAddTapAssetInvoiceArgs = {
-  input: TapAssetInvoiceInput;
-};
-
-export type MutationAddTapFederationServerArgs = {
-  host: Scalars['String']['input'];
-};
-
 export type MutationBakeSuperMacaroonArgs = {
   input: BakeSuperMacaroonInput;
-};
-
-export type MutationBurnTapAssetArgs = {
-  amount: Scalars['String']['input'];
-  assetId: Scalars['String']['input'];
 };
 
 export type MutationClaimBoltzTransactionArgs = {
@@ -753,10 +735,6 @@ export type MutationFetchLnUrlArgs = {
   url: Scalars['String']['input'];
 };
 
-export type MutationFundTapAssetChannelArgs = {
-  input: TapFundChannelInput;
-};
-
 export type MutationKeysendArgs = {
   destination?: InputMaybe<Scalars['String']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
@@ -786,16 +764,6 @@ export type MutationLnUrlWithdrawArgs = {
   k1: Scalars['String']['input'];
 };
 
-export type MutationMintTapAssetArgs = {
-  input: TapMintAssetInput;
-};
-
-export type MutationNewTapAddressArgs = {
-  amt?: InputMaybe<Scalars['Int']['input']>;
-  assetId?: InputMaybe<Scalars['String']['input']>;
-  groupKey?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type MutationOpenChannelArgs = {
   input: OpenChannelParams;
 };
@@ -815,16 +783,8 @@ export type MutationRemovePeerArgs = {
   publicKey?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type MutationRemoveTapFederationServerArgs = {
-  host: Scalars['String']['input'];
-};
-
 export type MutationRemoveTwofaSecretArgs = {
   token: Scalars['String']['input'];
-};
-
-export type MutationSendTapAssetArgs = {
-  tapAddrs: Array<Scalars['String']['input']>;
 };
 
 export type MutationSendToAddressArgs = {
@@ -837,10 +797,6 @@ export type MutationSendToAddressArgs = {
 
 export type MutationSetupTradePartnerArgs = {
   input: SetupTradePartnerInput;
-};
-
-export type MutationSyncTapUniverseArgs = {
-  host: Scalars['String']['input'];
 };
 
 export type MutationToggleConfigArgs = {
@@ -1154,7 +1110,6 @@ export type PublicQueries = {
 
 export type Query = {
   __typename?: 'Query';
-  decodeTapAddress: TapAddress;
   getAccount: ServerAccount;
   getAmbossLoginToken: Scalars['String']['output'];
   getAmbossUser?: Maybe<AmbossUser>;
@@ -1185,16 +1140,6 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
-  getTapAssetChannelBalances: Array<TapAssetChannelBalance>;
-  getTapAssets: TapAssetList;
-  getTapBalances: TapBalances;
-  getTapFederationServers: TapFederationServerList;
-  getTapOffers: TapTradeOfferList;
-  getTapSupportedAssets: TapSupportedAssetList;
-  getTapTransfers: TapTransferList;
-  getTapUniverseAssets: TapUniverseAssetList;
-  getTapUniverseInfo: TapUniverseInfo;
-  getTapUniverseStats: TapUniverseStats;
   getTimeHealth: ChannelsTimeHealth;
   getTradeQuote: TradeQuoteResult;
   getTwofaSecret: TwofaResult;
@@ -1205,16 +1150,14 @@ export type Query = {
   magma: MagmaQueries;
   node: CurrentNode;
   public: PublicQueries;
+  rails: RailsQueries;
   recoverFunds: Scalars['Boolean']['output'];
   signMessage: Scalars['String']['output'];
+  taproot_assets: TaprootAssetsQueries;
   user: UserQueries;
   verifyBackup: Scalars['Boolean']['output'];
   verifyBackups: Scalars['Boolean']['output'];
   verifyMessage: Scalars['String']['output'];
-};
-
-export type QueryDecodeTapAddressArgs = {
-  addr: Scalars['String']['input'];
 };
 
 export type QueryGetAmbossLoginTokenArgs = {
@@ -1259,18 +1202,6 @@ export type QueryGetPaymentsArgs = {
   token?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type QueryGetTapAssetChannelBalancesArgs = {
-  peerPubkey?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type QueryGetTapBalancesArgs = {
-  groupBy?: InputMaybe<TapBalanceGroupBy>;
-};
-
-export type QueryGetTapOffersArgs = {
-  input: GetTapOffersInput;
-};
-
 export type QueryGetTradeQuoteArgs = {
   input: TradeQuoteInput;
 };
@@ -1294,6 +1225,11 @@ export type QueryVerifyBackupsArgs = {
 export type QueryVerifyMessageArgs = {
   message: Scalars['String']['input'];
   signature: Scalars['String']['input'];
+};
+
+export type RailsQueries = {
+  __typename?: 'RailsQueries';
+  get_tap_supported_assets: TapSupportedAssetList;
 };
 
 export type Route = {
@@ -1369,74 +1305,74 @@ export type SuperMacaroon = {
 export type TapAddress = {
   __typename?: 'TapAddress';
   amount: Scalars['String']['output'];
-  assetId: Scalars['String']['output'];
-  assetType: Scalars['String']['output'];
+  asset_id: Scalars['String']['output'];
+  asset_type: Scalars['String']['output'];
   encoded: Scalars['String']['output'];
-  groupKey?: Maybe<Scalars['String']['output']>;
-  internalKey: Scalars['String']['output'];
-  scriptKey: Scalars['String']['output'];
-  taprootOutputKey: Scalars['String']['output'];
+  group_key?: Maybe<Scalars['String']['output']>;
+  internal_key: Scalars['String']['output'];
+  script_key: Scalars['String']['output'];
+  taproot_output_key: Scalars['String']['output'];
 };
 
 export type TapAsset = {
   __typename?: 'TapAsset';
   amount: Scalars['String']['output'];
-  assetGenesis?: Maybe<TapAssetGenesis>;
-  isBurn: Scalars['Boolean']['output'];
-  isSpent: Scalars['Boolean']['output'];
-  lockTime: Scalars['Int']['output'];
-  relativeLockTime: Scalars['Int']['output'];
-  scriptKey: Scalars['String']['output'];
-  scriptVersion: Scalars['Int']['output'];
+  asset_genesis?: Maybe<TapAssetGenesis>;
+  is_burn: Scalars['Boolean']['output'];
+  is_spent: Scalars['Boolean']['output'];
+  lock_time: Scalars['Int']['output'];
+  relative_lock_time: Scalars['Int']['output'];
+  script_key: Scalars['String']['output'];
+  script_version: Scalars['Int']['output'];
 };
 
 export type TapAssetBalanceEntry = {
   __typename?: 'TapAssetBalanceEntry';
-  assetId?: Maybe<Scalars['String']['output']>;
+  asset_id?: Maybe<Scalars['String']['output']>;
   balance: Scalars['String']['output'];
-  groupKey?: Maybe<Scalars['String']['output']>;
+  group_key?: Maybe<Scalars['String']['output']>;
   names?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type TapAssetChannelBalance = {
   __typename?: 'TapAssetChannelBalance';
-  assetId: Scalars['String']['output'];
+  asset_id: Scalars['String']['output'];
   capacity: Scalars['String']['output'];
-  channelPoint: Scalars['String']['output'];
-  groupKey?: Maybe<Scalars['String']['output']>;
-  localBalance: Scalars['String']['output'];
-  partnerPublicKey: Scalars['String']['output'];
-  remoteBalance: Scalars['String']['output'];
+  channel_point: Scalars['String']['output'];
+  group_key?: Maybe<Scalars['String']['output']>;
+  local_balance: Scalars['String']['output'];
+  partner_public_key: Scalars['String']['output'];
+  remote_balance: Scalars['String']['output'];
 };
 
 export type TapAssetGenesis = {
   __typename?: 'TapAssetGenesis';
-  assetId: Scalars['String']['output'];
-  assetType: TapAssetType;
-  genesisPoint: Scalars['String']['output'];
-  metaHash: Scalars['String']['output'];
+  asset_id: Scalars['String']['output'];
+  asset_type: TapAssetType;
+  genesis_point: Scalars['String']['output'];
+  meta_hash: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  outputIndex: Scalars['Int']['output'];
+  output_index: Scalars['Int']['output'];
 };
 
 export type TapAssetInvoiceInput = {
-  assetAmount: Scalars['String']['input'];
-  assetId?: InputMaybe<Scalars['String']['input']>;
+  asset_amount: Scalars['String']['input'];
+  asset_id?: InputMaybe<Scalars['String']['input']>;
   expiry?: InputMaybe<Scalars['Int']['input']>;
-  groupKey?: InputMaybe<Scalars['String']['input']>;
+  group_key?: InputMaybe<Scalars['String']['input']>;
   memo?: InputMaybe<Scalars['String']['input']>;
-  peerPubkey?: InputMaybe<Scalars['String']['input']>;
+  peer_pubkey?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TapAssetInvoiceResponse = {
   __typename?: 'TapAssetInvoiceResponse';
-  addIndex: Scalars['String']['output'];
-  assetAmount: Scalars['String']['output'];
-  assetId?: Maybe<Scalars['String']['output']>;
-  groupKey?: Maybe<Scalars['String']['output']>;
-  paymentAddr: Scalars['String']['output'];
-  paymentRequest: Scalars['String']['output'];
-  rHash: Scalars['String']['output'];
+  add_index: Scalars['String']['output'];
+  asset_amount: Scalars['String']['output'];
+  asset_id?: Maybe<Scalars['String']['output']>;
+  group_key?: Maybe<Scalars['String']['output']>;
+  payment_addr: Scalars['String']['output'];
+  payment_request: Scalars['String']['output'];
+  r_hash: Scalars['String']['output'];
 };
 
 export type TapAssetList = {
@@ -1473,35 +1409,35 @@ export type TapFederationServer = {
 
 export type TapFederationServerList = {
   __typename?: 'TapFederationServerList';
-  nodeAddress?: Maybe<Scalars['String']['output']>;
+  node_address?: Maybe<Scalars['String']['output']>;
   servers: Array<TapFederationServer>;
 };
 
 export type TapFinalizeBatchResponse = {
   __typename?: 'TapFinalizeBatchResponse';
-  batchKey: Scalars['String']['output'];
+  batch_key: Scalars['String']['output'];
 };
 
 export type TapFundChannelInput = {
-  assetAmount: Scalars['String']['input'];
-  assetId?: InputMaybe<Scalars['String']['input']>;
-  feeRateSatPerVbyte?: InputMaybe<Scalars['Int']['input']>;
-  groupKey?: InputMaybe<Scalars['String']['input']>;
-  peerPubkey: Scalars['String']['input'];
-  pushSat?: InputMaybe<Scalars['Int']['input']>;
-  universeHost?: InputMaybe<Scalars['String']['input']>;
+  asset_amount: Scalars['String']['input'];
+  asset_id?: InputMaybe<Scalars['String']['input']>;
+  fee_rate_sat_per_vbyte?: InputMaybe<Scalars['Int']['input']>;
+  group_key?: InputMaybe<Scalars['String']['input']>;
+  peer_pubkey: Scalars['String']['input'];
+  push_sat?: InputMaybe<Scalars['Int']['input']>;
+  universe_host?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TapFundChannelResponse = {
   __typename?: 'TapFundChannelResponse';
-  outputIndex: Scalars['Int']['output'];
+  output_index: Scalars['Int']['output'];
   txid: Scalars['String']['output'];
 };
 
 export type TapMintAssetInput = {
   amount: Scalars['String']['input'];
-  assetType?: TapAssetType;
-  groupKey?: InputMaybe<Scalars['String']['input']>;
+  asset_type?: TapAssetType;
+  group_key?: InputMaybe<Scalars['String']['input']>;
   grouped?: Scalars['Boolean']['input'];
   name: Scalars['String']['input'];
   precision: Scalars['Int']['input'];
@@ -1509,7 +1445,7 @@ export type TapMintAssetInput = {
 
 export type TapMintResponse = {
   __typename?: 'TapMintResponse';
-  batchKey: Scalars['String']['output'];
+  batch_key: Scalars['String']['output'];
 };
 
 export enum TapOfferSortBy {
@@ -1542,7 +1478,7 @@ export type TapSupportedAssetList = {
 
 export type TapSyncResult = {
   __typename?: 'TapSyncResult';
-  syncedUniverses: Array<Scalars['String']['output']>;
+  synced_universes: Array<Scalars['String']['output']>;
 };
 
 export type TapTradeOffer = {
@@ -1580,20 +1516,20 @@ export enum TapTransactionType {
 
 export type TapTransfer = {
   __typename?: 'TapTransfer';
-  anchorTxChainFees: Scalars['String']['output'];
-  anchorTxHash: Scalars['String']['output'];
-  anchorTxHeightHint: Scalars['Int']['output'];
+  anchor_tx_chain_fees: Scalars['String']['output'];
+  anchor_tx_hash: Scalars['String']['output'];
+  anchor_tx_height_hint: Scalars['Int']['output'];
   inputs: Array<TapTransferInput>;
   label: Scalars['String']['output'];
   outputs: Array<TapTransferOutput>;
-  transferTimestamp: Scalars['String']['output'];
+  transfer_timestamp: Scalars['String']['output'];
 };
 
 export type TapTransferInput = {
   __typename?: 'TapTransferInput';
   amount: Scalars['String']['output'];
-  anchorPoint: Scalars['String']['output'];
-  assetId: Scalars['String']['output'];
+  anchor_point: Scalars['String']['output'];
+  asset_id: Scalars['String']['output'];
 };
 
 export type TapTransferList = {
@@ -1604,18 +1540,18 @@ export type TapTransferList = {
 export type TapTransferOutput = {
   __typename?: 'TapTransferOutput';
   amount: Scalars['String']['output'];
-  assetId: Scalars['String']['output'];
-  outputType: Scalars['String']['output'];
-  scriptKeyIsLocal: Scalars['Boolean']['output'];
+  asset_id: Scalars['String']['output'];
+  output_type: Scalars['String']['output'];
+  script_key_is_local: Scalars['Boolean']['output'];
 };
 
 export type TapUniverseAsset = {
   __typename?: 'TapUniverseAsset';
-  assetId?: Maybe<Scalars['String']['output']>;
-  groupKey?: Maybe<Scalars['String']['output']>;
+  asset_id?: Maybe<Scalars['String']['output']>;
+  group_key?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  proofType: Scalars['String']['output'];
-  totalSupply: Scalars['String']['output'];
+  proof_type: Scalars['String']['output'];
+  total_supply: Scalars['String']['output'];
 };
 
 export type TapUniverseAssetList = {
@@ -1625,15 +1561,94 @@ export type TapUniverseAssetList = {
 
 export type TapUniverseInfo = {
   __typename?: 'TapUniverseInfo';
-  runtimeId: Scalars['String']['output'];
+  runtime_id: Scalars['String']['output'];
 };
 
 export type TapUniverseStats = {
   __typename?: 'TapUniverseStats';
-  numTotalAssets: Scalars['Int']['output'];
-  numTotalGroups: Scalars['Int']['output'];
-  numTotalProofs: Scalars['Int']['output'];
-  numTotalSyncs: Scalars['Int']['output'];
+  num_total_assets: Scalars['Int']['output'];
+  num_total_groups: Scalars['Int']['output'];
+  num_total_proofs: Scalars['Int']['output'];
+  num_total_syncs: Scalars['Int']['output'];
+};
+
+export type TaprootAssetsMutations = {
+  __typename?: 'TaprootAssetsMutations';
+  add_asset_invoice: TapAssetInvoiceResponse;
+  add_federation_server: Scalars['Boolean']['output'];
+  burn_asset: Scalars['Boolean']['output'];
+  cancel_batch: Scalars['Boolean']['output'];
+  finalize_batch: TapFinalizeBatchResponse;
+  fund_asset_channel: TapFundChannelResponse;
+  mint_asset: TapMintResponse;
+  new_address: TapAddress;
+  remove_federation_server: Scalars['Boolean']['output'];
+  send_asset: Scalars['Boolean']['output'];
+  sync_universe: TapSyncResult;
+};
+
+export type TaprootAssetsMutationsAdd_Asset_InvoiceArgs = {
+  input: TapAssetInvoiceInput;
+};
+
+export type TaprootAssetsMutationsAdd_Federation_ServerArgs = {
+  host: Scalars['String']['input'];
+};
+
+export type TaprootAssetsMutationsBurn_AssetArgs = {
+  amount: Scalars['String']['input'];
+  asset_id: Scalars['String']['input'];
+};
+
+export type TaprootAssetsMutationsFund_Asset_ChannelArgs = {
+  input: TapFundChannelInput;
+};
+
+export type TaprootAssetsMutationsMint_AssetArgs = {
+  input: TapMintAssetInput;
+};
+
+export type TaprootAssetsMutationsNew_AddressArgs = {
+  amt?: InputMaybe<Scalars['Int']['input']>;
+  asset_id?: InputMaybe<Scalars['String']['input']>;
+  group_key?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TaprootAssetsMutationsRemove_Federation_ServerArgs = {
+  host: Scalars['String']['input'];
+};
+
+export type TaprootAssetsMutationsSend_AssetArgs = {
+  tap_addrs: Array<Scalars['String']['input']>;
+};
+
+export type TaprootAssetsMutationsSync_UniverseArgs = {
+  host: Scalars['String']['input'];
+};
+
+export type TaprootAssetsQueries = {
+  __typename?: 'TaprootAssetsQueries';
+  decode_address: TapAddress;
+  get_asset_channel_balances: Array<TapAssetChannelBalance>;
+  get_assets: TapAssetList;
+  get_balances: TapBalances;
+  get_federation_servers: TapFederationServerList;
+  get_transfers: TapTransferList;
+  get_universe_assets: TapUniverseAssetList;
+  get_universe_info: TapUniverseInfo;
+  get_universe_stats: TapUniverseStats;
+};
+
+export type TaprootAssetsQueriesDecode_AddressArgs = {
+  addr: Scalars['String']['input'];
+};
+
+export type TaprootAssetsQueriesGet_Asset_Channel_BalancesArgs = {
+  peer_pubkey?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TaprootAssetsQueriesGet_BalancesArgs = {
+  group_by?: InputMaybe<TapBalanceGroupBy>;
 };
 
 export type TeamMutations = {

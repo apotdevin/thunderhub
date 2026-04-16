@@ -27,7 +27,7 @@ export const AssetTransfers: FC = () => {
     );
   }
 
-  const transfers = data?.getTapTransfers?.transfers || [];
+  const transfers = data?.taproot_assets?.get_transfers?.transfers || [];
 
   if (transfers.length === 0) {
     return (
@@ -46,21 +46,21 @@ export const AssetTransfers: FC = () => {
           0
         );
         const totalOut = (transfer.outputs || [])
-          .filter(o => !o.scriptKeyIsLocal)
+          .filter(o => !o.script_key_is_local)
           .reduce((sum, out) => sum + Number(out.amount || 0), 0);
 
         return (
-          <Card key={`${transfer.anchorTxHash}-${i}`}>
+          <Card key={`${transfer.anchor_tx_hash}-${i}`}>
             <CardContent className="p-4">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono truncate max-w-[400px]">
-                    {transfer.anchorTxHash}
+                    {transfer.anchor_tx_hash}
                   </span>
                   <span className="text-xs text-muted-foreground shrink-0 ml-2">
-                    {transfer.transferTimestamp
+                    {transfer.transfer_timestamp
                       ? new Date(
-                          Number(transfer.transferTimestamp) * 1000
+                          Number(transfer.transfer_timestamp) * 1000
                         ).toLocaleString()
                       : 'Pending'}
                   </span>
@@ -74,7 +74,7 @@ export const AssetTransfers: FC = () => {
                         className="flex items-center gap-1 text-muted-foreground"
                       >
                         <span className="font-mono truncate max-w-[120px]">
-                          {inp.assetId?.slice(0, 12)}...
+                          {inp.asset_id?.slice(0, 12)}...
                         </span>
                         <span className="font-semibold text-foreground">
                           {inp.amount}
@@ -89,10 +89,10 @@ export const AssetTransfers: FC = () => {
                     {(transfer.outputs || []).map((out, j) => (
                       <div key={j} className="flex items-center gap-1">
                         <span className="font-mono text-muted-foreground truncate max-w-[120px]">
-                          {out.assetId?.slice(0, 12)}...
+                          {out.asset_id?.slice(0, 12)}...
                         </span>
                         <span className="font-semibold">{out.amount}</span>
-                        {out.scriptKeyIsLocal && (
+                        {out.script_key_is_local && (
                           <span className="text-[10px] bg-muted px-1 rounded">
                             local
                           </span>
@@ -102,9 +102,9 @@ export const AssetTransfers: FC = () => {
                   </div>
                 </div>
 
-                {transfer.anchorTxChainFees && (
+                {transfer.anchor_tx_chain_fees && (
                   <div className="text-[10px] text-muted-foreground">
-                    Chain fee: {transfer.anchorTxChainFees} sats
+                    Chain fee: {transfer.anchor_tx_chain_fees} sats
                     {totalOut > 0 && ` · Sent: ${totalOut}`}
                     {totalIn > 0 && ` · Input: ${totalIn}`}
                   </div>

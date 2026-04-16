@@ -9,24 +9,29 @@ export type GetTapFederationServersQueryVariables = Types.Exact<{
 
 export type GetTapFederationServersQuery = {
   __typename?: 'Query';
-  getTapFederationServers: {
-    __typename?: 'TapFederationServerList';
-    nodeAddress?: string | null;
-    servers: Array<{
-      __typename?: 'TapFederationServer';
-      host: string;
-      id: number;
-    }>;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    get_federation_servers: {
+      __typename?: 'TapFederationServerList';
+      node_address?: string | null;
+      servers: Array<{
+        __typename?: 'TapFederationServer';
+        host: string;
+        id: number;
+      }>;
+    };
   };
 };
 
 export const GetTapFederationServersDocument = gql`
   query GetTapFederationServers {
-    getTapFederationServers {
-      nodeAddress
-      servers {
-        host
-        id
+    taproot_assets {
+      get_federation_servers {
+        node_address
+        servers {
+          host
+          id
+        }
       }
     }
   }

@@ -9,24 +9,29 @@ export type DecodeTapAddressQueryVariables = Types.Exact<{
 
 export type DecodeTapAddressQuery = {
   __typename?: 'Query';
-  decodeTapAddress: {
-    __typename?: 'TapAddress';
-    encoded: string;
-    assetId: string;
-    groupKey?: string | null;
-    amount: string;
-    assetType: string;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    decode_address: {
+      __typename?: 'TapAddress';
+      encoded: string;
+      asset_id: string;
+      group_key?: string | null;
+      amount: string;
+      asset_type: string;
+    };
   };
 };
 
 export const DecodeTapAddressDocument = gql`
   query DecodeTapAddress($addr: String!) {
-    decodeTapAddress(addr: $addr) {
-      encoded
-      assetId
-      groupKey
-      amount
-      assetType
+    taproot_assets {
+      decode_address(addr: $addr) {
+        encoded
+        asset_id
+        group_key
+        amount
+        asset_type
+      }
     }
   }
 `;

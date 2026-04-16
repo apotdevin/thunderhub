@@ -23,27 +23,31 @@ export const ReceiveAsset: FC = () => {
   const [copied, setCopied] = useState(false);
 
   const { data: balancesData } = useGetTapBalancesQuery({
-    variables: { groupBy: TapBalanceGroupBy.GroupKey },
+    variables: { group_by: TapBalanceGroupBy.GroupKey },
   });
 
   const { data: universeData } = useGetTapUniverseAssetsQuery();
 
   // Merge owned assets and universe assets, deduplicate by group key
-  const ownedGroups = (balancesData?.getTapBalances?.balances || [])
-    .filter(b => b.groupKey)
+  const ownedGroups = (
+    balancesData?.taproot_assets?.get_balances?.balances || []
+  )
+    .filter(b => b.group_key)
     .map(
       (b): GroupEntry => ({
-        groupKey: b.groupKey!,
+        groupKey: b.group_key!,
         name: b.names?.join(', ') || 'Unknown',
         source: 'owned',
       })
     );
 
-  const universeGroups = (universeData?.getTapUniverseAssets?.assets || [])
-    .filter(a => a.groupKey)
+  const universeGroups = (
+    universeData?.taproot_assets?.get_universe_assets?.assets || []
+  )
+    .filter(a => a.group_key)
     .map(
       (a): GroupEntry => ({
-        groupKey: a.groupKey!,
+        groupKey: a.group_key!,
         name: a.name || 'Unknown',
         source: 'universe',
       })
@@ -67,7 +71,7 @@ export const ReceiveAsset: FC = () => {
   const [newAddress, { loading }] = useNewTapAddressMutation({
     onError: error => toast.error(getErrorContent(error)),
     onCompleted: data => {
-      const addr = data.newTapAddress?.encoded;
+      const addr = data.taproot_assets?.new_address?.encoded;
       if (addr) {
         setGeneratedAddr(addr);
         toast.success('Address generated');
@@ -83,7 +87,7 @@ export const ReceiveAsset: FC = () => {
     setGeneratedAddr(null);
     newAddress({
       variables: {
-        groupKey: resolvedGroupKey,
+        group_key: resolvedGroupKey,
         amt: parseInt(amount, 10),
       },
     });

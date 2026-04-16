@@ -9,51 +9,56 @@ export type GetTapTransfersQueryVariables = Types.Exact<{
 
 export type GetTapTransfersQuery = {
   __typename?: 'Query';
-  getTapTransfers: {
-    __typename?: 'TapTransferList';
-    transfers: Array<{
-      __typename?: 'TapTransfer';
-      anchorTxHash: string;
-      anchorTxHeightHint: number;
-      anchorTxChainFees: string;
-      transferTimestamp: string;
-      label: string;
-      inputs: Array<{
-        __typename?: 'TapTransferInput';
-        anchorPoint: string;
-        assetId: string;
-        amount: string;
+  taproot_assets: {
+    __typename?: 'TaprootAssetsQueries';
+    get_transfers: {
+      __typename?: 'TapTransferList';
+      transfers: Array<{
+        __typename?: 'TapTransfer';
+        anchor_tx_hash: string;
+        anchor_tx_height_hint: number;
+        anchor_tx_chain_fees: string;
+        transfer_timestamp: string;
+        label: string;
+        inputs: Array<{
+          __typename?: 'TapTransferInput';
+          anchor_point: string;
+          asset_id: string;
+          amount: string;
+        }>;
+        outputs: Array<{
+          __typename?: 'TapTransferOutput';
+          asset_id: string;
+          amount: string;
+          script_key_is_local: boolean;
+          output_type: string;
+        }>;
       }>;
-      outputs: Array<{
-        __typename?: 'TapTransferOutput';
-        assetId: string;
-        amount: string;
-        scriptKeyIsLocal: boolean;
-        outputType: string;
-      }>;
-    }>;
+    };
   };
 };
 
 export const GetTapTransfersDocument = gql`
   query GetTapTransfers {
-    getTapTransfers {
-      transfers {
-        anchorTxHash
-        anchorTxHeightHint
-        anchorTxChainFees
-        transferTimestamp
-        label
-        inputs {
-          anchorPoint
-          assetId
-          amount
-        }
-        outputs {
-          assetId
-          amount
-          scriptKeyIsLocal
-          outputType
+    taproot_assets {
+      get_transfers {
+        transfers {
+          anchor_tx_hash
+          anchor_tx_height_hint
+          anchor_tx_chain_fees
+          transfer_timestamp
+          label
+          inputs {
+            anchor_point
+            asset_id
+            amount
+          }
+          outputs {
+            asset_id
+            amount
+            script_key_is_local
+            output_type
+          }
         }
       }
     }

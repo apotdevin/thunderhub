@@ -9,6 +9,8 @@ import {
   MagmaOrderQueriesResolver,
   MagmaMutationRoot,
   MagmaMutationsResolver,
+  RailsQueryRoot,
+  RailsQueriesResolver,
 } from './magma.resolver';
 import { TapFederationService } from '../tapd/tapd-federation.service';
 import { AmbossModule } from '../amboss/amboss.module';
@@ -22,6 +24,8 @@ import { AmbossModule } from '../amboss/amboss.module';
     MagmaOrderQueriesResolver,
     MagmaMutationRoot,
     MagmaMutationsResolver,
+    RailsQueryRoot,
+    RailsQueriesResolver,
     TapFederationService,
   ],
 })
