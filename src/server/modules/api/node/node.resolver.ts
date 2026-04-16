@@ -102,6 +102,16 @@ export class BalancesResolver {
   }
 }
 
+@Resolver(CurrentNode)
+export class CurrentNodeResolver {
+  constructor(private nodeService: NodeService) {}
+
+  @ResolveField(() => NodeCapabilities)
+  capabilities(@CurrentUser() { id }: UserId): NodeCapabilities {
+    return { list: [...this.nodeService.getCapabilities(id)] };
+  }
+}
+
 @Resolver(NodeInfo)
 export class NodeInfoResolver {
   constructor(
@@ -137,7 +147,7 @@ export class NodeResolver {
   ) {}
 
   @Query(() => CurrentNode, { name: 'node' })
-  async node(@CurrentUser() { id }: UserId): Promise<CurrentNode> {
+  async node(@CurrentUser() { id }: UserId) {
     const node = await this.accountsService.getNodeDetails(id);
     if (!node) {
       throw new Error('Account not found');
@@ -156,14 +166,6 @@ export class NodeResolver {
     @Args('publicKey') publicKey: string
   ) {
     return { publicKey, withoutChannels };
-  }
-
-  @Query(() => NodeCapabilities)
-  async getNodeCapabilities(
-    @CurrentUser() { id }: UserId
-  ): Promise<NodeCapabilities> {
-    const capabilities = this.nodeService.getCapabilities(id);
-    return { capabilities: [...capabilities] };
   }
 
   @Query(() => NodeInfo)

@@ -84,8 +84,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
 
   const { data: capData } = useGetNodeCapabilitiesQuery();
   const tapdAvailable =
-    capData?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
-    false;
+    capData?.node?.capabilities?.list?.includes('taproot_assets') ?? false;
 
   const secondaryNav: NavItem[] = secondaryNavItems.filter(
     item => item.link !== ASSETS || tapdAvailable

@@ -315,6 +315,7 @@ type CreateMacaroon {
 }
 
 type CurrentNode {
+  capabilities: NodeCapabilities!
   created_at: String
   id: String!
   network: String
@@ -625,7 +626,7 @@ type Node {
 }
 
 type NodeCapabilities {
-  capabilities: [String!]!
+  list: [String!]!
 }
 
 type NodeInfo {
@@ -857,7 +858,6 @@ type Query {
   getNetworkInfo: NetworkInfo!
   getNode(publicKey: String!, withoutChannels: Boolean): Node!
   getNodeBalances: Balances!
-  getNodeCapabilities: NodeCapabilities!
   getNodeInfo: NodeInfo!
   getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
   getPayments(token: String): GetPaymentsType!

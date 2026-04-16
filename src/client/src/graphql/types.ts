@@ -373,6 +373,7 @@ export type CreateMacaroon = {
 
 export type CurrentNode = {
   __typename?: 'CurrentNode';
+  capabilities: NodeCapabilities;
   created_at?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   network?: Maybe<Scalars['String']['output']>;
@@ -863,7 +864,7 @@ export type Node = {
 
 export type NodeCapabilities = {
   __typename?: 'NodeCapabilities';
-  capabilities: Array<Scalars['String']['output']>;
+  list: Array<Scalars['String']['output']>;
 };
 
 export type NodeInfo = {
@@ -1134,7 +1135,6 @@ export type Query = {
   getNetworkInfo: NetworkInfo;
   getNode: Node;
   getNodeBalances: Balances;
-  getNodeCapabilities: NodeCapabilities;
   getNodeInfo: NodeInfo;
   getNodeSocialInfo: LightningNodeSocialInfo;
   getPayments: GetPaymentsType;

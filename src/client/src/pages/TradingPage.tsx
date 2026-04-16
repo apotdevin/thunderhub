@@ -28,8 +28,7 @@ const TapdSetupPrompt = () => (
 const TradingPage = () => {
   const { data, loading } = useGetNodeCapabilitiesQuery();
   const tapdAvailable =
-    data?.getNodeCapabilities?.capabilities?.includes('taproot_assets') ??
-    false;
+    data?.node?.capabilities?.list?.includes('taproot_assets') ?? false;
 
   return (
     <GridWrapper centerContent={false}>

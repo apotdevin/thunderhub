@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { NodeModule as NodeServiceModule } from '../../node/node.module';
 import {
   BalancesResolver,
+  CurrentNodeResolver,
   LightningBalanceResolver,
   NodeFieldResolver,
   NodeInfoResolver,
@@ -20,6 +21,7 @@ import { AccountsModule } from '../../accounts/accounts.module';
     LightningBalanceResolver,
     NodeFieldResolver,
     NodeInfoResolver,
+    CurrentNodeResolver,
   ],
 })
 export class NodeModule {}

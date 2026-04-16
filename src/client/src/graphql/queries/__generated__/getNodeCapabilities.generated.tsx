@@ -9,16 +9,20 @@ export type GetNodeCapabilitiesQueryVariables = Types.Exact<{
 
 export type GetNodeCapabilitiesQuery = {
   __typename?: 'Query';
-  getNodeCapabilities: {
-    __typename?: 'NodeCapabilities';
-    capabilities: Array<string>;
+  node: {
+    __typename?: 'CurrentNode';
+    id: string;
+    capabilities: { __typename?: 'NodeCapabilities'; list: Array<string> };
   };
 };
 
 export const GetNodeCapabilitiesDocument = gql`
   query GetNodeCapabilities {
-    getNodeCapabilities {
-      capabilities
+    node {
+      id
+      capabilities {
+        list
+      }
     }
   }
 `;

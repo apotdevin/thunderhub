@@ -51,6 +51,12 @@ export class NodeInfo {
 }
 
 @ObjectType()
+export class NodeCapabilities {
+  @Field(() => [String])
+  list: string[];
+}
+
+@ObjectType()
 export class CurrentNode {
   @Field()
   id: string;
@@ -60,12 +66,8 @@ export class CurrentNode {
   network?: string;
   @Field()
   socket: string;
-}
-
-@ObjectType()
-export class NodeCapabilities {
-  @Field(() => [String])
-  capabilities: string[];
+  @Field(() => NodeCapabilities)
+  capabilities: NodeCapabilities;
 }
 
 @ObjectType()
