@@ -256,6 +256,19 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? totalAssetRemote > BigInt(0)
         : totalBtcRemote > 0;
 
+  // Warn (don't block) when channels exist but are offline.
+  const outboundOffline = isAssetPurchase
+    ? btcOnlyChannels.some(ch => !ch.is_active && ch.local_balance > 0)
+    : assetChannels.some(
+        ch => !ch.is_active && BigInt(ch.asset?.localBalance || '0') > BigInt(0)
+      );
+  const inboundOffline = isAssetPurchase
+    ? assetChannels.some(
+        ch =>
+          !ch.is_active && BigInt(ch.asset?.remoteBalance || '0') > BigInt(0)
+      )
+    : btcOnlyChannels.some(ch => !ch.is_active && ch.remote_balance > 0);
+
   const readyToTrade = hasOutbound && hasInbound;
   const loading = openChannelLoading || setupLoading || tradeLoading;
   const hasRate = !!rate && rate !== '0';
@@ -553,6 +566,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {outboundOffline && hasOutbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>Channel offline — peer may be unreachable</span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     {hasInbound ? (
                       <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
@@ -574,6 +593,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {inboundOffline && hasInbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>Channel offline — peer may be unreachable</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
