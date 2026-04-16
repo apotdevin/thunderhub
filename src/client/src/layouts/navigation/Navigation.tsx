@@ -8,7 +8,6 @@ import {
   GitPullRequest,
   Link as LinkIcon,
   Users,
-  BarChart2,
   Shuffle,
   Grid,
   Globe,
@@ -39,7 +38,6 @@ const TRANS = '/transactions';
 const FORWARDS = '/forwards';
 const CHAIN_TRANS = '/chain';
 const TOOLS = '/tools';
-const STATS = '/stats';
 const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
@@ -75,7 +73,6 @@ const secondaryNavItems: NavItem[] = [
   { title: 'Magma', link: MAGMA, icon: Flame },
   { title: 'Amboss', link: AMBOSS, icon: Globe },
   { title: 'Swap', link: SWAP, icon: Shuffle },
-  { title: 'Stats', link: STATS, icon: BarChart2 },
 ];
 
 export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {

@@ -219,23 +219,6 @@ export type ChannelAsset = {
   remoteBalance: Scalars['String']['output'];
 };
 
-export type ChannelFeeHealth = {
-  __typename?: 'ChannelFeeHealth';
-  id?: Maybe<Scalars['String']['output']>;
-  mySide?: Maybe<FeeHealth>;
-  partner?: Maybe<Node>;
-  partnerSide?: Maybe<FeeHealth>;
-};
-
-export type ChannelHealth = {
-  __typename?: 'ChannelHealth';
-  averageVolumeNormalized?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-  partner?: Maybe<Node>;
-  score?: Maybe<Scalars['Float']['output']>;
-  volumeNormalized?: Maybe<Scalars['String']['output']>;
-};
-
 export type ChannelInfo = {
   __typename?: 'ChannelInfo';
   node1_info: BaseNodeInfo;
@@ -260,35 +243,6 @@ export type ChannelRequest = {
   k1?: Maybe<Scalars['String']['output']>;
   tag?: Maybe<Scalars['String']['output']>;
   uri?: Maybe<Scalars['String']['output']>;
-};
-
-export type ChannelTimeHealth = {
-  __typename?: 'ChannelTimeHealth';
-  id?: Maybe<Scalars['String']['output']>;
-  monitoredDowntime?: Maybe<Scalars['Float']['output']>;
-  monitoredTime?: Maybe<Scalars['Float']['output']>;
-  monitoredUptime?: Maybe<Scalars['Float']['output']>;
-  partner?: Maybe<Node>;
-  score?: Maybe<Scalars['Float']['output']>;
-  significant?: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type ChannelsFeeHealth = {
-  __typename?: 'ChannelsFeeHealth';
-  channels?: Maybe<Array<ChannelFeeHealth>>;
-  score?: Maybe<Scalars['Float']['output']>;
-};
-
-export type ChannelsHealth = {
-  __typename?: 'ChannelsHealth';
-  channels?: Maybe<Array<ChannelHealth>>;
-  score?: Maybe<Scalars['Float']['output']>;
-};
-
-export type ChannelsTimeHealth = {
-  __typename?: 'ChannelsTimeHealth';
-  channels?: Maybe<Array<ChannelTimeHealth>>;
-  score?: Maybe<Scalars['Float']['output']>;
 };
 
 export type ClosedChannel = {
@@ -432,17 +386,6 @@ export type ExecuteTradeResult = {
   paymentPreimage?: Maybe<Scalars['String']['output']>;
   satsAmount?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
-};
-
-export type FeeHealth = {
-  __typename?: 'FeeHealth';
-  base?: Maybe<Scalars['String']['output']>;
-  baseOver?: Maybe<Scalars['Boolean']['output']>;
-  baseScore?: Maybe<Scalars['Float']['output']>;
-  rate?: Maybe<Scalars['Float']['output']>;
-  rateOver?: Maybe<Scalars['Boolean']['output']>;
-  rateScore?: Maybe<Scalars['Float']['output']>;
-  score?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Forward = {
@@ -1124,7 +1067,6 @@ export type Query = {
   getChannels: Array<Channel>;
   getClosedChannels: Array<ClosedChannel>;
   getConfigState: ConfigState;
-  getFeeHealth: ChannelsFeeHealth;
   getForwards: GetForwards;
   getHello: Scalars['String']['output'];
   getInvoiceStatusChange: Scalars['String']['output'];
@@ -1140,11 +1082,9 @@ export type Query = {
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
-  getTimeHealth: ChannelsTimeHealth;
   getTradeQuote: TradeQuoteResult;
   getTwofaSecret: TwofaResult;
   getUtxos: Array<Utxo>;
-  getVolumeHealth: ChannelsHealth;
   getWalletInfo: Wallet;
   lightning: LightningQueries;
   magma: MagmaQueries;

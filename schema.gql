@@ -177,21 +177,6 @@ type ChannelAsset {
   remoteBalance: String!
 }
 
-type ChannelFeeHealth {
-  id: String
-  mySide: FeeHealth
-  partner: Node
-  partnerSide: FeeHealth
-}
-
-type ChannelHealth {
-  averageVolumeNormalized: String
-  id: String
-  partner: Node
-  score: Float
-  volumeNormalized: String
-}
-
 type ChannelInfo {
   node1_info: BaseNodeInfo!
   node2_info: BaseNodeInfo!
@@ -213,31 +198,6 @@ type ChannelRequest {
   k1: String
   tag: String
   uri: String
-}
-
-type ChannelTimeHealth {
-  id: String
-  monitoredDowntime: Float
-  monitoredTime: Float
-  monitoredUptime: Float
-  partner: Node
-  score: Float
-  significant: Boolean
-}
-
-type ChannelsFeeHealth {
-  channels: [ChannelFeeHealth!]
-  score: Float
-}
-
-type ChannelsHealth {
-  channels: [ChannelHealth!]
-  score: Float
-}
-
-type ChannelsTimeHealth {
-  channels: [ChannelTimeHealth!]
-  score: Float
 }
 
 type ClosedChannel {
@@ -370,16 +330,6 @@ type ExecuteTradeResult {
   paymentPreimage: String
   satsAmount: String
   success: Boolean!
-}
-
-type FeeHealth {
-  base: String
-  baseOver: Boolean
-  baseScore: Float
-  rate: Float
-  rateOver: Boolean
-  rateScore: Float
-  score: Float
 }
 
 type Forward {
@@ -847,7 +797,6 @@ type Query {
   getChannels(active: Boolean, partner_public_key: String): [Channel!]!
   getClosedChannels: [ClosedChannel!]!
   getConfigState: ConfigState!
-  getFeeHealth: ChannelsFeeHealth!
   getForwards(days: Float!): GetForwards!
   getHello: String!
   getInvoiceStatusChange(id: String!): String!
@@ -863,11 +812,9 @@ type Query {
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!
-  getTimeHealth: ChannelsTimeHealth!
   getTradeQuote(input: TradeQuoteInput!): TradeQuoteResult!
   getTwofaSecret: TwofaResult!
   getUtxos: [Utxo!]!
-  getVolumeHealth: ChannelsHealth!
   getWalletInfo: Wallet!
   lightning: LightningQueries!
   magma: MagmaQueries!

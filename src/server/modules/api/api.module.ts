@@ -17,7 +17,6 @@ import { EdgeModule } from './edge/edge.module';
 import { LnUrlModule } from './lnurl/lnurl.module';
 import { ChannelsModule } from './channels/channels.module';
 import { ForwardsModule } from './forwards/forwards.module';
-import { HealthModule } from './health/health.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { BoltzModule } from './boltz/boltz.module';
@@ -48,7 +47,6 @@ import { PublicModule } from './public/public.module';
     LnUrlModule,
     ChannelsModule,
     ForwardsModule,
-    HealthModule,
     TransactionsModule,
     InvoicesModule,
     BoltzModule,
