@@ -256,18 +256,23 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? totalAssetRemote > BigInt(0)
         : totalBtcRemote > 0;
 
-  // Warn (don't block) when channels exist but are offline.
-  const outboundOffline = isAssetPurchase
-    ? btcOnlyChannels.some(ch => !ch.is_active && ch.local_balance > 0)
-    : assetChannels.some(
-        ch => !ch.is_active && BigInt(ch.asset?.localBalance || '0') > BigInt(0)
-      );
-  const inboundOffline = isAssetPurchase
-    ? assetChannels.some(
-        ch =>
-          !ch.is_active && BigInt(ch.asset?.remoteBalance || '0') > BigInt(0)
-      )
-    : btcOnlyChannels.some(ch => !ch.is_active && ch.remote_balance > 0);
+  // Count offline channels with balance to warn (not block) the user.
+  const outboundChannels = isAssetPurchase ? btcOnlyChannels : assetChannels;
+  const inboundChannels = isAssetPurchase ? assetChannels : btcOnlyChannels;
+
+  const outboundTotal = outboundChannels.length;
+  const outboundOfflineCount = outboundChannels.filter(ch =>
+    isAssetPurchase
+      ? !ch.is_active && ch.local_balance > 0
+      : !ch.is_active && BigInt(ch.asset?.localBalance || '0') > BigInt(0)
+  ).length;
+
+  const inboundTotal = inboundChannels.length;
+  const inboundOfflineCount = inboundChannels.filter(ch =>
+    isAssetPurchase
+      ? !ch.is_active && BigInt(ch.asset?.remoteBalance || '0') > BigInt(0)
+      : !ch.is_active && ch.remote_balance > 0
+  ).length;
 
   const readyToTrade = hasOutbound && hasInbound;
   const loading = openChannelLoading || setupLoading || tradeLoading;
@@ -566,10 +571,16 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
-                  {outboundOffline && hasOutbound && (
+                  {outboundOfflineCount > 0 && hasOutbound && (
                     <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
                       <AlertCircle className="h-3 w-3" />
-                      <span>Channel offline — peer may be unreachable</span>
+                      <span>
+                        {outboundOfflineCount === outboundTotal
+                          ? outboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${outboundTotal} channels offline`
+                          : `${outboundOfflineCount} of ${outboundTotal} channels offline`}
+                      </span>
                     </div>
                   )}
                   <div className="flex items-center gap-2">
@@ -593,10 +604,16 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
-                  {inboundOffline && hasInbound && (
+                  {inboundOfflineCount > 0 && hasInbound && (
                     <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
                       <AlertCircle className="h-3 w-3" />
-                      <span>Channel offline — peer may be unreachable</span>
+                      <span>
+                        {inboundOfflineCount === inboundTotal
+                          ? inboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${inboundTotal} channels offline`
+                          : `${inboundOfflineCount} of ${inboundTotal} channels offline`}
+                      </span>
                     </div>
                   )}
                 </div>
