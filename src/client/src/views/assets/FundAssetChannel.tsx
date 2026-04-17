@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useFundTapAssetChannelMutation } from '../../graphql/mutations/__generated__/fundTapAssetChannel.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
+import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
@@ -19,6 +20,15 @@ export const FundAssetChannel: FC = () => {
     variables: { group_by: TapBalanceGroupBy.GroupKey },
   });
 
+  const { data: channelsData, loading: channelsLoading } =
+    useGetTapAssetChannelBalancesQuery({
+      fetchPolicy: 'cache-and-network',
+      onError: error => toast.error(getErrorContent(error)),
+    });
+
+  const channels =
+    channelsData?.taproot_assets?.get_asset_channel_balances || [];
+
   const knownGroups = (
     balancesData?.taproot_assets?.get_balances?.balances || []
   )
@@ -28,6 +38,8 @@ export const FundAssetChannel: FC = () => {
       name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
     }));
+
+  const nameByGroupKey = new Map(knownGroups.map(g => [g.groupKey, g.name]));
 
   const selectedBalance = knownGroups.find(
     g => g.groupKey === selectedGroup
@@ -43,7 +55,7 @@ export const FundAssetChannel: FC = () => {
       setFeeRate('');
       setPushSat('');
     },
-    refetchQueries: ['GetTapBalances'],
+    refetchQueries: ['GetTapBalances', 'GetTapAssetChannelBalances'],
   });
 
   const handleFund = () => {
@@ -65,90 +77,160 @@ export const FundAssetChannel: FC = () => {
   };
 
   return (
-    <Card>
-      <CardContent className="p-4">
-        <h3 className="text-sm font-semibold mb-3">Open Asset Channel</h3>
-        <div className="flex flex-col gap-3">
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">
-              Peer Public Key
-            </label>
-            <input
-              type="text"
-              value={peerPubkey}
-              onChange={e => setPeerPubkey(e.target.value)}
-              placeholder="Peer pubkey (hex)"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">
-              Asset Group
-            </label>
-            <select
-              value={selectedGroup}
-              onChange={e => setSelectedGroup(e.target.value)}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="">Select a group...</option>
-              {knownGroups.map(g => (
-                <option key={g.groupKey} value={g.groupKey}>
-                  {g.name} (balance: {g.balance})
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">
-              Asset Amount
-              {selectedBalance && (
-                <span className="ml-1">(max: {selectedBalance})</span>
-              )}
-            </label>
-            <input
-              type="number"
-              value={assetAmount}
-              onChange={e => setAssetAmount(e.target.value)}
-              placeholder="Amount of assets to commit"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">
-              Fee Rate (sat/vB)
-              <span className="ml-1 text-muted-foreground/60">(optional)</span>
-            </label>
-            <input
-              type="number"
-              value={feeRate}
-              onChange={e => setFeeRate(e.target.value)}
-              placeholder="Leave empty for default"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground mb-1 block">
-              Push Sats
-              <span className="ml-1 text-muted-foreground/60">(optional)</span>
-            </label>
-            <input
-              type="number"
-              value={pushSat}
-              onChange={e => setPushSat(e.target.value)}
-              placeholder="Sats to push to peer"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            />
-          </div>
-          <Button
-            onClick={handleFund}
-            disabled={loading || !peerPubkey || !selectedGroup || !assetAmount}
-            size="sm"
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Open Asset Channel
-          </Button>
+    <div className="flex flex-col gap-4">
+      {channelsLoading && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 size={14} className="animate-spin" />
+          Loading asset channels...
         </div>
-      </CardContent>
-    </Card>
+      )}
+      {channels.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <h3 className="text-sm font-semibold">Asset Channels</h3>
+          {channels.map(ch => {
+            const name =
+              (ch.group_key && nameByGroupKey.get(ch.group_key)) || null;
+            return (
+              <Card key={ch.channel_point}>
+                <CardContent className="p-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">
+                        {name || 'Unknown Asset'}
+                      </span>
+                      <span className="text-xs text-muted-foreground font-mono">
+                        {ch.channel_point}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <span>Peer:</span>
+                      <span className="font-mono truncate max-w-[300px]">
+                        {ch.partner_public_key}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                      <div>
+                        <span className="text-xs text-muted-foreground block">
+                          Local
+                        </span>
+                        <span className="font-mono">{ch.local_balance}</span>
+                      </div>
+                      <div>
+                        <span className="text-xs text-muted-foreground block">
+                          Remote
+                        </span>
+                        <span className="font-mono">{ch.remote_balance}</span>
+                      </div>
+                      <div>
+                        <span className="text-xs text-muted-foreground block">
+                          Capacity
+                        </span>
+                        <span className="font-mono">{ch.capacity}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+      {!channelsLoading && channels.length === 0 && (
+        <div className="text-sm text-muted-foreground">
+          No asset channels found
+        </div>
+      )}
+      <Card>
+        <CardContent className="p-4">
+          <h3 className="text-sm font-semibold mb-3">Open Asset Channel</h3>
+          <div className="flex flex-col gap-3">
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">
+                Peer Public Key
+              </label>
+              <input
+                type="text"
+                value={peerPubkey}
+                onChange={e => setPeerPubkey(e.target.value)}
+                placeholder="Peer pubkey (hex)"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">
+                Asset Group
+              </label>
+              <select
+                value={selectedGroup}
+                onChange={e => setSelectedGroup(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="">Select a group...</option>
+                {knownGroups.map(g => (
+                  <option key={g.groupKey} value={g.groupKey}>
+                    {g.name} (balance: {g.balance})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">
+                Asset Amount
+                {selectedBalance && (
+                  <span className="ml-1">(max: {selectedBalance})</span>
+                )}
+              </label>
+              <input
+                type="number"
+                value={assetAmount}
+                onChange={e => setAssetAmount(e.target.value)}
+                placeholder="Amount of assets to commit"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">
+                Fee Rate (sat/vB)
+                <span className="ml-1 text-muted-foreground/60">
+                  (optional)
+                </span>
+              </label>
+              <input
+                type="number"
+                value={feeRate}
+                onChange={e => setFeeRate(e.target.value)}
+                placeholder="Leave empty for default"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">
+                Push Sats
+                <span className="ml-1 text-muted-foreground/60">
+                  (optional)
+                </span>
+              </label>
+              <input
+                type="number"
+                value={pushSat}
+                onChange={e => setPushSat(e.target.value)}
+                placeholder="Sats to push to peer"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+            </div>
+            <Button
+              onClick={handleFund}
+              disabled={
+                loading || !peerPubkey || !selectedGroup || !assetAmount
+              }
+              size="sm"
+            >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Open Asset Channel
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
