@@ -32,6 +32,14 @@ export type GetPendingChannelsQuery = {
       __typename?: 'Node';
       node?: { __typename?: 'NodeType'; alias: string } | null;
     };
+    asset?: {
+      __typename?: 'ChannelAsset';
+      assetId: string;
+      groupKey?: string | null;
+      localBalance: string;
+      remoteBalance: string;
+      capacity: string;
+    } | null;
   }>;
 };
 
@@ -59,6 +67,13 @@ export const GetPendingChannelsDocument = gql`
         node {
           alias
         }
+      }
+      asset {
+        assetId
+        groupKey
+        localBalance
+        remoteBalance
+        capacity
       }
     }
   }
