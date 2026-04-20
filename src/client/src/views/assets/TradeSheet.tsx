@@ -238,7 +238,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       ? asset.groupKey === tapdGroupKey
       : tapdAssetId
         ? asset.assetId === tapdAssetId
-        : true;
+        : false;
 
   // Prefill sats amount from existing or pending asset inbound capacity.
   useEffect(() => {
@@ -335,7 +335,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     : pendingBtcChannels.length > 0;
 
   const pendingOutboundSats = pendingBtcChannels.reduce(
-    (sum, ch) => sum + (ch.local_balance || 0) + (ch.remote_balance || 0),
+    (sum, ch) => sum + (ch.local_balance || 0),
     0
   );
 

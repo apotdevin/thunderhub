@@ -32,7 +32,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-type ChannelStatus = { hasBtc: boolean; hasAsset: boolean; pending: boolean };
+type ChannelStatus = {
+  btc: 'none' | 'pending' | 'open';
+  asset: 'none' | 'pending' | 'open';
+};
 
 const SortIcon: FC<{
   field: TapOfferSortBy;
@@ -185,17 +188,16 @@ export const TradingOffers: FC = () => {
     const map = new Map<string, ChannelStatus>();
 
     const ensure = (pk: string) => {
-      if (!map.has(pk))
-        map.set(pk, { hasBtc: false, hasAsset: false, pending: false });
+      if (!map.has(pk)) map.set(pk, { btc: 'none', asset: 'none' });
       return map.get(pk)!;
     };
 
     for (const pk of btcChannelPubkeys) {
-      ensure(pk).hasBtc = true;
+      ensure(pk).btc = 'open';
     }
 
     for (const pk of assetPeersForSelectedAsset || []) {
-      ensure(pk).hasAsset = true;
+      ensure(pk).asset = 'open';
     }
 
     for (const ch of pendingData?.getPendingChannels || []) {
@@ -207,13 +209,11 @@ export const TradingOffers: FC = () => {
           : selectedTapdAssetId
             ? ch.asset.assetId === selectedTapdAssetId
             : false;
-        if (match) {
-          s.hasAsset = true;
-          s.pending = true;
+        if (match && s.asset === 'none') {
+          s.asset = 'pending';
         }
-      } else {
-        s.hasBtc = true;
-        s.pending = true;
+      } else if (s.btc === 'none') {
+        s.btc = 'pending';
       }
     }
 
@@ -554,24 +554,29 @@ export const TradingOffers: FC = () => {
                         <div className="flex items-center gap-1.5 text-[10px]">
                           <span
                             className={
-                              status.hasBtc
+                              status.btc === 'open'
                                 ? 'text-green-500'
-                                : 'text-muted-foreground/40'
+                                : status.btc === 'pending'
+                                  ? 'text-yellow-500'
+                                  : 'text-muted-foreground/40'
                             }
                           >
                             BTC
                           </span>
                           <span
                             className={
-                              status.hasAsset
+                              status.asset === 'open'
                                 ? 'text-green-500'
-                                : 'text-muted-foreground/40'
+                                : status.asset === 'pending'
+                                  ? 'text-yellow-500'
+                                  : 'text-muted-foreground/40'
                             }
                           >
                             {selectedSymbol || 'Asset'}
                           </span>
-                          {status.pending && (
-                            <Clock size={10} className="text-blue-500" />
+                          {(status.btc === 'pending' ||
+                            status.asset === 'pending') && (
+                            <Clock size={10} className="text-yellow-500" />
                           )}
                         </div>
                       ) : (
