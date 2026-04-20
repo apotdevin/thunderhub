@@ -6,15 +6,23 @@ import { BurnAsset } from './BurnAsset';
 import { SendAsset } from './SendAsset';
 import { ReceiveAsset } from './ReceiveAsset';
 import { AssetTransfers } from './AssetTransfers';
+import { FundAssetChannel } from './FundAssetChannel';
 import { UniverseManager } from './UniverseManager';
 import { cn } from '../../lib/utils';
 
-type Tab = 'assets' | 'send' | 'receive' | 'transfers' | 'advanced';
+type Tab =
+  | 'assets'
+  | 'send'
+  | 'receive'
+  | 'channels'
+  | 'transfers'
+  | 'advanced';
 
 const tabs: { id: Tab; label: string }[] = [
   { id: 'assets', label: 'Assets' },
   { id: 'send', label: 'Send' },
   { id: 'receive', label: 'Receive' },
+  { id: 'channels', label: 'Channels' },
   { id: 'transfers', label: 'Transfers' },
   { id: 'advanced', label: 'Advanced' },
 ];
@@ -53,6 +61,7 @@ export const AssetsView = () => {
       )}
       {activeTab === 'send' && <SendAsset />}
       {activeTab === 'receive' && <ReceiveAsset />}
+      {activeTab === 'channels' && <FundAssetChannel />}
       {activeTab === 'transfers' && <AssetTransfers />}
       {activeTab === 'advanced' && (
         <div className="flex flex-col gap-6">
