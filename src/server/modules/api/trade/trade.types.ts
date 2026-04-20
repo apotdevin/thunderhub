@@ -17,6 +17,9 @@ export class TradeQuoteInput {
 
   @Field()
   peerPubkey: string;
+
+  @Field({ nullable: true })
+  expiry?: number;
 }
 
 @ObjectType()

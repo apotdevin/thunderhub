@@ -77,7 +77,7 @@ export class TradeResolver {
         groupKey: input.tapdGroupKey || undefined,
         assetAmount: input.assetAmount,
         peerPubkey: input.peerPubkey,
-        expiry: 30,
+        expiry: input.expiry ?? 30,
       })
     );
 
