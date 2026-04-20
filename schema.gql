@@ -725,6 +725,7 @@ type Peer {
 }
 
 type PendingChannel {
+  asset: ChannelAsset
   close_transaction_id: String
   is_active: Boolean!
   is_closing: Boolean!
@@ -1150,7 +1151,7 @@ type TaprootAssetsMutations {
   finalize_batch: TapFinalizeBatchResponse!
   fund_asset_channel(input: TapFundChannelInput!): TapFundChannelResponse!
   mint_asset(input: TapMintAssetInput!): TapMintResponse!
-  new_address(amt: Int, asset_id: String, group_key: String): TapAddress!
+  new_address(amt: String, asset_id: String, group_key: String, proof_courier_addr: String): TapAddress!
   remove_federation_server(host: String!): Boolean!
   send_asset(tap_addrs: [String!]!): Boolean!
   sync_universe(host: String!): TapSyncResult!

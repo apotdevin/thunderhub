@@ -1,11 +1,4 @@
-import {
-  Args,
-  Int,
-  Mutation,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -420,7 +413,9 @@ export class TaprootAssetsMutationsResolver {
     @CurrentUser() { id }: UserId,
     @Args('asset_id', { nullable: true }) asset_id?: string,
     @Args('group_key', { nullable: true }) group_key?: string,
-    @Args('amt', { type: () => Int, nullable: true }) amt?: number
+    @Args('amt', { nullable: true }) amt?: string,
+    @Args('proof_courier_addr', { nullable: true })
+    proof_courier_addr?: string
   ) {
     if ((!asset_id && !group_key) || (asset_id && group_key)) {
       throw new GraphQLError(
@@ -433,7 +428,8 @@ export class TaprootAssetsMutationsResolver {
         id,
         assetId: asset_id || undefined,
         groupKey: group_key || undefined,
-        amt: amt || 0,
+        amt: amt || '0',
+        proofCourierAddr: proof_courier_addr || undefined,
       })
     );
     if (error || !result) {
@@ -618,9 +614,12 @@ export class TaprootAssetsMutationsResolver {
       );
     }
 
-    const parsedAmount = Number(asset_amount);
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      throw new GraphQLError('asset_amount must be a positive number');
+    if (
+      !asset_amount ||
+      isNaN(Number(asset_amount)) ||
+      Number(asset_amount) <= 0
+    ) {
+      throw new GraphQLError('asset_amount must be a positive numeric string');
     }
 
     const [result, error] = await toWithError(
@@ -628,7 +627,7 @@ export class TaprootAssetsMutationsResolver {
         id,
         assetId: asset_id || undefined,
         groupKey: group_key || undefined,
-        assetAmount: parsedAmount,
+        assetAmount: asset_amount,
         peerPubkey: peer_pubkey || undefined,
         memo: memo || undefined,
         expiry: expiry || undefined,
@@ -679,16 +678,19 @@ export class TaprootAssetsMutationsResolver {
       );
     }
 
-    const parsedAmount = Number(asset_amount);
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      throw new GraphQLError('asset_amount must be a positive number');
+    if (
+      !asset_amount ||
+      isNaN(Number(asset_amount)) ||
+      Number(asset_amount) <= 0
+    ) {
+      throw new GraphQLError('asset_amount must be a positive numeric string');
     }
 
     const [result, error] = await toWithError(
       this.tapdNodeService.fundAssetChannel({
         id,
         peerPubkey: peer_pubkey,
-        assetAmount: parsedAmount,
+        assetAmount: asset_amount,
         groupKey: group_key || undefined,
         assetId: asset_id || undefined,
         feeRateSatPerVbyte: fee_rate_sat_per_vbyte || undefined,

@@ -34,8 +34,21 @@ import { Payment as LnrpcPayment } from '@lightningpolar/tapd-api/dist/types/lnr
 import { AccountsService } from '../../accounts/accounts.service';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
+import { NodeService } from '../node.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
+import { getNetwork } from '../../../utils/network';
+import { toWithError } from '../../../utils/async';
+
+type AssetChannelInfo = {
+  channelPoint: string;
+  partnerPublicKey: string;
+  assetId: string;
+  groupKey: string;
+  localBalance: string;
+  remoteBalance: string;
+  capacity: string;
+};
 
 /** Timeout for sendPayment RPC before the stream-level guard kicks in. */
 const SEND_PAYMENT_TIMEOUT_SECONDS = 60;
@@ -46,6 +59,7 @@ export class TapdNodeService {
   constructor(
     private accountsService: AccountsService,
     private providerRegistry: ProviderRegistryService,
+    private nodeService: NodeService,
     private configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -130,27 +144,36 @@ export class TapdNodeService {
 
   // ── Addresses ──
 
+  private async isMainnet(id: string): Promise<boolean> {
+    const [info] = await toWithError(this.nodeService.getWalletInfo(id));
+    return getNetwork(info?.chains?.[0] || '') === 'btc';
+  }
+
   async newAddr(opts: {
     id: string;
     assetId?: string;
     groupKey?: string;
-    amt: number;
+    amt: string;
     proofCourierAddr?: string;
   }): Promise<Addr> {
     const tapd = this.getTapd(opts.id);
-    const isProduction = this.configService.get('isProduction');
+    const mainnet = await this.isMainnet(opts.id);
     const defaultCourier =
       'authmailbox+universerpc://universe.lightning.finance:10029';
+
+    const courierAddr = opts.proofCourierAddr
+      ? opts.proofCourierAddr
+      : mainnet
+        ? defaultCourier
+        : undefined;
 
     return tapd.taprootAssets.newAddr({
       ...(opts.groupKey
         ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
-      amt: String(opts.amt),
+      amt: opts.amt,
       addressVersion: 'ADDR_VERSION_V2',
-      ...(isProduction
-        ? { proofCourierAddr: opts.proofCourierAddr || defaultCourier }
-        : {}),
+      ...(courierAddr ? { proofCourierAddr: courierAddr } : {}),
     });
   }
 
@@ -350,7 +373,7 @@ export class TapdNodeService {
     id: string;
     assetId?: string;
     groupKey?: string;
-    assetAmount: number;
+    assetAmount: string;
     peerPubkey?: string;
     memo?: string;
     expiry?: number;
@@ -360,7 +383,7 @@ export class TapdNodeService {
       ...(opts.groupKey
         ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
-      assetAmount: String(opts.assetAmount),
+      assetAmount: opts.assetAmount,
       ...(opts.peerPubkey
         ? {
             peerPubkey: Buffer.from(opts.peerPubkey, 'hex'),
@@ -381,17 +404,7 @@ export class TapdNodeService {
   async getAssetChannelBalances(opts: {
     id: string;
     peerPubkey?: string;
-  }): Promise<
-    {
-      channelPoint: string;
-      partnerPublicKey: string;
-      assetId: string;
-      groupKey: string;
-      localBalance: string;
-      remoteBalance: string;
-      capacity: string;
-    }[]
-  > {
+  }): Promise<AssetChannelInfo[]> {
     const account = this.getAccount(opts.id);
     const provider = this.providerRegistry.getProvider(account.type);
     const capabilities = provider.getCapabilities();
@@ -422,15 +435,7 @@ export class TapdNodeService {
         ) => {
           if (err) return reject(err);
 
-          const results: {
-            channelPoint: string;
-            partnerPublicKey: string;
-            assetId: string;
-            groupKey: string;
-            localBalance: string;
-            remoteBalance: string;
-            capacity: string;
-          }[] = [];
+          const results: AssetChannelInfo[] = [];
 
           for (const ch of res.channels || []) {
             if (!ch.custom_channel_data?.length) continue;
@@ -457,6 +462,74 @@ export class TapdNodeService {
                 channelPoint: ch.channel_point,
                 err,
               });
+            }
+          }
+
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  async getPendingAssetChannels(opts: {
+    id: string;
+  }): Promise<AssetChannelInfo[]> {
+    const account = this.getAccount(opts.id);
+    const provider = this.providerRegistry.getProvider(account.type);
+    const capabilities = provider.getCapabilities();
+
+    if (!capabilities.has(Capability.TAPROOT_ASSETS)) {
+      return [];
+    }
+
+    const connection = account.connection;
+    const lnd = connection.lnd ?? connection;
+
+    return new Promise((resolve, reject) => {
+      lnd.default.pendingChannels(
+        {},
+        (
+          err: Error | null,
+          res: {
+            pending_open_channels: {
+              channel: {
+                channel_point: string;
+                remote_node_pub: string;
+                custom_channel_data: Buffer;
+              };
+            }[];
+          }
+        ) => {
+          if (err) return reject(err);
+
+          const results: AssetChannelInfo[] = [];
+
+          for (const entry of res.pending_open_channels || []) {
+            const ch = entry.channel;
+            if (!ch?.custom_channel_data?.length) continue;
+
+            try {
+              const data = JSON.parse(ch.custom_channel_data.toString('utf8'));
+              const fundingAsset = data.funding_assets?.[0];
+              const assetId = fundingAsset?.asset_genesis?.asset_id || '';
+              if (!assetId) continue;
+
+              const groupKey = data.group_key;
+
+              results.push({
+                channelPoint: ch.channel_point,
+                partnerPublicKey: ch.remote_node_pub,
+                assetId,
+                groupKey,
+                localBalance: String(data.local_balance ?? 0),
+                remoteBalance: String(data.remote_balance ?? 0),
+                capacity: String(data.capacity ?? 0),
+              });
+            } catch (parseErr) {
+              this.logger.warn(
+                'Failed to parse custom_channel_data for pending channel',
+                { channelPoint: ch.channel_point, err: parseErr }
+              );
             }
           }
 
@@ -632,7 +705,7 @@ export class TapdNodeService {
   async fundAssetChannel(opts: {
     id: string;
     peerPubkey: string;
-    assetAmount: number;
+    assetAmount: string;
     groupKey?: string;
     assetId?: string;
     feeRateSatPerVbyte?: number;
@@ -641,7 +714,7 @@ export class TapdNodeService {
     const tapd = this.getTapd(opts.id);
     return tapd.channels.fundChannel({
       peerPubkey: Buffer.from(opts.peerPubkey, 'hex'),
-      assetAmount: String(opts.assetAmount),
+      assetAmount: opts.assetAmount,
       ...(opts.groupKey
         ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),

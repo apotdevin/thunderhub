@@ -6,7 +6,8 @@ const defaultOptions = {} as const;
 export type NewTapAddressMutationVariables = Types.Exact<{
   asset_id?: Types.InputMaybe<Types.Scalars['String']['input']>;
   group_key?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  amt: Types.Scalars['Int']['input'];
+  amt: Types.Scalars['String']['input'];
+  proof_courier_addr?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 export type NewTapAddressMutation = {
@@ -26,9 +27,19 @@ export type NewTapAddressMutation = {
 };
 
 export const NewTapAddressDocument = gql`
-  mutation NewTapAddress($asset_id: String, $group_key: String, $amt: Int!) {
+  mutation NewTapAddress(
+    $asset_id: String
+    $group_key: String
+    $amt: String!
+    $proof_courier_addr: String
+  ) {
     taproot_assets {
-      new_address(asset_id: $asset_id, group_key: $group_key, amt: $amt) {
+      new_address(
+        asset_id: $asset_id
+        group_key: $group_key
+        amt: $amt
+        proof_courier_addr: $proof_courier_addr
+      ) {
         encoded
         asset_id
         amount
@@ -60,6 +71,7 @@ export type NewTapAddressMutationFn = Apollo.MutationFunction<
  *      asset_id: // value for 'asset_id'
  *      group_key: // value for 'group_key'
  *      amt: // value for 'amt'
+ *      proof_courier_addr: // value for 'proof_courier_addr'
  *   },
  * });
  */

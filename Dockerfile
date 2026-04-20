@@ -56,6 +56,7 @@ COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules/ ./node_modules
 COPY --from=build /app/src/client/dist/ ./src/client/dist
 COPY --from=build /app/dist/ ./dist
+COPY --from=build /app/drizzle/ ./drizzle
 
 # Run as non-root user
 USER node

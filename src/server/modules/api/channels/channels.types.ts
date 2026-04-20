@@ -249,6 +249,8 @@ export class PendingChannel {
   timelock_blocks: number;
   @Field({ nullable: true })
   timelock_expiration: number;
+  @Field(() => ChannelAsset, { nullable: true })
+  asset?: ChannelAsset;
 }
 
 @ObjectType()
