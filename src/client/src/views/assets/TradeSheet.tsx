@@ -382,6 +382,20 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? totalAssetRemote > 0n
         : totalBtcRemote > 0;
 
+  // Count offline channels with balance to warn (not block) the user.
+  const outboundChannels = isAssetPurchase ? btcOnlyChannels : assetChannels;
+  const inboundChannels = isAssetPurchase ? assetChannels : btcOnlyChannels;
+
+  const outboundTotal = outboundChannels.length;
+  const outboundOfflineCount = outboundChannels.filter(
+    ch => !ch.is_active
+  ).length;
+
+  const inboundTotal = inboundChannels.length;
+  const inboundOfflineCount = inboundChannels.filter(
+    ch => !ch.is_active
+  ).length;
+
   const readyToTrade = hasOutbound && hasInbound;
   const loading = openChannelLoading || setupLoading || tradeLoading;
   const hasRate = !!rate && rate !== '0';
@@ -699,6 +713,18 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {outboundOfflineCount > 0 && hasOutbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>
+                        {outboundOfflineCount === outboundTotal
+                          ? outboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${outboundTotal} channels offline`
+                          : `${outboundOfflineCount} of ${outboundTotal} channels offline`}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     {inboundExists && !hasPendingInbound ? (
                       <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
@@ -724,6 +750,18 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {inboundOfflineCount > 0 && hasInbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>
+                        {inboundOfflineCount === inboundTotal
+                          ? inboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${inboundTotal} channels offline`
+                          : `${inboundOfflineCount} of ${inboundTotal} channels offline`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
