@@ -118,10 +118,11 @@ export const AssetsList: FC = () => {
         balance: existing.balance + localBal,
       });
     } else {
-      // Find a name from on-chain balances
       const name =
+        ch.asset_name ||
         balances.find(b => b.group_key === key || b.asset_id === key)
-          ?.names?.[0] || 'Unknown';
+          ?.names?.[0] ||
+        'Unknown';
       channelBalanceMap.set(key, { key, name, balance: localBal });
     }
   }
