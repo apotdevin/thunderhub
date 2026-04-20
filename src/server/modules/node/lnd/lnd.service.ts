@@ -316,6 +316,8 @@ export class LndService implements LightningProvider {
     return to(payViaPaymentDetails({ lnd, ...options } as any));
   }
 
+  // Intentionally not wrapped in to() — callers need the raw [code, message,
+  // {failures}] array that payViaRoutes throws on failure for diagnostics.
   async payViaRoutes(lnd: AuthenticatedLnd, options: PayViaRoutesOptions) {
     return payViaRoutes({ lnd, ...options } as any);
   }
