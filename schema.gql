@@ -1178,6 +1178,7 @@ type TeamMutations {
 
 input TradeQuoteInput {
   assetAmount: String!
+  expiry: Float
   peerPubkey: String!
   tapdAssetId: String!
   tapdGroupKey: String
