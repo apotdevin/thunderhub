@@ -94,9 +94,9 @@ export class TapdNodeService {
     const tapd = this.getTapd(opts.id);
     // The barrel export resolves GetInfoResponse to lnrpc's variant, but
     // taprootAssets.getInfo() actually returns taprpc.GetInfoResponse at runtime.
-    return tapd.taprootAssets.getInfo(
-      {}
-    ) as unknown as Promise<TapGetInfoResponse>;
+    const result = await tapd.taprootAssets.getInfo({});
+
+    return result as unknown as TapGetInfoResponse;
   }
 
   // ── Assets ──
