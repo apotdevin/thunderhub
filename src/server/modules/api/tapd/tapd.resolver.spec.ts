@@ -386,13 +386,13 @@ describe('TaprootAssetsMutationsResolver', () => {
   describe('new_address', () => {
     it('throws when both asset_id and group_key are provided', async () => {
       await expect(
-        resolver.new_address(userId, 'asset1', 'group1', 100)
+        resolver.new_address(userId, 'asset1', 'group1', '100')
       ).rejects.toThrow(GraphQLError);
     });
 
     it('throws when neither asset_id nor group_key is provided', async () => {
       await expect(
-        resolver.new_address(userId, undefined, undefined, 100)
+        resolver.new_address(userId, undefined, undefined, '100')
       ).rejects.toThrow(GraphQLError);
     });
 
@@ -410,7 +410,7 @@ describe('TaprootAssetsMutationsResolver', () => {
         userId,
         'asset1',
         undefined,
-        100
+        '100'
       );
 
       expect(result.encoded).toBe('tap1...');
@@ -431,7 +431,7 @@ describe('TaprootAssetsMutationsResolver', () => {
         userId,
         undefined,
         'group1',
-        200
+        '200'
       );
 
       expect(result.encoded).toBe('tap1group...');
@@ -440,7 +440,7 @@ describe('TaprootAssetsMutationsResolver', () => {
         id: userId.id,
         groupKey: 'group1',
         assetId: undefined,
-        amt: 200,
+        amt: '200',
       });
     });
   });
@@ -458,7 +458,7 @@ describe('TaprootAssetsMutationsResolver', () => {
           asset_amount: '0',
           asset_id: 'asset1',
         })
-      ).rejects.toThrow('asset_amount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive numeric string');
     });
 
     it('throws when asset_amount is negative', async () => {
@@ -467,7 +467,7 @@ describe('TaprootAssetsMutationsResolver', () => {
           asset_amount: '-5',
           asset_id: 'asset1',
         })
-      ).rejects.toThrow('asset_amount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive numeric string');
     });
 
     it('throws when asset_amount is not a valid number', async () => {
@@ -476,7 +476,7 @@ describe('TaprootAssetsMutationsResolver', () => {
           asset_amount: 'abc',
           asset_id: 'asset1',
         })
-      ).rejects.toThrow('asset_amount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive numeric string');
     });
 
     it('returns invoice response with asset_id', async () => {
@@ -537,7 +537,7 @@ describe('TaprootAssetsMutationsResolver', () => {
         id: userId.id,
         assetId: undefined,
         groupKey: 'group1',
-        assetAmount: 200,
+        assetAmount: '200',
         peerPubkey: undefined,
         memo: undefined,
         expiry: undefined,
@@ -595,7 +595,7 @@ describe('TaprootAssetsMutationsResolver', () => {
         id: userId.id,
         assetId: 'asset1',
         groupKey: undefined,
-        assetAmount: 100,
+        assetAmount: '100',
         peerPubkey: 'peer1',
         memo: 'test memo',
         expiry: 3600,
@@ -631,7 +631,7 @@ describe('TaprootAssetsMutationsResolver', () => {
           asset_amount: 'abc',
           group_key: 'group1',
         })
-      ).rejects.toThrow('asset_amount must be a positive number');
+      ).rejects.toThrow('asset_amount must be a positive numeric string');
     });
 
     it('funds a channel with group_key', async () => {
