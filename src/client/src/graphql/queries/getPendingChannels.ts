@@ -25,6 +25,13 @@ export const GET_PENDING_CHANNELS = gql`
           alias
         }
       }
+      asset {
+        assetId
+        groupKey
+        localBalance
+        remoteBalance
+        capacity
+      }
     }
   }
 `;

@@ -969,6 +969,7 @@ export type Peer = {
 
 export type PendingChannel = {
   __typename?: 'PendingChannel';
+  asset?: Maybe<ChannelAsset>;
   close_transaction_id?: Maybe<Scalars['String']['output']>;
   is_active: Scalars['Boolean']['output'];
   is_closing: Scalars['Boolean']['output'];
