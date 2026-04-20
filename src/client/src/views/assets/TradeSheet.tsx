@@ -6,6 +6,7 @@ import {
   AlertCircle,
   ArrowRight,
   ArrowLeft,
+  Clock,
 } from 'lucide-react';
 import {
   Sheet,
@@ -21,6 +22,7 @@ import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generate
 import { useOpenChannelMutation } from '../../graphql/mutations/__generated__/openChannel.generated';
 import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
+import { useGetPendingChannelsQuery } from '../../graphql/queries/__generated__/getPendingChannels.generated';
 import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { getErrorContent } from '../../utils/error';
 import {
@@ -49,6 +51,52 @@ type TradeSheetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+const PendingChannelCard: FC<{
+  txId: string;
+  capacity: string;
+  local: string;
+  remote: string;
+}> = ({ txId, capacity, local, remote }) => (
+  <div className="flex flex-col gap-0.5 rounded-md border border-blue-500/30 bg-blue-500/5 px-2 py-1.5">
+    <div className="flex justify-between">
+      <span className="text-muted-foreground">{capacity}</span>
+      <span>
+        {local} / {remote}
+      </span>
+    </div>
+    <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+      <span className="font-mono truncate mr-2">{txId}</span>
+      <span className="text-blue-500 flex items-center gap-1 shrink-0">
+        <Clock className="h-3 w-3" />
+        opening
+      </span>
+    </div>
+  </div>
+);
+
+const OpenChannelCard: FC<{
+  channelId: string;
+  capacity: string;
+  local: string;
+  remote: string;
+  isActive: boolean;
+}> = ({ channelId, capacity, local, remote, isActive }) => (
+  <div className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5">
+    <div className="flex justify-between">
+      <span className="text-muted-foreground">{capacity}</span>
+      <span>
+        {local} / {remote}
+      </span>
+    </div>
+    <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+      <span className="font-mono">{channelId}</span>
+      <span className={isActive ? 'text-green-500' : 'text-yellow-500'}>
+        {isActive ? 'active' : 'inactive'}
+      </span>
+    </div>
+  </div>
+);
+
 export const TradeSheet: FC<TradeSheetProps> = ({
   offer,
   ambossAssetId,
@@ -69,6 +117,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const [quoteRfqId, setQuoteRfqId] = useState<string | null>(null);
   const [quoteExpiry, setQuoteExpiry] = useState<number | null>(null);
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+
+  const clearQuoteState = () => {
+    setQuotedSats(null);
+    setQuotePaymentRequest(null);
+    setQuoteRfqId(null);
+    setQuoteExpiry(null);
+  };
 
   const [openChannel, { loading: openChannelLoading }] = useOpenChannelMutation(
     {
@@ -103,10 +158,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           onOpenChange(false);
           setAmount('');
           setStep('input');
-          setQuotedSats(null);
-          setQuotePaymentRequest(null);
-          setQuoteRfqId(null);
-          setQuoteExpiry(null);
+          clearQuoteState();
         }
       },
       onError: err => toast.error(getErrorContent(err)),
@@ -126,10 +178,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         onOpenChange(false);
         setAmount('');
         setStep('input');
-        setQuotedSats(null);
-        setQuotePaymentRequest(null);
-        setQuoteRfqId(null);
-        setQuoteExpiry(null);
+        clearQuoteState();
       } else {
         toast.error('Trade did not complete — please try again');
         setStep('input');
@@ -175,7 +224,72 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       fetchPolicy: 'network-only',
     });
 
+  const { data: pendingData, loading: pendingLoading } =
+    useGetPendingChannelsQuery({
+      skip: !offer?.node.pubkey || !open,
+      fetchPolicy: 'network-only',
+    });
+
+  const matchAsset = (asset: {
+    groupKey?: string | null;
+    assetId: string;
+  }): boolean =>
+    tapdGroupKey
+      ? asset.groupKey === tapdGroupKey
+      : tapdAssetId
+        ? asset.assetId === tapdAssetId
+        : false;
+
+  // Prefill sats amount from existing or pending asset inbound capacity.
+  useEffect(() => {
+    if (!open || !offer?.node.pubkey || amount) return;
+    if (transactionType !== TapTransactionType.Purchase) return;
+
+    const rate = offer.rate.fullAmount;
+    if (!rate || rate === '0') return;
+
+    // Sum inbound from open asset channels
+    const openRemote = (channelsData?.getChannels || [])
+      .filter(ch => ch.asset && matchAsset(ch.asset))
+      .reduce((sum, ch) => sum + BigInt(ch.asset?.remoteBalance || '0'), 0n);
+
+    // Sum capacity from pending asset channels
+    const pendingCap = (pendingData?.getPendingChannels || [])
+      .filter(
+        ch =>
+          ch.is_opening &&
+          ch.partner_public_key === offer.node.pubkey &&
+          ch.asset &&
+          matchAsset(ch.asset)
+      )
+      .reduce((sum, ch) => sum + BigInt(ch.asset?.capacity || '0'), 0n);
+
+    const assetAtomic = openRemote > 0n ? openRemote : pendingCap;
+    if (assetAtomic <= 0n) return;
+
+    const sats = (assetAtomic * BigInt(100_000_000)) / BigInt(rate);
+    if (sats > 0n) setAmount(sats.toString());
+  }, [
+    pendingData,
+    channelsData,
+    open,
+    offer,
+    transactionType,
+    tapdGroupKey,
+    tapdAssetId,
+    amount,
+  ]);
+
   if (!offer) return null;
+
+  const pendingPeerChannels = (pendingData?.getPendingChannels || []).filter(
+    ch => ch.is_opening && ch.partner_public_key === offer.node.pubkey
+  );
+
+  const pendingBtcChannels = pendingPeerChannels.filter(ch => !ch.asset);
+  const pendingAssetChannels = pendingPeerChannels.filter(
+    ch => ch.asset && matchAsset(ch.asset)
+  );
 
   const isAssetPurchase = transactionType === TapTransactionType.Purchase;
   const nodeLabel = offer.node.alias || offer.node.pubkey?.slice(0, 16);
@@ -189,13 +303,9 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const btcOnlyChannels = peerChannels.filter(ch => !ch.asset);
   const allPeerAssetChannels = peerChannels.filter(ch => ch.asset);
 
-  // Filter to the requested asset. When tapdGroupKey/tapdAssetId is empty,
-  // include all asset channels with this peer.
-  const assetChannels = allPeerAssetChannels.filter(ch => {
-    if (tapdGroupKey) return ch.asset?.groupKey === tapdGroupKey;
-    if (tapdAssetId) return ch.asset?.assetId === tapdAssetId;
-    return true;
-  });
+  const assetChannels = allPeerAssetChannels.filter(
+    ch => ch.asset && matchAsset(ch.asset)
+  );
 
   const totalBtcLocal = btcOnlyChannels.reduce(
     (sum, ch) => sum + ch.local_balance,
@@ -203,11 +313,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   );
   const totalAssetLocal = assetChannels.reduce(
     (sum, ch) => sum + BigInt(ch.asset?.localBalance || '0'),
-    BigInt(0)
+    0n
   );
   const totalAssetRemote = assetChannels.reduce(
     (sum, ch) => sum + BigInt(ch.asset?.remoteBalance || '0'),
-    BigInt(0)
+    0n
   );
   const totalBtcRemote = btcOnlyChannels.reduce(
     (sum, ch) => sum + ch.remote_balance,
@@ -216,11 +326,27 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   const isValid = amount && Number(amount) > 0;
 
+  const hasPendingOutbound = isAssetPurchase
+    ? pendingBtcChannels.length > 0
+    : pendingAssetChannels.length > 0;
+
+  const hasPendingInbound = isAssetPurchase
+    ? pendingAssetChannels.length > 0
+    : pendingBtcChannels.length > 0;
+
+  const pendingOutboundSats = pendingBtcChannels.reduce(
+    (sum, ch) => sum + (ch.local_balance || 0),
+    0
+  );
+
   // Determine input mode from raw capacity to avoid circular dependency.
-  // When buying with existing asset inbound but no BTC outbound, the user
-  // opens a direct BTC channel (amount = sats) instead of a Magma order.
+  // When buying with existing or pending asset inbound but no BTC outbound,
+  // the user opens a direct BTC channel (amount = sats) instead of a Magma order.
   const needsOnlyOutboundBtc =
-    isAssetPurchase && totalAssetRemote > BigInt(0) && !(totalBtcLocal > 0);
+    isAssetPurchase &&
+    (totalAssetRemote > 0n || hasPendingInbound) &&
+    !(totalBtcLocal > 0) &&
+    !hasPendingOutbound;
 
   // Input is asset display units unless needsOnlyOutboundBtc (sats directly).
   // rate is in atomic-asset-units per BTC (full_amount from trade API)
@@ -232,7 +358,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const atomicTradeAmount =
     isValid && !needsOnlyOutboundBtc
       ? displayToAtomic(amount, assetPrecision)
-      : BigInt(0);
+      : 0n;
 
   // Amount-aware capacity checks: passes only if existing channels cover the
   // requested trade size. Falls back to > 0 when no amount has been entered.
@@ -244,7 +370,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         : totalAssetLocal >= atomicTradeAmount
       : isAssetPurchase
         ? totalBtcLocal > 0
-        : totalAssetLocal > BigInt(0);
+        : totalAssetLocal > 0n;
 
   const hasInbound = needsOnlyOutboundBtc
     ? true
@@ -253,8 +379,22 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? totalAssetRemote >= atomicTradeAmount
         : totalBtcRemote >= Number(satsAmount)
       : isAssetPurchase
-        ? totalAssetRemote > BigInt(0)
+        ? totalAssetRemote > 0n
         : totalBtcRemote > 0;
+
+  // Count offline channels with balance to warn (not block) the user.
+  const outboundChannels = isAssetPurchase ? btcOnlyChannels : assetChannels;
+  const inboundChannels = isAssetPurchase ? assetChannels : btcOnlyChannels;
+
+  const outboundTotal = outboundChannels.length;
+  const outboundOfflineCount = outboundChannels.filter(
+    ch => !ch.is_active
+  ).length;
+
+  const inboundTotal = inboundChannels.length;
+  const inboundOfflineCount = inboundChannels.filter(
+    ch => !ch.is_active
+  ).length;
 
   const readyToTrade = hasOutbound && hasInbound;
   const loading = openChannelLoading || setupLoading || tradeLoading;
@@ -283,6 +423,27 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const magmaSize = isAssetPurchase ? amount : satsAmount;
   const magmaUnit = isAssetPurchase ? assetSymbol : 'sats';
 
+  // Amount-independent: do both channel types exist (open or pending)?
+  const outboundExists = isAssetPurchase
+    ? totalBtcLocal > 0 || hasPendingOutbound
+    : totalAssetLocal > 0n || hasPendingOutbound;
+  const inboundExists = isAssetPurchase
+    ? totalAssetRemote > 0n || hasPendingInbound
+    : totalBtcRemote > 0 || hasPendingInbound;
+  const allChannelsExist = outboundExists && inboundExists;
+
+  // Only suppress the input when channels are still pending. If all channels
+  // are open but balance is insufficient, the user can still adjust the amount.
+  const hasPendingChannels = pendingPeerChannels.length > 0;
+  const waitingForChannels =
+    allChannelsExist && !readyToTrade && hasPendingChannels;
+
+  // Whether to hide the outbound card on the confirm step (already covered).
+  const skipOutboundCard =
+    hasOutbound ||
+    (hasPendingOutbound &&
+      (!isValid || pendingOutboundSats >= Number(satsAmount)));
+
   const handleSubmit = () => {
     if (!amount || !offer.node.pubkey) return;
 
@@ -298,9 +459,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       return;
     }
 
-    // When outbound already exists we skip opening a BTC channel by omitting satsAmount.
+    // Skip opening a BTC channel when outbound is already sufficient (open)
+    // or a pending channel covers the needed capacity.
     const skipOutboundBtc =
-      isAssetPurchase && hasInbound === false && hasOutbound === true;
+      isAssetPurchase &&
+      (hasOutbound ||
+        (hasPendingOutbound && pendingOutboundSats >= Number(satsAmount)));
 
     setupPartner({
       variables: {
@@ -322,11 +486,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
 
   const handleReviewTrade = async () => {
     if (!amount || !offer.node.pubkey) return;
-    setQuotedSats(null);
-    setQuotePaymentRequest(null);
-    setQuoteRfqId(null);
-    setQuoteExpiry(null);
-    const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
+    clearQuoteState();
+    const assetAtomicAmount = atomicTradeAmount.toString();
     const { data, error } = await fetchQuote({
       variables: {
         input: {
@@ -371,13 +532,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       );
       return;
     }
-    const assetAtomicAmount = String(displayToAtomic(amount, assetPrecision));
     executeTrade({
       variables: {
         input: {
           tapdAssetId,
           tapdGroupKey: tapdGroupKey || undefined,
-          assetAmount: assetAtomicAmount,
+          assetAmount: atomicTradeAmount.toString(),
           satsAmount: displaySats,
           transactionType,
           peerPubkey: offer.node.pubkey,
@@ -388,20 +548,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     });
   };
 
-  const clearQuoteState = () => {
-    setQuotedSats(null);
-    setQuotePaymentRequest(null);
-    setQuoteRfqId(null);
-    setQuoteExpiry(null);
-  };
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
       setStep('input');
       setAmount('');
       clearQuoteState();
     }
-    onOpenChange(open);
+    onOpenChange(nextOpen);
   };
 
   return (
@@ -454,119 +607,142 @@ export const TradeSheet: FC<TradeSheetProps> = ({
             {/* Existing channels with peer */}
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium">Existing channels</span>
-              {channelsLoading ? (
+              {channelsLoading || pendingLoading ? (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Checking channels...
                 </div>
-              ) : btcOnlyChannels.length === 0 && assetChannels.length === 0 ? (
+              ) : btcOnlyChannels.length === 0 &&
+                assetChannels.length === 0 &&
+                pendingBtcChannels.length === 0 &&
+                pendingAssetChannels.length === 0 ? (
                 <div className="text-xs text-muted-foreground">
                   No channels with this node
                 </div>
               ) : (
                 <div className="flex flex-col gap-1 text-xs">
+                  {pendingBtcChannels.map(ch => (
+                    <PendingChannelCard
+                      key={ch.transaction_id}
+                      txId={ch.transaction_id}
+                      capacity={`${((ch.local_balance || 0) + (ch.remote_balance || 0)).toLocaleString()} sats`}
+                      local={(ch.local_balance || 0).toLocaleString()}
+                      remote={(ch.remote_balance || 0).toLocaleString()}
+                    />
+                  ))}
+                  {pendingAssetChannels.map(ch => (
+                    <PendingChannelCard
+                      key={ch.transaction_id}
+                      txId={ch.transaction_id}
+                      capacity={`${atomicToDisplay(ch.asset!.capacity, assetPrecision)} ${assetSymbol}`}
+                      local={atomicToDisplay(
+                        ch.asset!.localBalance,
+                        assetPrecision
+                      )}
+                      remote={atomicToDisplay(
+                        ch.asset!.remoteBalance,
+                        assetPrecision
+                      )}
+                    />
+                  ))}
                   {btcOnlyChannels.map(ch => (
-                    <div
+                    <OpenChannelCard
                       key={ch.id}
-                      className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5"
-                    >
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                          {Number(ch.capacity).toLocaleString()} sats
-                        </span>
-                        <span>
-                          {Number(ch.local_balance).toLocaleString()} /{' '}
-                          {Number(ch.remote_balance).toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                        <span className="font-mono">{ch.id}</span>
-                        <span
-                          className={
-                            ch.is_active ? 'text-green-500' : 'text-yellow-500'
-                          }
-                        >
-                          {ch.is_active ? 'active' : 'inactive'}
-                        </span>
-                      </div>
-                    </div>
+                      channelId={ch.id}
+                      capacity={`${Number(ch.capacity).toLocaleString()} sats`}
+                      local={Number(ch.local_balance).toLocaleString()}
+                      remote={Number(ch.remote_balance).toLocaleString()}
+                      isActive={ch.is_active}
+                    />
                   ))}
                   {assetChannels.map(ch => (
-                    <div
+                    <OpenChannelCard
                       key={ch.id}
-                      className="flex flex-col gap-0.5 rounded-md border border-border bg-muted/20 px-2 py-1.5"
-                    >
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                          {atomicToDisplay(ch.asset!.capacity, assetPrecision)}{' '}
-                          {assetSymbol}
-                        </span>
-                        <span>
-                          {atomicToDisplay(
-                            ch.asset!.localBalance,
-                            assetPrecision
-                          )}{' '}
-                          /{' '}
-                          {atomicToDisplay(
-                            ch.asset!.remoteBalance,
-                            assetPrecision
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                        <span className="font-mono">{ch.id}</span>
-                        <span
-                          className={
-                            ch.is_active ? 'text-green-500' : 'text-yellow-500'
-                          }
-                        >
-                          {ch.is_active ? 'active' : 'inactive'}
-                        </span>
-                      </div>
-                    </div>
+                      channelId={ch.id}
+                      capacity={`${atomicToDisplay(ch.asset!.capacity, assetPrecision)} ${assetSymbol}`}
+                      local={atomicToDisplay(
+                        ch.asset!.localBalance,
+                        assetPrecision
+                      )}
+                      remote={atomicToDisplay(
+                        ch.asset!.remoteBalance,
+                        assetPrecision
+                      )}
+                      isActive={ch.is_active}
+                    />
                   ))}
                 </div>
               )}
             </div>
 
             {/* Channel status */}
-            {!channelsLoading && (
+            {!channelsLoading && !pendingLoading && (
               <div className="flex flex-col gap-1.5">
                 <span className="text-sm font-medium">Channel status</span>
                 <div className="flex flex-col gap-1 text-xs">
+                  {pendingPeerChannels.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-3.5 w-3.5 text-blue-500" />
+                      <span className="text-blue-500">
+                        {pendingPeerChannels.length} channel
+                        {pendingPeerChannels.length > 1 ? 's' : ''} opening with
+                        this node
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
-                    {hasOutbound ? (
+                    {outboundExists && !hasPendingOutbound ? (
                       <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                    ) : hasPendingOutbound ? (
+                      <Clock className="h-3.5 w-3.5 text-blue-500" />
                     ) : (
                       <AlertCircle className="h-3.5 w-3.5 text-yellow-500" />
                     )}
                     <span>
                       Outbound ({isAssetPurchase ? 'BTC' : assetSymbol})
-                      {hasOutbound ? (
+                      {outboundExists && !hasPendingOutbound ? (
                         <span className="text-muted-foreground ml-1">
                           {isAssetPurchase
                             ? `${totalBtcLocal.toLocaleString()} sats`
                             : `${atomicToDisplay(totalAssetLocal.toString(), assetPrecision)} ${assetSymbol}`}
                         </span>
+                      ) : hasPendingOutbound ? (
+                        <span className="text-blue-500 ml-1">opening</span>
                       ) : (
                         <span className="text-yellow-500 ml-1">missing</span>
                       )}
                     </span>
                   </div>
+                  {outboundOfflineCount > 0 && hasOutbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>
+                        {outboundOfflineCount === outboundTotal
+                          ? outboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${outboundTotal} channels offline`
+                          : `${outboundOfflineCount} of ${outboundTotal} channels offline`}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
-                    {hasInbound ? (
+                    {inboundExists && !hasPendingInbound ? (
                       <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                    ) : hasPendingInbound ? (
+                      <Clock className="h-3.5 w-3.5 text-blue-500" />
                     ) : (
                       <AlertCircle className="h-3.5 w-3.5 text-yellow-500" />
                     )}
                     <span>
                       Inbound ({isAssetPurchase ? assetSymbol : 'BTC'})
-                      {hasInbound ? (
+                      {inboundExists && !hasPendingInbound ? (
                         <span className="text-muted-foreground ml-1">
                           {isAssetPurchase
                             ? `${atomicToDisplay(totalAssetRemote.toString(), assetPrecision)} ${assetSymbol}`
                             : `${totalBtcRemote.toLocaleString()} sats`}
                         </span>
+                      ) : hasPendingInbound ? (
+                        <span className="text-blue-500 ml-1">opening</span>
                       ) : (
                         <span className="text-yellow-500 ml-1">
                           missing — will be purchased via Magma
@@ -574,43 +750,62 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {inboundOfflineCount > 0 && hasInbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>
+                        {inboundOfflineCount === inboundTotal
+                          ? inboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${inboundTotal} channels offline`
+                          : `${inboundOfflineCount} of ${inboundTotal} channels offline`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="trade-amount"
-                className="text-sm text-muted-foreground"
-              >
-                {needsOnlyOutboundBtc
-                  ? 'Channel size (sats)'
-                  : `Amount (${assetSymbol})`}
-              </label>
-              <div className="relative">
-                <input
-                  id="trade-amount"
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="Enter amount"
-                  value={amount}
-                  onChange={e => {
-                    const v = e.target.value.replace(/[^0-9.]/g, '');
-                    // Allow only one decimal point
-                    const parts = v.split('.');
-                    setAmount(
-                      parts.length > 2
-                        ? `${parts[0]}.${parts.slice(1).join('')}`
-                        : v
-                    );
-                  }}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                  {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
-                </span>
+            {waitingForChannels ? (
+              <div className="rounded-md border border-blue-500/30 bg-blue-500/5 p-3 text-sm text-blue-500">
+                All channels are in place. Trade will be available once pending
+                channels confirm.
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="trade-amount"
+                  className="text-sm text-muted-foreground"
+                >
+                  {needsOnlyOutboundBtc
+                    ? 'Channel size (sats)'
+                    : `Amount (${assetSymbol})`}
+                </label>
+                <div className="relative">
+                  <input
+                    id="trade-amount"
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="Enter amount"
+                    value={amount}
+                    onChange={e => {
+                      const v = e.target.value.replace(/[^0-9.]/g, '');
+                      // Allow only one decimal point
+                      const parts = v.split('.');
+                      setAmount(
+                        parts.length > 2
+                          ? `${parts[0]}.${parts.slice(1).join('')}`
+                          : v
+                      );
+                    }}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-16"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                    {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -700,7 +895,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               <div className="flex flex-col gap-2">
                 <span className="text-sm font-medium">Channels to open</span>
                 <div className="flex flex-col gap-2">
-                  {!hasOutbound && (
+                  {!skipOutboundCard && (
                     <div className="rounded-md border border-border bg-muted/20 p-3">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <ArrowRight className="h-3.5 w-3.5" />
@@ -714,7 +909,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       </div>
                     </div>
                   )}
-                  {!hasInbound && (
+                  {!hasInbound && !hasPendingInbound && (
                     <div className="rounded-md border border-border bg-muted/20 p-3">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <ArrowLeft className="h-3.5 w-3.5" />
@@ -735,7 +930,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         )}
 
         <SheetFooter className="flex-row gap-2 p-4">
-          {step === 'input' && (
+          {step === 'input' && !waitingForChannels && (
             <Button
               onClick={
                 readyToTrade ? handleReviewTrade : () => setStep('confirm')
@@ -800,7 +995,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <Button
                   size="lg"
                   onClick={handleSubmit}
-                  disabled={loading}
+                  disabled={loading || waitingForChannels}
                   className="flex-1"
                 >
                   {loading ? (
@@ -808,6 +1003,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       {needsOnlyOutboundBtc ? 'Opening...' : 'Setting up...'}
                     </>
+                  ) : waitingForChannels ? (
+                    'Channels opening...'
                   ) : needsOnlyOutboundBtc ? (
                     'Open Channel'
                   ) : (
