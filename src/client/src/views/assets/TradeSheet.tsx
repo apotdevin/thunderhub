@@ -261,17 +261,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   const inboundChannels = isAssetPurchase ? assetChannels : btcOnlyChannels;
 
   const outboundTotal = outboundChannels.length;
-  const outboundOfflineCount = outboundChannels.filter(ch =>
-    isAssetPurchase
-      ? !ch.is_active && ch.local_balance > 0
-      : !ch.is_active && BigInt(ch.asset?.localBalance || '0') > BigInt(0)
+  const outboundOfflineCount = outboundChannels.filter(
+    ch => !ch.is_active
   ).length;
 
   const inboundTotal = inboundChannels.length;
-  const inboundOfflineCount = inboundChannels.filter(ch =>
-    isAssetPurchase
-      ? !ch.is_active && BigInt(ch.asset?.remoteBalance || '0') > BigInt(0)
-      : !ch.is_active && ch.remote_balance > 0
+  const inboundOfflineCount = inboundChannels.filter(
+    ch => !ch.is_active
   ).length;
 
   const readyToTrade = hasOutbound && hasInbound;
