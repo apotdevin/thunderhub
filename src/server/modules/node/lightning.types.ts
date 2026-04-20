@@ -103,6 +103,34 @@ export type PayViaPaymentDetailsOptions = {
   messages?: { type: string; value: string }[];
 };
 
+export type PayViaRoutesHop = {
+  channel: string;
+  channel_capacity: number;
+  fee: number;
+  fee_mtokens: string;
+  forward: number;
+  forward_mtokens: string;
+  public_key?: string;
+  timeout: number;
+  messages?: { type: string; value: string }[];
+};
+
+export type PayViaRoutesRoute = {
+  fee: number;
+  fee_mtokens: string;
+  hops: PayViaRoutesHop[];
+  mtokens: string;
+  payment?: string;
+  timeout: number;
+  tokens: number;
+  total_mtokens?: string;
+};
+
+export type PayViaRoutesOptions = {
+  id?: string;
+  routes: PayViaRoutesRoute[];
+};
+
 export type SendToChainAddressOptions = {
   address: string;
   tokens?: number;
@@ -207,6 +235,7 @@ export interface LightningProvider {
     connection: any,
     options: PayViaPaymentDetailsOptions
   ): Promise<any>;
+  payViaRoutes(connection: any, options: PayViaRoutesOptions): Promise<any>;
   decodePaymentRequest(connection: any, request: string): Promise<any>;
   getPayments(connection: any, options: GetPaymentsOptions): Promise<any>;
 
