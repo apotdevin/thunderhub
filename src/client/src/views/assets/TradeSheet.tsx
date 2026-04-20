@@ -324,7 +324,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     0
   );
 
-  const isValid = amount && BigInt(amount) > 0n;
+  const isValid = amount && Number(amount) > 0;
 
   const hasPendingOutbound = isAssetPurchase
     ? pendingBtcChannels.length > 0

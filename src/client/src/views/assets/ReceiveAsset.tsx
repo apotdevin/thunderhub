@@ -3,9 +3,21 @@ import toast from 'react-hot-toast';
 import { Loader2, Copy, Check } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useNewTapAddressMutation } from '../../graphql/mutations/__generated__/newTapAddress.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetTapUniverseAssetsQuery } from '../../graphql/queries/__generated__/getTapUniverseAssets.generated';
+import { useGetTapFederationServersQuery } from '../../graphql/queries/__generated__/getTapFederationServers.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
 
@@ -15,10 +27,15 @@ type GroupEntry = {
   source: 'owned' | 'universe';
 };
 
+const toProofCourierAddr = (host: string): string =>
+  `authmailbox+universerpc://${host}`;
+
 export const ReceiveAsset: FC = () => {
   const [selectedKey, setSelectedKey] = useState('');
   const [customGroupKey, setCustomGroupKey] = useState('');
   const [amount, setAmount] = useState('');
+  const [selectedCourier, setSelectedCourier] = useState('__default');
+  const [customCourier, setCustomCourier] = useState('');
   const [generatedAddr, setGeneratedAddr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -27,6 +44,11 @@ export const ReceiveAsset: FC = () => {
   });
 
   const { data: universeData } = useGetTapUniverseAssetsQuery();
+
+  const { data: fedData } = useGetTapFederationServersQuery();
+
+  const federationServers =
+    fedData?.taproot_assets?.get_federation_servers?.servers || [];
 
   // Merge owned assets and universe assets, deduplicate by group key
   const ownedGroups = (
@@ -62,11 +84,19 @@ export const ReceiveAsset: FC = () => {
     }
   }
 
-  const isCustom = selectedKey === '__custom';
-  const resolvedGroupKey = isCustom
+  const isCustomGroup = selectedKey === '__custom';
+  const resolvedGroupKey = isCustomGroup
     ? customGroupKey
     : allGroups.find(g => g.groupKey === selectedKey)?.groupKey;
   const canGenerate = !!resolvedGroupKey;
+
+  const isCustomCourier = selectedCourier === '__custom';
+  const resolvedCourier =
+    selectedCourier === '__default'
+      ? undefined
+      : isCustomCourier
+        ? customCourier || undefined
+        : selectedCourier;
 
   const [newAddress, { loading }] = useNewTapAddressMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -88,7 +118,8 @@ export const ReceiveAsset: FC = () => {
     newAddress({
       variables: {
         group_key: resolvedGroupKey,
-        amt: parseInt(amount, 10),
+        amt: amount,
+        proof_courier_addr: resolvedCourier,
       },
     });
   };
@@ -110,30 +141,40 @@ export const ReceiveAsset: FC = () => {
             <label className="text-xs text-muted-foreground mb-1 block">
               Group Key
             </label>
-            <select
+            <Select
               value={selectedKey}
-              onChange={e => {
-                setSelectedKey(e.target.value);
+              onValueChange={v => {
+                setSelectedKey(v);
                 setGeneratedAddr(null);
               }}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="">Select a group...</option>
-              {allGroups.map(g => (
-                <option key={g.groupKey} value={g.groupKey}>
-                  {g.name} ({g.groupKey.slice(0, 16)}...)
-                  {g.source === 'universe' ? ' [universe]' : ''}
-                </option>
-              ))}
-              <option value="__custom">Enter group key manually...</option>
-            </select>
-            {isCustom && (
-              <input
-                type="text"
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a group..." />
+              </SelectTrigger>
+              <SelectContent>
+                {allGroups.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel>Available Groups</SelectLabel>
+                    {allGroups.map(g => (
+                      <SelectItem key={g.groupKey} value={g.groupKey}>
+                        {g.name} ({g.groupKey.slice(0, 16)}...)
+                        {g.source === 'universe' ? ' [universe]' : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                )}
+                <SelectSeparator />
+                <SelectItem value="__custom">
+                  Enter group key manually...
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            {isCustomGroup && (
+              <Input
                 value={customGroupKey}
                 onChange={e => setCustomGroupKey(e.target.value)}
                 placeholder="Group key (hex)"
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono mt-2"
+                className="font-mono mt-2"
               />
             )}
           </div>
@@ -141,13 +182,56 @@ export const ReceiveAsset: FC = () => {
             <label className="text-xs text-muted-foreground mb-1 block">
               Amount
             </label>
-            <input
+            <Input
               type="number"
               value={amount}
               onChange={e => setAmount(e.target.value)}
               placeholder="100"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">
+              Proof Courier
+            </label>
+            <Select
+              value={selectedCourier}
+              onValueChange={v => {
+                setSelectedCourier(v);
+                setGeneratedAddr(null);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Default" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__default">Default</SelectItem>
+                {federationServers.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel>Synced Universes</SelectLabel>
+                    {federationServers.map(s => {
+                      const uri = toProofCourierAddr(s.host);
+                      return (
+                        <SelectItem key={s.host} value={uri}>
+                          {uri}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectGroup>
+                )}
+                <SelectSeparator />
+                <SelectItem value="__custom">
+                  Enter custom address...
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            {isCustomCourier && (
+              <Input
+                value={customCourier}
+                onChange={e => setCustomCourier(e.target.value)}
+                placeholder="authmailbox+universerpc://host:port"
+                className="font-mono mt-2"
+              />
+            )}
           </div>
           <Button
             onClick={handleGenerate}

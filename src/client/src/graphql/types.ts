@@ -1553,9 +1553,10 @@ export type TaprootAssetsMutationsMint_AssetArgs = {
 };
 
 export type TaprootAssetsMutationsNew_AddressArgs = {
-  amt?: InputMaybe<Scalars['Int']['input']>;
+  amt?: InputMaybe<Scalars['String']['input']>;
   asset_id?: InputMaybe<Scalars['String']['input']>;
   group_key?: InputMaybe<Scalars['String']['input']>;
+  proof_courier_addr?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TaprootAssetsMutationsRemove_Federation_ServerArgs = {

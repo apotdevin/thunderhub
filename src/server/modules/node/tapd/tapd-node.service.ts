@@ -34,8 +34,11 @@ import { Payment as LnrpcPayment } from '@lightningpolar/tapd-api/dist/types/lnr
 import { AccountsService } from '../../accounts/accounts.service';
 import { EnrichedAccount } from '../../accounts/accounts.types';
 import { ProviderRegistryService } from '../provider-registry.service';
+import { NodeService } from '../node.service';
 import { Capability } from '../lightning.types';
 import { isTaprootAssetsProvider } from './taproot-assets.types';
+import { getNetwork } from '../../../utils/network';
+import { toWithError } from '../../../utils/async';
 
 type AssetChannelInfo = {
   channelPoint: string;
@@ -56,6 +59,7 @@ export class TapdNodeService {
   constructor(
     private accountsService: AccountsService,
     private providerRegistry: ProviderRegistryService,
+    private nodeService: NodeService,
     private configService: ConfigService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -140,27 +144,36 @@ export class TapdNodeService {
 
   // ── Addresses ──
 
+  private async isMainnet(id: string): Promise<boolean> {
+    const [info] = await toWithError(this.nodeService.getWalletInfo(id));
+    return getNetwork(info?.chains?.[0] || '') === 'btc';
+  }
+
   async newAddr(opts: {
     id: string;
     assetId?: string;
     groupKey?: string;
-    amt: number;
+    amt: string;
     proofCourierAddr?: string;
   }): Promise<Addr> {
     const tapd = this.getTapd(opts.id);
-    const isProduction = this.configService.get('isProduction');
+    const mainnet = await this.isMainnet(opts.id);
     const defaultCourier =
       'authmailbox+universerpc://universe.lightning.finance:10029';
+
+    const courierAddr = opts.proofCourierAddr
+      ? opts.proofCourierAddr
+      : mainnet
+        ? defaultCourier
+        : undefined;
 
     return tapd.taprootAssets.newAddr({
       ...(opts.groupKey
         ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
-      amt: String(opts.amt),
+      amt: opts.amt,
       addressVersion: 'ADDR_VERSION_V2',
-      ...(isProduction
-        ? { proofCourierAddr: opts.proofCourierAddr || defaultCourier }
-        : {}),
+      ...(courierAddr ? { proofCourierAddr: courierAddr } : {}),
     });
   }
 
@@ -360,7 +373,7 @@ export class TapdNodeService {
     id: string;
     assetId?: string;
     groupKey?: string;
-    assetAmount: number;
+    assetAmount: string;
     peerPubkey?: string;
     memo?: string;
     expiry?: number;
@@ -370,7 +383,7 @@ export class TapdNodeService {
       ...(opts.groupKey
         ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
-      assetAmount: String(opts.assetAmount),
+      assetAmount: opts.assetAmount,
       ...(opts.peerPubkey
         ? {
             peerPubkey: Buffer.from(opts.peerPubkey, 'hex'),
@@ -692,7 +705,7 @@ export class TapdNodeService {
   async fundAssetChannel(opts: {
     id: string;
     peerPubkey: string;
-    assetAmount: number;
+    assetAmount: string;
     groupKey?: string;
     assetId?: string;
     feeRateSatPerVbyte?: number;
@@ -701,7 +714,7 @@ export class TapdNodeService {
     const tapd = this.getTapd(opts.id);
     return tapd.channels.fundChannel({
       peerPubkey: Buffer.from(opts.peerPubkey, 'hex'),
-      assetAmount: String(opts.assetAmount),
+      assetAmount: opts.assetAmount,
       ...(opts.groupKey
         ? { groupKey: Buffer.from(opts.groupKey, 'hex') }
         : { assetId: Buffer.from(opts.assetId || '', 'hex') }),
