@@ -171,6 +171,7 @@ type Channel {
 
 type ChannelAsset {
   assetId: String!
+  assetName: String!
   capacity: String!
   groupKey: String
   localBalance: String!

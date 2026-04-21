@@ -213,6 +213,7 @@ export type Channel = {
 export type ChannelAsset = {
   __typename?: 'ChannelAsset';
   assetId: Scalars['String']['output'];
+  assetName: Scalars['String']['output'];
   capacity: Scalars['String']['output'];
   groupKey?: Maybe<Scalars['String']['output']>;
   localBalance: Scalars['String']['output'];

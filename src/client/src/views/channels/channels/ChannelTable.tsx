@@ -55,10 +55,13 @@ export const ChannelTable = () => {
   const tableData = useMemo(() => {
     const channelData = data?.getChannels || [];
 
-    const balanceArray = channelData.reduce(
-      (p, c) => [...p, c.remote_balance || 0, c.local_balance || 0],
-      [] as number[]
-    );
+    const balanceArray = channelData.reduce((p, c) => {
+      const lb = c.asset ? Number(c.asset.localBalance) : c.local_balance || 0;
+      const rb = c.asset
+        ? Number(c.asset.remoteBalance)
+        : c.remote_balance || 0;
+      return [...p, rb, lb];
+    }, [] as number[]);
 
     const maxBalance = Math.max(...balanceArray);
 
@@ -156,6 +159,16 @@ export const ChannelTable = () => {
         ),
       };
 
+      const asset = c.asset;
+      const localBal = asset ? Number(asset.localBalance) : c.local_balance;
+      const remoteBal = asset ? Number(asset.remoteBalance) : c.remote_balance;
+      const formatBal = (btcAmount: number, assetAmount: number) =>
+        asset ? (
+          <span>{assetAmount}</span>
+        ) : (
+          <Price amount={btcAmount} breakNumber={true} noUnit={true} />
+        );
+
       return {
         ...c,
         ...status,
@@ -177,49 +190,25 @@ export const ChannelTable = () => {
           144 *
           30
         ).toFixed(2),
-        balancePercent: getPercent(c.local_balance, c.remote_balance),
-        balancePercentText: `${getPercent(c.local_balance, c.remote_balance)}%`,
+        balancePercent: getPercent(localBal, remoteBal),
+        balancePercentText: `${getPercent(localBal, remoteBal)}%`,
         proportionalBars: (
           <div className="min-w-[180px]">
             <BalanceBars
-              local={getBar(c.local_balance, maxBalance)}
-              remote={getBar(c.remote_balance, maxBalance)}
-              formatLocal={
-                <Price
-                  amount={c.local_balance}
-                  breakNumber={true}
-                  noUnit={true}
-                />
-              }
-              formatRemote={
-                <Price
-                  amount={c.remote_balance}
-                  breakNumber={true}
-                  noUnit={true}
-                />
-              }
+              local={getBar(localBal, maxBalance)}
+              remote={getBar(remoteBal, maxBalance)}
+              formatLocal={formatBal(c.local_balance, localBal)}
+              formatRemote={formatBal(c.remote_balance, remoteBal)}
             />
           </div>
         ),
         balanceBars: (
           <div className="min-w-[180px]">
             <BalanceBars
-              local={getPercent(c.local_balance, c.remote_balance)}
-              remote={getPercent(c.remote_balance, c.local_balance)}
-              formatLocal={
-                <Price
-                  amount={c.local_balance}
-                  breakNumber={true}
-                  noUnit={true}
-                />
-              }
-              formatRemote={
-                <Price
-                  amount={c.remote_balance}
-                  breakNumber={true}
-                  noUnit={true}
-                />
-              }
+              local={getPercent(localBal, remoteBal)}
+              remote={getPercent(remoteBal, localBal)}
+              formatLocal={formatBal(c.local_balance, localBal)}
+              formatRemote={formatBal(c.remote_balance, remoteBal)}
             />
           </div>
         ),
@@ -339,20 +328,46 @@ export const ChannelTable = () => {
           {
             header: 'Local',
             accessorKey: 'local_balance',
-            cell: ({ row }: any) => (
-              <div className="whitespace-nowrap">
-                <Price amount={row.original.local_balance} />
-              </div>
-            ),
+            cell: ({ row }: any) => {
+              const asset = row.original.asset;
+              return (
+                <div className="whitespace-nowrap">
+                  <div>
+                    <Price amount={row.original.local_balance} />
+                  </div>
+                  {asset && (
+                    <div className="text-xs">
+                      {asset.localBalance}{' '}
+                      <span className="text-gray-500">
+                        {asset.assetName || asset.assetId.slice(0, 8)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            },
           },
           {
             header: 'Remote',
             accessorKey: 'remote_balance',
-            cell: ({ row }: any) => (
-              <div className="whitespace-nowrap">
-                <Price amount={row.original.remote_balance} />
-              </div>
-            ),
+            cell: ({ row }: any) => {
+              const asset = row.original.asset;
+              return (
+                <div className="whitespace-nowrap">
+                  <div>
+                    <Price amount={row.original.remote_balance} />
+                  </div>
+                  {asset && (
+                    <div className="text-xs">
+                      {asset.remoteBalance}{' '}
+                      <span className="text-gray-500">
+                        {asset.assetName || asset.assetId.slice(0, 8)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            },
           },
           {
             header: 'Percent',

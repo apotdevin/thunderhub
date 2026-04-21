@@ -95,6 +95,8 @@ export class SingleChannel {
 export class ChannelAsset {
   @Field()
   assetId: string;
+  @Field()
+  assetName: string;
   @Field({ nullable: true })
   groupKey?: string;
   @Field()

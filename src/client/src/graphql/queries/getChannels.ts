@@ -55,6 +55,13 @@ export const GET_CHANNELS = gql`
           min_htlc_mtokens
         }
       }
+      asset {
+        assetId
+        assetName
+        localBalance
+        remoteBalance
+        capacity
+      }
     }
   }
 `;

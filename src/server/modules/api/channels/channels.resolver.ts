@@ -26,6 +26,7 @@ import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 
 function toAssetField(ac: {
   assetId: string;
+  assetName: string;
   groupKey: string;
   localBalance: string;
   remoteBalance: string;
@@ -33,6 +34,7 @@ function toAssetField(ac: {
 }) {
   return {
     assetId: ac.assetId,
+    assetName: ac.assetName,
     groupKey: ac.groupKey,
     localBalance: ac.localBalance,
     remoteBalance: ac.remoteBalance,
