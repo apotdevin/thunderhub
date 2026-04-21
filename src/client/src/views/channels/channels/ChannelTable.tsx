@@ -27,6 +27,16 @@ import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
 
+const AssetLabel = ({
+  asset,
+}: {
+  asset: { assetName: string; assetId: string };
+}) => (
+  <span className="text-gray-500">
+    {asset.assetName || asset.assetId.slice(0, 8)}
+  </span>
+);
+
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
   return Math.min(percent, 100);
@@ -175,8 +185,8 @@ export const ChannelTable = () => {
 
       const assetBar = asset ? (
         <div className="mt-1">
-          <div className="text-xs text-gray-500 mb-0.5 text-center">
-            {asset.assetName || asset.assetId.slice(0, 8)}
+          <div className="text-xs mb-0.5 text-center">
+            <AssetLabel asset={asset} />
           </div>
           <BalanceBars
             local={getPercent(
@@ -275,9 +285,7 @@ export const ChannelTable = () => {
                   </div>
                   <div className="text-xs">
                     {formatNumber(asset.localBalance)}{' '}
-                    <span className="text-gray-500">
-                      {asset.assetName || asset.assetId.slice(0, 8)}
-                    </span>
+                    <AssetLabel asset={asset} />
                   </div>
                 </>
               )}
@@ -323,9 +331,7 @@ export const ChannelTable = () => {
                   </div>
                   <div className="text-xs">
                     {formatNumber(asset.remoteBalance)}{' '}
-                    <span className="text-gray-500">
-                      {asset.assetName || asset.assetId.slice(0, 8)}
-                    </span>
+                    <AssetLabel asset={asset} />
                   </div>
                 </>
               )}
@@ -429,10 +435,7 @@ export const ChannelTable = () => {
                   </div>
                   {asset && (
                     <div className="text-xs">
-                      {asset.capacity}{' '}
-                      <span className="text-gray-500">
-                        {asset.assetName || asset.assetId.slice(0, 8)}
-                      </span>
+                      {asset.capacity} <AssetLabel asset={asset} />
                     </div>
                   )}
                 </div>
@@ -471,9 +474,7 @@ export const ChannelTable = () => {
                   {asset && (
                     <div className="text-xs">
                       {formatNumber(asset.localBalance)}{' '}
-                      <span className="text-gray-500">
-                        {asset.assetName || asset.assetId.slice(0, 8)}
-                      </span>
+                      <AssetLabel asset={asset} />
                     </div>
                   )}
                 </div>
@@ -493,9 +494,7 @@ export const ChannelTable = () => {
                   {asset && (
                     <div className="text-xs">
                       {formatNumber(asset.remoteBalance)}{' '}
-                      <span className="text-gray-500">
-                        {asset.assetName || asset.assetId.slice(0, 8)}
-                      </span>
+                      <AssetLabel asset={asset} />
                     </div>
                   )}
                 </div>
