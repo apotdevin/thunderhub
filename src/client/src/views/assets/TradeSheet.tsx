@@ -944,18 +944,26 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 readyToTrade ? handleReviewTrade : () => setStep('confirm')
               }
               disabled={
+                quoteLoading ||
                 !isValid ||
                 (!readyToTrade && !needsOnlyOutboundBtc && !offer.magmaOfferId)
               }
               className="w-full"
             >
-              {readyToTrade
-                ? 'Review Trade'
-                : needsOnlyOutboundBtc
-                  ? 'Review Channel'
-                  : !offer.magmaOfferId
-                    ? 'No offer available for setup'
-                    : 'Review Setup'}
+              {readyToTrade && quoteLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Getting quote...
+                </>
+              ) : readyToTrade ? (
+                'Review Trade'
+              ) : needsOnlyOutboundBtc ? (
+                'Review Channel'
+              ) : !offer.magmaOfferId ? (
+                'No offer available for setup'
+              ) : (
+                'Review Setup'
+              )}
             </Button>
           )}
           {step === 'confirm' && (
