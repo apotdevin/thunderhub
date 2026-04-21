@@ -133,7 +133,7 @@ export const Keysend: FC<KeysendProps> = ({ payCallback }) => {
             </div>
             <div className="flex items-center justify-between px-3 py-2">
               <span className="text-muted-foreground">Destination</span>
-              <span className="max-w-[200px] truncate font-mono text-[11px] font-medium">
+              <span className="max-w-50 truncate font-mono text-[11px] font-medium">
                 {publicKey}
               </span>
             </div>

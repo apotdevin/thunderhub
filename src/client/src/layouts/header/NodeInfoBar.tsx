@@ -122,7 +122,7 @@ export const NodeInfoBar = () => {
         }}
       >
         <span
-          className="font-medium truncate max-w-[140px]"
+          className="font-medium truncate max-w-35"
           style={{ color: getAliasStyle().color }}
         >
           {alias}

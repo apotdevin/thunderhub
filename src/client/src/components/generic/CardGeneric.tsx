@@ -7,7 +7,7 @@ export const Progress = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('m-[5px] bg-muted', className)} {...props} />
+  <div ref={ref} className={cn('m-1.25 bg-muted', className)} {...props} />
 ));
 
 // ─── ProgressBar ─────────────────────────────────────────
@@ -70,7 +70,7 @@ export const NodeTitle = forwardRef<
   <div
     ref={ref}
     className={cn(
-      'text-base font-bold w-auto mb-2 whitespace-nowrap overflow-hidden text-ellipsis md:w-[240px] md:mb-0 flex items-center',
+      'text-base font-bold w-auto mb-2 whitespace-nowrap overflow-hidden text-ellipsis md:w-60 md:mb-0 flex items-center',
       className
     )}
     {...props}
@@ -84,7 +84,7 @@ export const StatusLine = forwardRef<
   <div
     ref={ref}
     className={cn(
-      'w-full relative -right-3 -top-3 flex justify-end mb-[-8px]',
+      'w-full relative -right-3 -top-3 flex justify-end -mb-2',
       className
     )}
     {...props}

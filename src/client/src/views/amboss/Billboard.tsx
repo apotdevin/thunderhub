@@ -100,7 +100,7 @@ export const Billboard = () => {
               <div className="divide-y divide-border rounded border border-border text-xs">
                 <div className="flex items-center justify-between px-3 py-2">
                   <span className="text-muted-foreground">Message</span>
-                  <span className="max-w-[250px] truncate font-medium">
+                  <span className="max-w-62.5 truncate font-medium">
                     {message}
                   </span>
                 </div>

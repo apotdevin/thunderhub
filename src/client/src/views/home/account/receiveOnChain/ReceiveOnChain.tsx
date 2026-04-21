@@ -29,7 +29,7 @@ export const ReceiveOnChainCard = () => {
     <>
       {data && data.createAddress ? (
         <div className="flex flex-col justify-between items-center md:flex-row">
-          <div className="w-[280px] h-[280px] m-4 bg-white p-4">
+          <div className="w-70 h-70 m-4 bg-white p-4">
             <QRCodeSVG value={data.createAddress} size={248} />
           </div>
           <div className="w-full h-full flex flex-col justify-center items-center">

@@ -25,7 +25,7 @@ const SectionTitle = ({
   icon: React.ReactNode;
   label: string;
 }) => (
-  <div className="flex items-center gap-1.5 pb-3 md:pb-0 md:w-[100px] md:shrink-0">
+  <div className="flex items-center gap-1.5 pb-3 md:pb-0 md:w-25 md:shrink-0">
     <div>{icon}</div>
     <span className="text-sm font-medium text-nowrap">{label}</span>
   </div>

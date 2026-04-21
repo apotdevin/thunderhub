@@ -29,7 +29,7 @@ const Modal = ({
         className={
           noMinWidth
             ? 'max-h-[80vh] overflow-y-auto'
-            : 'max-h-[80vh] overflow-y-auto sm:max-w-[578px]'
+            : 'max-h-[80vh] overflow-y-auto sm:max-w-144.5'
         }
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>

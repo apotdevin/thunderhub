@@ -80,7 +80,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
 
   if (loading || paymentsLoading) {
     return (
-      <div className="w-full h-[300px]">
+      <div className="w-full h-75">
         <div className="flex h-full w-full items-center justify-center">
           <LoadingCard noCard={true} />
         </div>
@@ -93,7 +93,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
     (showPay && !paymentsData?.getPayments.payments.length)
   ) {
     return (
-      <div className="w-full h-[300px]">
+      <div className="w-full h-75">
         <div className="flex h-full w-full items-center justify-center">
           No {showPay ? 'payments' : 'invoices'} for this period.
         </div>
@@ -105,7 +105,7 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   const finalColor = showPay ? [chartColors.darkyellow] : [chartColors.orange2];
 
   return (
-    <div className="w-full h-[300px]">
+    <div className="w-full h-75">
       <div
         className="w-full px-4 overflow-auto"
         style={{ height: 'calc(100% - 40px)' }}
