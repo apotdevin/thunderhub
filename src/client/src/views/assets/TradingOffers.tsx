@@ -151,6 +151,11 @@ export const TradingOffers: FC = () => {
     [assetChannelsByAssetId]
   );
 
+  const assetChannelGroupKeys = useMemo(
+    () => new Set(assetChannelsByGroupKey.keys()),
+    [assetChannelsByGroupKey]
+  );
+
   // For SALE, show assets the node owns (match by group key or asset ID) OR has asset channels for
   const supportedAssets =
     txType === TapTransactionType.Sale
@@ -158,7 +163,8 @@ export const TradingOffers: FC = () => {
           a =>
             (a.groupKey && ownedGroupKeys.has(a.groupKey)) ||
             (!a.groupKey && a.assetId && ownedAssetIds.has(a.assetId)) ||
-            (a.assetId && assetChannelAssetIds.has(a.assetId))
+            (a.assetId && assetChannelAssetIds.has(a.assetId)) ||
+            (a.groupKey && assetChannelGroupKeys.has(a.groupKey))
         )
       : allSupported;
 
@@ -349,8 +355,10 @@ export const TradingOffers: FC = () => {
                       selected?.assetId &&
                       ownedAssetIds.has(selected.assetId));
                   const hasAssetChannels =
-                    selected?.assetId &&
-                    assetChannelAssetIds.has(selected.assetId);
+                    (selected?.assetId &&
+                      assetChannelAssetIds.has(selected.assetId)) ||
+                    (selected?.groupKey &&
+                      assetChannelGroupKeys.has(selected.groupKey));
                   if (!isOwned && !hasAssetChannels) setSelectedAsset('');
                 }
               }}
