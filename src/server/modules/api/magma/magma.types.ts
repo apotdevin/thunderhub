@@ -382,12 +382,23 @@ export type SetupTradePartnerAuto = {
   outboundChannel: { txid: string; outputIndex: number } | undefined;
 };
 
+// ─── Order Invoice ──────────────────────────────────────────────
+
+@ObjectType()
+export class MagmaOrderInvoice {
+  @Field({ nullable: true })
+  invoice?: string;
+}
+
 // ─── Namespace types ─────────────────────────────────────────────
 
 @ObjectType()
 export class MagmaOrderQueries {
   @Field(() => MagmaPendingOrders, { nullable: true })
   find_many?: MagmaPendingOrders;
+
+  @Field(() => MagmaOrderInvoice)
+  get_invoice: MagmaOrderInvoice;
 }
 
 @ObjectType()

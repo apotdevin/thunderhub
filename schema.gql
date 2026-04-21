@@ -479,6 +479,10 @@ type MagmaOrderFees {
   seller: MagmaOrderFeeAmount
 }
 
+type MagmaOrderInvoice {
+  invoice: String
+}
+
 type MagmaOrderParty {
   alias: String
   pubkey: String
@@ -486,6 +490,7 @@ type MagmaOrderParty {
 
 type MagmaOrderQueries {
   find_many: MagmaPendingOrders
+  get_invoice(orderId: String!): MagmaOrderInvoice!
 }
 
 type MagmaPendingOrders {

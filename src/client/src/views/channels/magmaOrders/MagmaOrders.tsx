@@ -1,10 +1,13 @@
 import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ExternalLink, X } from 'lucide-react';
+import { Copy, ExternalLink, Loader2, X, Zap } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import { Pay } from '../../home/account/pay/Pay';
 import {
   useGetMagmaOrdersQuery,
   GetMagmaOrdersQuery,
 } from '../../../graphql/queries/__generated__/getMagmaOrders.generated';
+import { useGetMagmaOrderInvoiceLazyQuery } from '../../../graphql/queries/__generated__/getMagmaOrderInvoice.generated';
 import { useCancelMagmaOrderMutation } from '../../../graphql/mutations/__generated__/cancelMagmaOrder.generated';
 import { OrderCancellationReason } from '../../../graphql/types';
 import { getErrorContent } from '../../../utils/error';
@@ -121,11 +124,13 @@ function OrderTable({
   role,
   magmaUrl,
   onCancelRequest,
+  onPayRequest,
 }: {
   orders: MagmaOrder[];
   role: 'buyer' | 'seller';
   magmaUrl: string;
   onCancelRequest: (id: string) => void;
+  onPayRequest: (orderId: string) => void;
 }) {
   if (!orders.length) {
     return (
@@ -194,18 +199,28 @@ function OrderTable({
                       Cancel
                     </Button>
                   )}
-                  <Button variant="ghost" size="sm" asChild>
-                    <a
-                      href={`${magmaUrl}/order/${order.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  {order.status === 'WAITING_FOR_BUYER_PAYMENT' &&
+                  role === 'buyer' ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onPayRequest(order.id)}
                     >
-                      <ExternalLink className="mr-1 size-3.5" />
-                      {order.status === 'WAITING_FOR_BUYER_PAYMENT'
-                        ? 'Pay on Amboss'
-                        : 'View on Amboss'}
-                    </a>
-                  </Button>
+                      <Zap className="mr-1 size-3.5" />
+                      Pay
+                    </Button>
+                  ) : (
+                    <Button variant="ghost" size="sm" asChild>
+                      <a
+                        href={`${magmaUrl}/order/${order.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="mr-1 size-3.5" />
+                        View on Amboss
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </TableCell>
             </TableRow>
@@ -241,6 +256,12 @@ export const MagmaOrders = ({
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [cancelReason, setCancelReason] =
     useState<OrderCancellationReason | null>(null);
+  const [payDialogOpen, setPayDialogOpen] = useState(false);
+  const [fetchInvoice, { data: invoiceData, loading: invoiceLoading }] =
+    useGetMagmaOrderInvoiceLazyQuery();
+
+  const payingInvoice =
+    invoiceData?.magma?.orders?.get_invoice?.invoice ?? null;
 
   const allOrders = tab === 'purchases' ? purchases : sales;
 
@@ -283,6 +304,10 @@ export const MagmaOrders = ({
         role={tab === 'purchases' ? 'buyer' : 'seller'}
         magmaUrl={magmaUrl}
         onCancelRequest={handleCancelRequest}
+        onPayRequest={orderId => {
+          setPayDialogOpen(true);
+          fetchInvoice({ variables: { orderId } });
+        }}
       />
 
       <Dialog
@@ -329,6 +354,68 @@ export const MagmaOrders = ({
               Cancel Order
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={payDialogOpen}
+        onOpenChange={open => !open && setPayDialogOpen(false)}
+      >
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Pay Invoice</DialogTitle>
+            <DialogDescription>
+              Scan the QR code, copy the invoice, or pay directly.
+            </DialogDescription>
+          </DialogHeader>
+
+          {invoiceLoading && (
+            <div className="flex justify-center py-8">
+              <Loader2 className="animate-spin size-6 text-muted-foreground" />
+            </div>
+          )}
+
+          {!invoiceLoading && !payingInvoice && (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No invoice available for this order.
+            </p>
+          )}
+
+          {!invoiceLoading && payingInvoice && (
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-center">
+                <div className="rounded border border-border bg-white p-3">
+                  <QRCodeSVG value={`lightning:${payingInvoice}`} size={200} />
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-2">
+                <div className="max-w-full break-all text-center font-mono text-[11px] text-muted-foreground">
+                  {payingInvoice}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    navigator.clipboard
+                      .writeText(payingInvoice)
+                      .then(() => toast.success('Copied to clipboard'))
+                  }
+                >
+                  <Copy size={14} className="mr-1" />
+                  Copy Invoice
+                </Button>
+              </div>
+
+              <Pay
+                predefinedRequest={payingInvoice}
+                payCallback={() => {
+                  setPayDialogOpen(false);
+                  refetch();
+                }}
+              />
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>
