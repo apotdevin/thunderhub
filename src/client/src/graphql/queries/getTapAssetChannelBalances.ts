@@ -9,6 +9,7 @@ export const GET_TAP_ASSET_CHANNEL_BALANCES = gql`
         partner_public_key
         asset_id
         asset_name
+        asset_precision
         group_key
         local_balance
         remote_balance

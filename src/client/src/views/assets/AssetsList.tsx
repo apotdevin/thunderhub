@@ -19,6 +19,7 @@ type UnifiedEntry = {
   onChainBalance: number;
   channelBalance: number;
   totalBalance: number;
+  precision: number;
   priceEntry: PriceInfo | undefined;
   isAmbossListed: boolean;
 };
@@ -116,7 +117,12 @@ export const AssetsList: FC = () => {
     // 2. Channel balances aggregated by group_key (falling back to asset_id)
     const channelMap = new Map<
       string,
-      { localBalance: number; names: string[]; hasGroupKey: boolean }
+      {
+        localBalance: number;
+        names: string[];
+        hasGroupKey: boolean;
+        precision: number;
+      }
     >();
     for (const ch of channels) {
       const key = ch.group_key || ch.asset_id;
@@ -132,6 +138,7 @@ export const AssetsList: FC = () => {
           localBalance: localBal,
           names: ch.asset_name ? [ch.asset_name] : [],
           hasGroupKey: !!ch.group_key,
+          precision: ch.asset_precision ?? 0,
         });
       }
     }
@@ -154,6 +161,8 @@ export const AssetsList: FC = () => {
         : (channel?.names ?? []);
 
       const hasGroupKey = onChain?.hasGroupKey || channel?.hasGroupKey;
+      const priceEntry = priceMap.get(key);
+      const precision = channel?.precision ?? priceEntry?.precision ?? 0;
 
       merged.push({
         key,
@@ -162,7 +171,8 @@ export const AssetsList: FC = () => {
         onChainBalance,
         channelBalance,
         totalBalance,
-        priceEntry: priceMap.get(key),
+        precision,
+        priceEntry,
         isAmbossListed: supportedKeys.has(key),
       });
     }
@@ -210,7 +220,7 @@ export const AssetsList: FC = () => {
       <div className="grid gap-3">
         {unified.map(entry => {
           const usdValue = entry.priceEntry
-            ? (entry.totalBalance / 10 ** entry.priceEntry.precision) *
+            ? (entry.totalBalance / 10 ** entry.precision) *
               entry.priceEntry.usd
             : null;
 
@@ -241,40 +251,23 @@ export const AssetsList: FC = () => {
 
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="text-lg font-semibold">
-                      {entry.priceEntry
-                        ? formatBalance(
-                            entry.totalBalance,
-                            entry.priceEntry.precision
-                          )
-                        : entry.totalBalance.toString()}
+                      {formatBalance(entry.totalBalance, entry.precision)}
                     </span>
                     {usdValue != null && (
                       <span className="text-xs text-muted-foreground">
                         ≈ ${formatUsd(usdValue)}
                       </span>
                     )}
-                    {hasBothSources(entry) && entry.priceEntry && (
+                    {hasBothSources(entry) && (
                       <div className="flex flex-col items-end gap-0.5 text-[11px] text-muted-foreground/70">
                         <span>
                           On-chain:{' '}
-                          {formatBalance(
-                            entry.onChainBalance,
-                            entry.priceEntry.precision
-                          )}
+                          {formatBalance(entry.onChainBalance, entry.precision)}
                         </span>
                         <span>
                           Channel:{' '}
-                          {formatBalance(
-                            entry.channelBalance,
-                            entry.priceEntry.precision
-                          )}
+                          {formatBalance(entry.channelBalance, entry.precision)}
                         </span>
-                      </div>
-                    )}
-                    {hasBothSources(entry) && !entry.priceEntry && (
-                      <div className="flex flex-col items-end gap-0.5 text-[11px] text-muted-foreground/70">
-                        <span>On-chain: {entry.onChainBalance}</span>
-                        <span>Channel: {entry.channelBalance}</span>
                       </div>
                     )}
                   </div>

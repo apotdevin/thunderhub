@@ -45,6 +45,7 @@ type AssetChannelInfo = {
   partnerPublicKey: string;
   assetId: string;
   assetName: string;
+  assetPrecision: number;
   groupKey: string;
   localBalance: string;
   remoteBalance: string;
@@ -454,6 +455,7 @@ export class TapdNodeService {
                 partnerPublicKey: ch.remote_pubkey,
                 assetId,
                 assetName: fundingAsset?.asset_genesis?.name || '',
+                assetPrecision: fundingAsset?.decimal_display ?? 0,
                 groupKey,
                 localBalance: String(data.local_balance ?? 0),
                 remoteBalance: String(data.remote_balance ?? 0),
@@ -523,6 +525,7 @@ export class TapdNodeService {
                 partnerPublicKey: ch.remote_node_pub,
                 assetId,
                 assetName: fundingAsset?.asset_genesis?.name || '',
+                assetPrecision: fundingAsset?.decimal_display ?? 0,
                 groupKey,
                 localBalance: String(data.local_balance ?? 0),
                 remoteBalance: String(data.remote_balance ?? 0),
