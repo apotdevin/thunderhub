@@ -392,6 +392,7 @@ export class TaprootAssetsQueriesResolver {
       partner_public_key: b.partnerPublicKey,
       asset_id: b.assetId,
       asset_name: b.assetName || null,
+      asset_precision: b.assetPrecision,
       group_key: b.groupKey || null,
       local_balance: b.localBalance,
       remote_balance: b.remoteBalance,
