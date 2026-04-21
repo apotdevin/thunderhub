@@ -16,6 +16,7 @@ import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
 import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
+import { colorFromString } from '../../../utils/color';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
@@ -55,13 +56,10 @@ export const ChannelTable = () => {
   const tableData = useMemo(() => {
     const channelData = data?.getChannels || [];
 
-    const balanceArray = channelData.reduce((p, c) => {
-      const lb = c.asset ? Number(c.asset.localBalance) : c.local_balance || 0;
-      const rb = c.asset
-        ? Number(c.asset.remoteBalance)
-        : c.remote_balance || 0;
-      return [...p, rb, lb];
-    }, [] as number[]);
+    const balanceArray = channelData.reduce(
+      (p, c) => [...p, c.remote_balance || 0, c.local_balance || 0],
+      [] as number[]
+    );
 
     const maxBalance = Math.max(...balanceArray);
 
@@ -162,12 +160,36 @@ export const ChannelTable = () => {
       const asset = c.asset;
       const localBal = asset ? Number(asset.localBalance) : c.local_balance;
       const remoteBal = asset ? Number(asset.remoteBalance) : c.remote_balance;
-      const formatBal = (btcAmount: number, assetAmount: number) =>
-        asset ? (
-          <span>{assetAmount}</span>
-        ) : (
-          <Price amount={btcAmount} breakNumber={true} noUnit={true} />
-        );
+
+      const assetKey = asset?.groupKey || asset?.assetId || '';
+      const assetLocalColor = asset
+        ? colorFromString(assetKey + 'local')
+        : undefined;
+      const assetRemoteColor = asset
+        ? colorFromString(assetKey + 'remote')
+        : undefined;
+
+      const assetBar = asset ? (
+        <div className="mt-1">
+          <div className="text-xs text-gray-500 mb-0.5 text-center">
+            {asset.assetName || asset.assetId.slice(0, 8)}
+          </div>
+          <BalanceBars
+            local={getPercent(
+              Number(asset.localBalance),
+              Number(asset.remoteBalance)
+            )}
+            remote={getPercent(
+              Number(asset.remoteBalance),
+              Number(asset.localBalance)
+            )}
+            formatLocal={String(asset.localBalance)}
+            formatRemote={String(asset.remoteBalance)}
+            localColor={assetLocalColor}
+            remoteColor={assetRemoteColor}
+          />
+        </div>
+      ) : null;
 
       return {
         ...c,
@@ -176,6 +198,8 @@ export const ChannelTable = () => {
         ...pending,
         ...partnerInfo,
         ...actions,
+        assetLocalColor,
+        assetRemoteColor,
         alias: c.partner_node_info.node?.alias || 'Unknown',
         undercaseAlias: (
           c.partner_node_info.node?.alias || 'Unknown'
@@ -195,21 +219,47 @@ export const ChannelTable = () => {
         proportionalBars: (
           <div className="min-w-[180px]">
             <BalanceBars
-              local={getBar(localBal, maxBalance)}
-              remote={getBar(remoteBal, maxBalance)}
-              formatLocal={formatBal(c.local_balance, localBal)}
-              formatRemote={formatBal(c.remote_balance, remoteBal)}
+              local={getBar(c.local_balance, maxBalance)}
+              remote={getBar(c.remote_balance, maxBalance)}
+              formatLocal={
+                <Price
+                  amount={c.local_balance}
+                  breakNumber={true}
+                  noUnit={true}
+                />
+              }
+              formatRemote={
+                <Price
+                  amount={c.remote_balance}
+                  breakNumber={true}
+                  noUnit={true}
+                />
+              }
             />
+            {assetBar}
           </div>
         ),
         balanceBars: (
           <div className="min-w-[180px]">
             <BalanceBars
-              local={getPercent(localBal, remoteBal)}
-              remote={getPercent(remoteBal, localBal)}
-              formatLocal={formatBal(c.local_balance, localBal)}
-              formatRemote={formatBal(c.remote_balance, remoteBal)}
+              local={getPercent(c.local_balance, c.remote_balance)}
+              remote={getPercent(c.remote_balance, c.local_balance)}
+              formatLocal={
+                <Price
+                  amount={c.local_balance}
+                  breakNumber={true}
+                  noUnit={true}
+                />
+              }
+              formatRemote={
+                <Price
+                  amount={c.remote_balance}
+                  breakNumber={true}
+                  noUnit={true}
+                />
+              }
             />
+            {assetBar}
           </div>
         ),
         activityBars: (
@@ -332,11 +382,14 @@ export const ChannelTable = () => {
               const asset = row.original.asset;
               return (
                 <div className="whitespace-nowrap">
-                  <div>
+                  <div style={{ color: '#1890ff' }}>
                     <Price amount={row.original.local_balance} />
                   </div>
                   {asset && (
-                    <div className="text-xs">
+                    <div
+                      className="text-xs"
+                      style={{ color: row.original.assetLocalColor }}
+                    >
                       {asset.localBalance}{' '}
                       <span className="text-gray-500">
                         {asset.assetName || asset.assetId.slice(0, 8)}
@@ -354,11 +407,14 @@ export const ChannelTable = () => {
               const asset = row.original.asset;
               return (
                 <div className="whitespace-nowrap">
-                  <div>
+                  <div style={{ color: '#a0d911' }}>
                     <Price amount={row.original.remote_balance} />
                   </div>
                   {asset && (
-                    <div className="text-xs">
+                    <div
+                      className="text-xs"
+                      style={{ color: row.original.assetRemoteColor }}
+                    >
                       {asset.remoteBalance}{' '}
                       <span className="text-gray-500">
                         {asset.assetName || asset.assetId.slice(0, 8)}
