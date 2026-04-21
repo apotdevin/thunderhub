@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { Zap, Anchor, Users, Radio, Wallet, Gauge } from 'lucide-react';
+import { Zap, Anchor, Users, Radio, Wallet, Gauge, Box } from 'lucide-react';
 import { Price } from '../../components/price/Price';
 import { useNodeInfo } from '../../hooks/UseNodeInfo';
 import { useNodeBalances } from '../../hooks/UseNodeBalances';
@@ -33,6 +33,12 @@ const getLuminance = (hex: string) => {
   const { r, g, b } = hexToRgb(hex);
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 };
+
+const pill =
+  'flex items-center gap-1 rounded-md bg-muted/50 px-2 py-0.5 shrink-0';
+const label = 'text-muted-foreground/70';
+const value = 'text-foreground font-medium';
+const separator = 'w-px h-3.5 bg-border shrink-0';
 
 export const NodeInfoBar = () => {
   const {
@@ -78,29 +84,25 @@ export const NodeInfoBar = () => {
   const { r, g, b } = hexToRgb(color);
   const lum = getLuminance(color);
 
-  // Mix color toward a target by amount (0 = original, 1 = target)
   const mixColor = (
-    r: number,
-    g: number,
-    b: number,
+    cr: number,
+    cg: number,
+    cb: number,
     target: number,
     amount: number
   ) => ({
-    r: Math.round(r + (target - r) * amount),
-    g: Math.round(g + (target - g) * amount),
-    b: Math.round(b + (target - b) * amount),
+    r: Math.round(cr + (target - cr) * amount),
+    g: Math.round(cg + (target - cg) * amount),
+    b: Math.round(cb + (target - cb) * amount),
   });
 
   const getAliasStyle = () => {
-    // Very light colors on light theme / very dark on dark theme: use foreground text
     if ((!isDark && lum > 0.85) || (isDark && lum < 0.15)) {
       return {
         backgroundColor: `rgba(${r},${g},${b},0.15)`,
         color: 'var(--color-foreground)',
       };
     }
-    // Dark theme: lighten text (mix toward white)
-    // Light theme: darken text (mix toward black)
     const target = isDark ? 255 : 0;
     const mixAmount = isDark
       ? Math.max(0.2, 0.85 - lum)
@@ -112,136 +114,142 @@ export const NodeInfoBar = () => {
     };
   };
 
+  const aliasStyle = getAliasStyle();
+
   return (
-    <div className="flex items-center h-9 text-xs text-muted-foreground overflow-x-auto">
+    <div className="flex items-center min-h-9 text-xs text-muted-foreground flex-wrap gap-1.5 px-4 py-1.5">
       {/* Node alias */}
       <div
-        className="flex items-center shrink-0 h-full pl-4 pr-6"
-        style={{
-          background: `linear-gradient(to right, ${getAliasStyle().backgroundColor}, transparent)`,
-        }}
+        className="flex items-center shrink-0 rounded-md px-2 py-0.5"
+        style={{ backgroundColor: aliasStyle.backgroundColor }}
       >
         <span
-          className="font-medium truncate max-w-[140px]"
-          style={{ color: getAliasStyle().color }}
+          className="font-semibold truncate max-w-[140px]"
+          style={{ color: aliasStyle.color }}
         >
           {alias}
         </span>
       </div>
 
-      <div className="flex items-center gap-5 px-4">
-        {/* Sync status badge */}
-        <Badge
-          variant={syncedToChain ? 'secondary' : 'destructive'}
-          className={cn(
-            'shrink-0 text-[10px] rounded-sm',
-            syncedToChain &&
-              'bg-green-500/10 text-green-600 dark:text-green-400'
-          )}
-        >
-          {syncedToChain ? (
-            'Synced'
-          ) : (
-            <>
-              <Spinner className="size-3" />
-              {syncPercentage ? `Syncing ${syncPercentage}%` : 'Syncing...'}
-            </>
-          )}
-        </Badge>
-
-        <div className="w-px h-3.5 bg-border shrink-0" />
-
-        {/* Total balance */}
-        <div className="flex items-center gap-1 shrink-0">
-          <Wallet size={12} />
-          <span className="text-foreground font-medium">Balance</span>
-          <Price amount={totalBalance} />
-        </div>
-
-        {/* Lightning balance */}
-        <div className="flex items-center gap-1 shrink-0">
-          <Zap
-            size={12}
-            color={channelPending === 0 ? '#FFD300' : '#652EC7'}
-            fill={channelPending === 0 ? '#FFD300' : '#652EC7'}
-          />
-          <span className="text-foreground font-medium">Lightning</span>
-          <Price amount={totalLightning} />
-          {channelPending > 0 && (
-            <span className="text-muted-foreground/60">
-              (pending: <Price amount={String(lightning.pending)} />)
-            </span>
-          )}
-        </div>
-
-        {/* Chain balance */}
-        <div className="flex items-center gap-1 shrink-0">
-          <Anchor
-            size={12}
-            color={chainPending === 0 ? '#FFD300' : '#652EC7'}
-          />
-          <span className="text-foreground font-medium">On-chain</span>
-          <Price amount={totalChain} />
-          {chainPending > 0 && (
-            <span className="text-muted-foreground/60">
-              (pending: <Price amount={String(onchain.pending)} />)
-            </span>
-          )}
-        </div>
-
-        <div className="w-px h-3.5 bg-border shrink-0" />
-
-        {/* Channels */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="flex items-center gap-1">
-            <Radio size={12} />
-            <span className="text-foreground font-medium">Channels</span>
-          </div>
-          <span>{activeChannelCount} active</span>
-          {pendingChannelCount > 0 && (
-            <span className="text-muted-foreground/60">
-              {pendingChannelCount} pending
-            </span>
-          )}
-          {closedChannelCount > 0 && (
-            <span className="text-muted-foreground/60">
-              {closedChannelCount} closed
-            </span>
-          )}
-        </div>
-
-        <div className="w-px h-3.5 bg-border shrink-0" />
-
-        {/* Peers */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="flex items-center gap-1">
-            <Users size={12} />
-            <span className="text-foreground font-medium">Peers</span>
-          </div>
-          <span>{peersCount} connected</span>
-        </div>
-
-        {/* Mempool Fees */}
-        {!dontShowFees && (
+      {/* Sync status */}
+      <Badge
+        variant={syncedToChain ? 'secondary' : 'destructive'}
+        className={cn(
+          'shrink-0 text-[10px] rounded-sm',
+          syncedToChain && 'bg-green-500/10 text-green-600 dark:text-green-400'
+        )}
+      >
+        {syncedToChain ? (
+          'Synced'
+        ) : (
           <>
-            <div className="w-px h-3.5 bg-border shrink-0" />
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-1">
-                <Gauge size={12} />
-                <span className="text-foreground font-medium">Fees</span>
-              </div>
-              <span>{fast} sat/vB</span>
-              {halfHour !== fast && (
-                <span className="text-muted-foreground/60">
-                  30m: {halfHour}
-                </span>
-              )}
-              <span className="text-muted-foreground/60">1h: {hour}</span>
-              <span className="text-muted-foreground/60">min: {minimum}</span>
-            </div>
+            <Spinner className="size-3" />
+            {syncPercentage ? `Syncing ${syncPercentage}%` : 'Syncing...'}
           </>
         )}
+      </Badge>
+
+      <div className={separator} />
+
+      {/* Total balance */}
+      <div className={pill}>
+        <Wallet size={11} className="text-muted-foreground/60" />
+        <span className={label}>Balance</span>
+        <span className={value}>
+          <Price amount={totalBalance} />
+        </span>
       </div>
+
+      {/* Lightning balance */}
+      <div className={pill}>
+        <Zap
+          size={11}
+          className={cn(
+            'fill-current',
+            channelPending === 0 ? 'text-yellow-500' : 'text-violet-500'
+          )}
+        />
+        <span className={label}>Lightning</span>
+        <span className={value}>
+          <Price amount={totalLightning} />
+        </span>
+        {channelPending > 0 && (
+          <span className="text-muted-foreground/50 text-[10px]">
+            +<Price amount={String(lightning.pending)} /> pending
+          </span>
+        )}
+      </div>
+
+      {/* On-chain balance */}
+      <div className={pill}>
+        <Anchor
+          size={11}
+          className={cn(
+            chainPending === 0 ? 'text-blue-400' : 'text-violet-500'
+          )}
+        />
+        <span className={label}>On-chain</span>
+        <span className={value}>
+          <Price amount={totalChain} />
+        </span>
+        {chainPending > 0 && (
+          <span className="text-muted-foreground/50 text-[10px]">
+            +<Price amount={String(onchain.pending)} /> pending
+          </span>
+        )}
+      </div>
+
+      <div className={separator} />
+
+      {/* Channels */}
+      <div className={pill}>
+        <Radio size={11} className="text-emerald-500" />
+        <span className={label}>Channels</span>
+        <span className={value}>{activeChannelCount}</span>
+        {pendingChannelCount > 0 && (
+          <span className="text-muted-foreground/50 text-[10px]">
+            {pendingChannelCount} pending
+          </span>
+        )}
+        {closedChannelCount > 0 && (
+          <span className="text-muted-foreground/50 text-[10px]">
+            {closedChannelCount} closed
+          </span>
+        )}
+      </div>
+
+      {/* Peers */}
+      <div className={pill}>
+        <Users size={11} className="text-violet-400" />
+        <span className={label}>Peers</span>
+        <span className={value}>{peersCount}</span>
+      </div>
+
+      <div className={separator} />
+
+      {/* Mempool fees */}
+      {!dontShowFees && (
+        <div className={pill}>
+          <Gauge size={11} className="text-orange-500" />
+          <span className={value}>{fast} sat/vB</span>
+          {halfHour !== fast && (
+            <span className="text-muted-foreground/50">30m: {halfHour}</span>
+          )}
+          <span className="text-muted-foreground/50">1h: {hour}</span>
+          <span className="text-muted-foreground/50">min: {minimum}</span>
+        </div>
+      )}
+
+      <div className={separator} />
+
+      {/* Block height */}
+      {currentBlockHeight > 0 && (
+        <div className={pill}>
+          <Box size={11} className="text-sky-500" />
+          <span className={label}>Block</span>
+          <span className={value}>{currentBlockHeight.toLocaleString()}</span>
+        </div>
+      )}
     </div>
   );
 };
