@@ -992,6 +992,17 @@ type TapBalances {
   balances: [TapAssetBalanceEntry!]!
 }
 
+type TapDaemonInfo {
+  block_hash: String!
+  block_height: Int!
+  lnd_identity_pubkey: String!
+  lnd_version: String!
+  network: String!
+  node_alias: String!
+  sync_to_chain: Boolean!
+  version: String!
+}
+
 type TapFederationServer {
   host: String!
   id: Int!
@@ -1163,6 +1174,7 @@ type TaprootAssetsQueries {
   get_assets: TapAssetList!
   get_balances(group_by: TapBalanceGroupBy = GROUP_KEY): TapBalances!
   get_federation_servers: TapFederationServerList!
+  get_info: TapDaemonInfo!
   get_transfers: TapTransferList!
   get_universe_assets: TapUniverseAssetList!
   get_universe_info: TapUniverseInfo!
@@ -1178,6 +1190,7 @@ type TeamMutations {
 
 input TradeQuoteInput {
   assetAmount: String!
+  expiry: Float
   peerPubkey: String!
   tapdAssetId: String!
   tapdGroupKey: String

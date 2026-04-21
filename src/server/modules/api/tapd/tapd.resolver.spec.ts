@@ -37,6 +37,7 @@ const mockService = () => ({
   addAssetInvoice: jest.fn(),
   fundAssetChannel: jest.fn(),
   getAccount: jest.fn(),
+  getInfo: jest.fn(),
 });
 
 type MockService = ReturnType<typeof mockService>;
@@ -55,6 +56,39 @@ describe('TaprootAssetsQueriesResolver', () => {
       service as never,
       mockLogger as never
     );
+  });
+
+  describe('get_info', () => {
+    it('returns mapped daemon info fields', async () => {
+      service.getInfo.mockResolvedValue({
+        version: '0.4.0',
+        lndVersion: '0.18.0',
+        network: 'testnet',
+        lndIdentityPubkey: 'abc123',
+        nodeAlias: 'test-node',
+        blockHeight: 800000,
+        blockHash: 'deadbeef',
+        syncToChain: true,
+      });
+
+      const result = await resolver.get_info(userId);
+
+      expect(result).toEqual({
+        version: '0.4.0',
+        lnd_version: '0.18.0',
+        network: 'testnet',
+        lnd_identity_pubkey: 'abc123',
+        node_alias: 'test-node',
+        block_height: 800000,
+        block_hash: 'deadbeef',
+        sync_to_chain: true,
+      });
+    });
+
+    it('throws GraphQLError when the service call fails', async () => {
+      service.getInfo.mockRejectedValue(new Error('connection failed'));
+      await expect(resolver.get_info(userId)).rejects.toThrow(GraphQLError);
+    });
   });
 
   describe('get_assets', () => {

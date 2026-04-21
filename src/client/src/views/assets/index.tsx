@@ -8,6 +8,7 @@ import { ReceiveAsset } from './ReceiveAsset';
 import { AssetTransfers } from './AssetTransfers';
 import { FundAssetChannel } from './FundAssetChannel';
 import { UniverseManager } from './UniverseManager';
+import { TapDaemonInfo } from './TapDaemonInfo';
 import { cn } from '../../lib/utils';
 
 type Tab =
@@ -70,6 +71,8 @@ export const AssetsView = () => {
           <BurnAsset />
           <div className="h-px bg-border" />
           <UniverseManager />
+          <div className="h-px bg-border" />
+          <TapDaemonInfo />
         </div>
       )}
     </div>
