@@ -416,6 +416,12 @@ export class TapAssetChannelBalance {
   asset_id: string;
 
   @Field({ nullable: true })
+  asset_name?: string;
+
+  @Field()
+  asset_precision: number;
+
+  @Field({ nullable: true })
   group_key?: string;
 
   @Field()

@@ -933,6 +933,8 @@ type TapAssetBalanceEntry {
 
 type TapAssetChannelBalance {
   asset_id: String!
+  asset_name: String
+  asset_precision: Float!
   capacity: String!
   channel_point: String!
   group_key: String

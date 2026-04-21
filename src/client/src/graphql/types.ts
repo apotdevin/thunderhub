@@ -1281,6 +1281,8 @@ export type TapAssetBalanceEntry = {
 export type TapAssetChannelBalance = {
   __typename?: 'TapAssetChannelBalance';
   asset_id: Scalars['String']['output'];
+  asset_name?: Maybe<Scalars['String']['output']>;
+  asset_precision: Scalars['Float']['output'];
   capacity: Scalars['String']['output'];
   channel_point: Scalars['String']['output'];
   group_key?: Maybe<Scalars['String']['output']>;

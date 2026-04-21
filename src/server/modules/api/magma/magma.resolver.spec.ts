@@ -367,7 +367,7 @@ describe('MagmaResolver', () => {
           magmaUrl,
           expect.anything(),
           expect.objectContaining({
-            input: expect.objectContaining({ size: '1000' }),
+            input: expect.objectContaining({ size: '1000', is_private: true }),
           }),
           expect.any(Object)
         );
@@ -433,7 +433,7 @@ describe('MagmaResolver', () => {
           magmaUrl,
           expect.anything(),
           expect.objectContaining({
-            input: expect.objectContaining({ size: '1000' }),
+            input: expect.objectContaining({ size: '1000', is_private: true }),
           }),
           expect.any(Object)
         );
