@@ -23,6 +23,7 @@ import {
   OpenChannelOptions,
   PayOptions,
   PayViaPaymentDetailsOptions,
+  PayViaRoutesOptions,
   SendToChainAddressOptions,
   UpdateRoutingFeesOptions,
   VerifyBackupsOptions,
@@ -264,6 +265,11 @@ export class NodeService {
   async payViaPaymentDetails(id: string, options: PayViaPaymentDetailsOptions) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.payViaPaymentDetails(account.connection, options);
+  }
+
+  async payViaRoutes(id: string, options: PayViaRoutesOptions) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.payViaRoutes(account.connection, options);
   }
 
   subscribeToInvoice(id: string, invoice: string): EventEmitter {

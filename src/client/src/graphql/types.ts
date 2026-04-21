@@ -969,6 +969,7 @@ export type Peer = {
 
 export type PendingChannel = {
   __typename?: 'PendingChannel';
+  asset?: Maybe<ChannelAsset>;
   close_transaction_id?: Maybe<Scalars['String']['output']>;
   is_active: Scalars['Boolean']['output'];
   is_closing: Scalars['Boolean']['output'];
@@ -1617,6 +1618,7 @@ export type TeamMutationsEdit_NodeArgs = {
 
 export type TradeQuoteInput = {
   assetAmount: Scalars['String']['input'];
+  expiry?: InputMaybe<Scalars['Float']['input']>;
   peerPubkey: Scalars['String']['input'];
   tapdAssetId: Scalars['String']['input'];
   tapdGroupKey?: InputMaybe<Scalars['String']['input']>;

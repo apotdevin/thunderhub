@@ -24,6 +24,22 @@ import { GetRecommendedNode } from '../amboss/amboss.gql';
 import { AmbossService } from '../amboss/amboss.service';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 
+function toAssetField(ac: {
+  assetId: string;
+  groupKey: string;
+  localBalance: string;
+  remoteBalance: string;
+  capacity: string;
+}) {
+  return {
+    assetId: ac.assetId,
+    groupKey: ac.groupKey,
+    localBalance: ac.localBalance,
+    remoteBalance: ac.remoteBalance,
+    capacity: ac.capacity,
+  };
+}
+
 @Resolver()
 export class ChannelsResolver {
   constructor(
@@ -98,17 +114,7 @@ export class ChannelsResolver {
         partner_fee_info: { localKey: public_key },
         channel_age: getChannelAge(channel.id, current_block_height),
         partner_node_info: { publicKey: channel.partner_public_key },
-        ...(asset
-          ? {
-              asset: {
-                assetId: asset.assetId,
-                groupKey: asset.groupKey,
-                localBalance: asset.localBalance,
-                remoteBalance: asset.remoteBalance,
-                capacity: asset.capacity,
-              },
-            }
-          : {}),
+        ...(asset ? { asset: toAssetField(asset) } : {}),
       };
     });
   }
@@ -135,10 +141,23 @@ export class ChannelsResolver {
   async getPendingChannels(@CurrentUser() { id }: UserId) {
     const { pending_channels } = await this.nodeService.getPendingChannels(id);
 
-    return pending_channels.map(channel => ({
-      ...channel,
-      partner_node_info: { publicKey: channel.partner_public_key },
-    }));
+    const [assetChannels] = await toWithError(
+      this.tapdNodeService.getPendingAssetChannels({ id })
+    );
+
+    const assetByChannelPoint = new Map(
+      (assetChannels || []).map(ac => [ac.channelPoint, ac])
+    );
+
+    return pending_channels.map(channel => {
+      const channelPoint = `${channel.transaction_id}:${channel.transaction_vout}`;
+      const asset = assetByChannelPoint.get(channelPoint);
+      return {
+        ...channel,
+        partner_node_info: { publicKey: channel.partner_public_key },
+        ...(asset ? { asset: toAssetField(asset) } : {}),
+      };
+    });
   }
 
   @Mutation(() => OpenOrCloseChannel)

@@ -725,6 +725,7 @@ type Peer {
 }
 
 type PendingChannel {
+  asset: ChannelAsset
   close_transaction_id: String
   is_active: Boolean!
   is_closing: Boolean!
@@ -1189,6 +1190,7 @@ type TeamMutations {
 
 input TradeQuoteInput {
   assetAmount: String!
+  expiry: Float
   peerPubkey: String!
   tapdAssetId: String!
   tapdGroupKey: String
