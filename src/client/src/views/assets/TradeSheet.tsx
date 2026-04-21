@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Loader2,
@@ -109,6 +109,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   onOpenChange,
 }) => {
   const [amount, setAmount] = useState('');
+  const prefilled = useRef(false);
   const [step, setStep] = useState<'input' | 'confirm'>('input');
   const [quotedSats, setQuotedSats] = useState<string | null>(null);
   const [quotePaymentRequest, setQuotePaymentRequest] = useState<string | null>(
@@ -240,9 +241,14 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? asset.assetId === tapdAssetId
         : false;
 
+  // Reset prefill flag when the sheet closes.
+  useEffect(() => {
+    if (!open) prefilled.current = false;
+  }, [open]);
+
   // Prefill sats amount from existing or pending asset inbound capacity.
   useEffect(() => {
-    if (!open || !offer?.node.pubkey || amount) return;
+    if (!open || !offer?.node.pubkey || prefilled.current) return;
     if (transactionType !== TapTransactionType.Purchase) return;
 
     const rate = offer.rate.fullAmount;
@@ -268,7 +274,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     if (assetAtomic <= 0n) return;
 
     const sats = (assetAtomic * BigInt(100_000_000)) / BigInt(rate);
-    if (sats > 0n) setAmount(sats.toString());
+    if (sats > 0n) {
+      prefilled.current = true;
+      setAmount(sats.toString());
+    }
   }, [
     pendingData,
     channelsData,
@@ -277,7 +286,6 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     transactionType,
     tapdGroupKey,
     tapdAssetId,
-    amount,
   ]);
 
   if (!offer) return null;
@@ -381,6 +389,20 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       : isAssetPurchase
         ? totalAssetRemote > 0n
         : totalBtcRemote > 0;
+
+  // Count offline channels with balance to warn (not block) the user.
+  const outboundChannels = isAssetPurchase ? btcOnlyChannels : assetChannels;
+  const inboundChannels = isAssetPurchase ? assetChannels : btcOnlyChannels;
+
+  const outboundTotal = outboundChannels.length;
+  const outboundOfflineCount = outboundChannels.filter(
+    ch => !ch.is_active
+  ).length;
+
+  const inboundTotal = inboundChannels.length;
+  const inboundOfflineCount = inboundChannels.filter(
+    ch => !ch.is_active
+  ).length;
 
   const readyToTrade = hasOutbound && hasInbound;
   const loading = openChannelLoading || setupLoading || tradeLoading;
@@ -699,6 +721,18 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {outboundOfflineCount > 0 && hasOutbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>
+                        {outboundOfflineCount === outboundTotal
+                          ? outboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${outboundTotal} channels offline`
+                          : `${outboundOfflineCount} of ${outboundTotal} channels offline`}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     {inboundExists && !hasPendingInbound ? (
                       <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
@@ -724,6 +758,18 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       )}
                     </span>
                   </div>
+                  {inboundOfflineCount > 0 && hasInbound && (
+                    <div className="flex items-center gap-2 ml-5.5 text-yellow-500">
+                      <AlertCircle className="h-3 w-3" />
+                      <span>
+                        {inboundOfflineCount === inboundTotal
+                          ? inboundTotal === 1
+                            ? 'Channel offline'
+                            : `All ${inboundTotal} channels offline`
+                          : `${inboundOfflineCount} of ${inboundTotal} channels offline`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
