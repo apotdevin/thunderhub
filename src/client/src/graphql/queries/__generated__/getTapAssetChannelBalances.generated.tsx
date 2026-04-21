@@ -18,6 +18,7 @@ export type GetTapAssetChannelBalancesQuery = {
       partner_public_key: string;
       asset_id: string;
       asset_name?: string | null;
+      asset_precision: number;
       group_key?: string | null;
       local_balance: string;
       remote_balance: string;
@@ -35,6 +36,7 @@ export const GetTapAssetChannelBalancesDocument = gql`
         partner_public_key
         asset_id
         asset_name
+        asset_precision
         group_key
         local_balance
         remote_balance

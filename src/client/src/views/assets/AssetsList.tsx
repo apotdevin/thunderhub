@@ -30,6 +30,9 @@ const formatBalance = (atomic: number, precision: number): string =>
     maximumFractionDigits: 2,
   });
 
+const hasBothSources = (e: UnifiedEntry): boolean =>
+  e.onChainBalance > 0 && e.channelBalance > 0;
+
 const CopyableKey: FC<{ label: string; value: string }> = ({
   label,
   value,
@@ -211,9 +214,6 @@ export const AssetsList: FC = () => {
       </div>
     );
   }
-
-  const hasBothSources = (e: UnifiedEntry) =>
-    e.onChainBalance > 0 && e.channelBalance > 0;
 
   return (
     <div className="flex flex-col gap-4">
