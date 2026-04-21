@@ -29,6 +29,7 @@ import {
   decodePaymentRequest,
   pay,
   payViaPaymentDetails,
+  payViaRoutes,
   createInvoice,
   getChannel,
   closeChannel,
@@ -57,6 +58,7 @@ import {
   PayOptions,
   CreateInvoiceOptions,
   PayViaPaymentDetailsOptions,
+  PayViaRoutesOptions,
   SendToChainAddressOptions,
   CreateChainAddressFormat,
   UpdateRoutingFeesOptions,
@@ -312,6 +314,12 @@ export class LndService implements LightningProvider {
     options: PayViaPaymentDetailsOptions
   ) {
     return to(payViaPaymentDetails({ lnd, ...options } as any));
+  }
+
+  // Intentionally not wrapped in to() — callers need the raw [code, message,
+  // {failures}] array that payViaRoutes throws on failure for diagnostics.
+  async payViaRoutes(lnd: AuthenticatedLnd, options: PayViaRoutesOptions) {
+    return payViaRoutes({ lnd, ...options } as any);
   }
 
   subscribeToInvoice(lnd: AuthenticatedLnd, id: string): EventEmitter {
