@@ -222,6 +222,7 @@ export class MagmaResolver {
                   pubkey: nodeInfo.publicKey,
                   size: magmaSize,
                   payment_method: 'SATS',
+                  is_private: true,
                   options: { asset_id: input.ambossAssetId },
                 },
               },
