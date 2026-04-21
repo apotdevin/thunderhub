@@ -11,8 +11,37 @@ jest.mock('../../security/security.types', () => ({}));
 
 import { TradeResolver } from './trade.resolver';
 
-// Access private method for direct unit testing of return-hint construction.
-type BuildBtcReturnHint = (id: string, peerPubkey: string) => Promise<unknown>;
+type BtcChannel = {
+  id: string;
+  capacity: number;
+  local_balance: number;
+  remote_balance: number;
+};
+
+type RouteHop = {
+  public_key: string;
+  channel?: string;
+  cltv_delta?: number;
+};
+
+// Combined private-method accessor to avoid repeating the cast per suite.
+interface PrivateMethods {
+  buildBtcReturnHint(
+    id: string,
+    peerPubkey: string,
+    btcChannels: BtcChannel[]
+  ): Promise<unknown>;
+  getBtcChannelsWithPeer(id: string, peerPubkey: string): Promise<BtcChannel[]>;
+  findVirtualScidHint(
+    routes: RouteHop[][],
+    peerPubkey: string
+  ): { channel: string; cltv_delta?: number } | undefined;
+  deriveSatsFromRate(
+    assetAmount: string,
+    rate: { coefficient: string; scale: number },
+    minTransportableMsat: string
+  ): number;
+}
 
 describe('TradeResolver', () => {
   const userId = 'test-user-id';
@@ -28,6 +57,7 @@ describe('TradeResolver', () => {
   const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 
   let resolver: TradeResolver;
+  let priv: PrivateMethods;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -41,11 +71,12 @@ describe('TradeResolver', () => {
       mockNodeService as never,
       mockLogger as never
     );
+    priv = resolver as unknown as PrivateMethods;
   });
 
   // ── Regression guard against upstream channelTypes mapping ──
-  // buildBtcReturnHint filters BTC channels by truthy `type`, which relies on
-  // the `lightning` package leaving SIMPLE_TAPROOT_OVERLAY unmapped (undefined)
+  // getBtcChannelsWithPeer filters BTC channels by truthy `type`, which relies
+  // on the `lightning` package leaving SIMPLE_TAPROOT_OVERLAY unmapped (undefined)
   // while mapping real BTC commitment types (ANCHORS, SIMPLE_TAPROOT, …) to
   // non-empty strings. If upstream ever adds an entry for SIMPLE_TAPROOT_OVERLAY,
   // the filter will start treating TA channels as BTC and the self-pay loop
@@ -71,51 +102,26 @@ describe('TradeResolver', () => {
   // ── buildBtcReturnHint ──
 
   describe('buildBtcReturnHint', () => {
-    const buildHint = () => {
-      const privateResolver = resolver as unknown as {
-        buildBtcReturnHint: BuildBtcReturnHint;
-      };
-      return privateResolver.buildBtcReturnHint.call(
-        resolver,
-        userId,
-        peerPubkey
-      );
-    };
-
-    it('skips TA channels (type undefined) when selecting the BTC return channel', async () => {
-      mockNodeService.getChannels.mockResolvedValue({
-        channels: [
-          // Taproot Asset channel has the largest remote_balance but must be skipped
-          {
-            id: 'ta-channel',
-            type: undefined,
-            remote_balance: 10_000_000,
-          },
-          { id: 'btc-channel', type: 'anchor', remote_balance: 500_000 },
-        ],
-      });
-
-      const hint = await buildHint();
-
-      expect(Array.isArray(hint)).toBe(true);
-      expect((hint as Array<{ channel?: string }>)[1].channel).toBe(
-        'btc-channel'
-      );
+    const btcChannel = (
+      id: string,
+      remote: number
+    ): BtcChannel & { type: string } => ({
+      id,
+      type: 'anchor',
+      capacity: 2_000_000,
+      local_balance: 1_000_000,
+      remote_balance: remote,
     });
 
     it('picks the BTC channel with the largest remote_balance', async () => {
-      // Input order scrambled so `.find()`-style selection on the original array
-      // would pick the wrong channel — forces reliance on the sort.
-      mockNodeService.getChannels.mockResolvedValue({
-        channels: [
-          { id: 'btc-medium', type: 'anchor', remote_balance: 200_000 },
-          { id: 'btc-small', type: 'anchor', remote_balance: 50_000 },
-          { id: 'btc-largest', type: 'anchor', remote_balance: 900_000 },
-          { id: 'btc-large', type: 'anchor', remote_balance: 500_000 },
-        ],
-      });
+      const channels = [
+        btcChannel('btc-medium', 200_000),
+        btcChannel('btc-small', 50_000),
+        btcChannel('btc-largest', 900_000),
+        btcChannel('btc-large', 500_000),
+      ];
 
-      const hint = await buildHint();
+      const hint = await priv.buildBtcReturnHint(userId, peerPubkey, channels);
 
       expect((hint as Array<{ channel?: string }>)[1].channel).toBe(
         'btc-largest'
@@ -127,20 +133,15 @@ describe('TradeResolver', () => {
     });
 
     it("uses the peer's gossiped policy when available", async () => {
-      mockNodeService.getChannels.mockResolvedValue({
-        channels: [{ id: 'btc-1', type: 'anchor', remote_balance: 500_000 }],
-      });
       mockNodeService.getChannel.mockResolvedValue({
         id: 'btc-1',
         policies: [
-          // Our side of the channel — must be ignored
           {
             public_key: myPubkey,
             base_fee_mtokens: '0',
             fee_rate: 1,
             cltv_delta: 144,
           },
-          // Peer side — drives the hint
           {
             public_key: peerPubkey,
             base_fee_mtokens: '500',
@@ -150,7 +151,9 @@ describe('TradeResolver', () => {
         ],
       });
 
-      const hint = await buildHint();
+      const hint = await priv.buildBtcReturnHint(userId, peerPubkey, [
+        btcChannel('btc-1', 500_000),
+      ]);
 
       expect(hint).toEqual([
         { public_key: peerPubkey },
@@ -165,12 +168,8 @@ describe('TradeResolver', () => {
     });
 
     it('falls back to conservative defaults when peer policy is missing from gossip', async () => {
-      mockNodeService.getChannels.mockResolvedValue({
-        channels: [{ id: 'btc-1', type: 'anchor', remote_balance: 500_000 }],
-      });
       mockNodeService.getChannel.mockResolvedValue({
         id: 'btc-1',
-        // Only our policy gossiped — peer hasn't announced one yet
         policies: [
           {
             public_key: myPubkey,
@@ -181,7 +180,9 @@ describe('TradeResolver', () => {
         ],
       });
 
-      const hint = await buildHint();
+      const hint = await priv.buildBtcReturnHint(userId, peerPubkey, [
+        btcChannel('btc-1', 500_000),
+      ]);
 
       expect(hint).toEqual([
         { public_key: peerPubkey },
@@ -195,36 +196,168 @@ describe('TradeResolver', () => {
       ]);
     });
 
-    it('returns undefined when the peer has only TA channels', async () => {
-      mockNodeService.getChannels.mockResolvedValue({
-        channels: [
-          { id: 'ta-1', type: undefined, remote_balance: 10_000_000 },
-          { id: 'ta-2', type: undefined, remote_balance: 20_000_000 },
-        ],
-      });
-
-      await expect(buildHint()).resolves.toBeUndefined();
+    it('returns undefined when given an empty channels array', async () => {
+      await expect(
+        priv.buildBtcReturnHint(userId, peerPubkey, [])
+      ).resolves.toBeUndefined();
       expect(mockLogger.warn).toHaveBeenCalledWith(
         'No BTC channel with peer; omitting return hint',
         expect.any(Object)
       );
     });
 
-    it('returns undefined when getChannels fails', async () => {
-      mockNodeService.getChannels.mockRejectedValue(new Error('rpc down'));
-
-      await expect(buildHint()).resolves.toBeUndefined();
-      // Must not have attempted identity lookup after channel fetch failure.
-      expect(mockNodeService.getIdentity).not.toHaveBeenCalled();
-    });
-
     it('returns undefined when getIdentity fails', async () => {
-      mockNodeService.getChannels.mockResolvedValue({
-        channels: [{ id: 'btc-1', type: 'anchor', remote_balance: 100_000 }],
-      });
       mockNodeService.getIdentity.mockRejectedValue(new Error('no identity'));
 
-      await expect(buildHint()).resolves.toBeUndefined();
+      await expect(
+        priv.buildBtcReturnHint(userId, peerPubkey, [
+          btcChannel('btc-1', 100_000),
+        ])
+      ).resolves.toBeUndefined();
+    });
+  });
+
+  // ── getBtcChannelsWithPeer ──
+
+  describe('getBtcChannelsWithPeer', () => {
+    it('filters out TA channels (type undefined)', async () => {
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [
+          {
+            id: 'ta-1',
+            type: undefined,
+            capacity: 1_000_000,
+            local_balance: 500_000,
+            remote_balance: 500_000,
+          },
+          {
+            id: 'btc-1',
+            type: 'anchor',
+            capacity: 2_000_000,
+            local_balance: 1_000_000,
+            remote_balance: 1_000_000,
+          },
+        ],
+      });
+
+      const result = await priv.getBtcChannelsWithPeer(userId, peerPubkey);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('btc-1');
+    });
+
+    it('returns empty array and logs warning on getChannels error', async () => {
+      mockNodeService.getChannels.mockRejectedValue(new Error('rpc down'));
+
+      const result = await priv.getBtcChannelsWithPeer(userId, peerPubkey);
+
+      expect(result).toEqual([]);
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        'Failed to fetch channels with peer',
+        expect.objectContaining({ peerPubkey })
+      );
+    });
+
+    it('returns empty array when peer has no channels', async () => {
+      mockNodeService.getChannels.mockResolvedValue({ channels: [] });
+
+      const result = await priv.getBtcChannelsWithPeer(userId, peerPubkey);
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  // ── findVirtualScidHint ──
+
+  describe('findVirtualScidHint', () => {
+    it('finds hint on the peer entry itself', () => {
+      const routes = [
+        [{ public_key: peerPubkey, channel: '123x1x0', cltv_delta: 144 }],
+      ];
+
+      expect(priv.findVirtualScidHint(routes, peerPubkey)).toEqual({
+        channel: '123x1x0',
+        cltv_delta: 144,
+      });
+    });
+
+    it('finds hint on the next entry (destination) when peer entry has no channel', () => {
+      const destPubkey = 'ee'.repeat(33);
+      const routes = [
+        [
+          { public_key: peerPubkey },
+          { public_key: destPubkey, channel: '456x2x1', cltv_delta: 80 },
+        ],
+      ];
+
+      expect(priv.findVirtualScidHint(routes, peerPubkey)).toEqual({
+        channel: '456x2x1',
+        cltv_delta: 80,
+      });
+    });
+
+    it('returns undefined when peer pubkey is not in any route', () => {
+      const otherPubkey = 'ff'.repeat(33);
+      const routes = [
+        [{ public_key: otherPubkey, channel: '789x3x0', cltv_delta: 40 }],
+      ];
+
+      expect(priv.findVirtualScidHint(routes, peerPubkey)).toBeUndefined();
+    });
+
+    it('returns undefined for empty routes', () => {
+      expect(priv.findVirtualScidHint([], peerPubkey)).toBeUndefined();
+    });
+
+    it('searches across multiple routes and returns the first match', () => {
+      const otherPubkey = 'ff'.repeat(33);
+      const routes = [
+        [{ public_key: otherPubkey, channel: '111x1x0' }],
+        [{ public_key: peerPubkey, channel: '222x2x0', cltv_delta: 100 }],
+      ];
+
+      expect(priv.findVirtualScidHint(routes, peerPubkey)).toEqual({
+        channel: '222x2x0',
+        cltv_delta: 100,
+      });
+    });
+  });
+
+  // ── deriveSatsFromRate ──
+
+  describe('deriveSatsFromRate', () => {
+    it('computes sats from rate and asset amount', () => {
+      // rate = 50000 * 10^(-2) = 500 assets per BTC
+      // 100 assets at 500/BTC = 0.2 BTC = 20_000_000 sats
+      const sats = priv.deriveSatsFromRate(
+        '100',
+        { coefficient: '50000', scale: 2 },
+        '0'
+      );
+
+      expect(sats).toBe(20_000_000);
+    });
+
+    it('ceils to the next sat', () => {
+      // rate = 3 * 10^0 = 3 assets per BTC
+      // 1 asset at 3/BTC = 0.333... BTC = 33_333_334 sats (ceil)
+      const sats = priv.deriveSatsFromRate(
+        '1',
+        { coefficient: '3', scale: 0 },
+        '0'
+      );
+
+      expect(sats).toBe(33_333_334);
+    });
+
+    it('respects minTransportableMsat floor', () => {
+      const sats = priv.deriveSatsFromRate(
+        '1',
+        { coefficient: '100000000', scale: 0 },
+        '10000000'
+      );
+
+      expect(sats).toBeGreaterThanOrEqual(10_000);
     });
   });
 });
