@@ -27,6 +27,7 @@ import {
   TapTransferList,
   TapUniverseInfo,
   TapUniverseStats,
+  TapDaemonInfo,
   TaprootAssetsMutations,
   TaprootAssetsQueries,
 } from './tapd.types';
@@ -106,6 +107,29 @@ export class TaprootAssetsQueriesResolver {
   @ResolveField(() => String)
   id(): string {
     return uuidv5(TaprootAssetsQueriesResolver.name, uuidv5.URL);
+  }
+
+  @ResolveField(() => TapDaemonInfo)
+  async get_info(@CurrentUser() { id }: UserId) {
+    const [result, error] = await toWithError(
+      this.tapdNodeService.getInfo({ id })
+    );
+    if (error || !result) {
+      this.logger.error('Failed to get tapd info', { error });
+      throw new GraphQLError(
+        grpcErrorMessage('Failed to get tapd info', error)
+      );
+    }
+    return {
+      version: result.version || '',
+      lnd_version: result.lndVersion || '',
+      network: result.network || '',
+      lnd_identity_pubkey: result.lndIdentityPubkey || '',
+      node_alias: result.nodeAlias || '',
+      block_height: result.blockHeight ?? 0,
+      block_hash: result.blockHash || '',
+      sync_to_chain: result.syncToChain ?? false,
+    };
   }
 
   @ResolveField(() => TapAssetList)
