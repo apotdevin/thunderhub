@@ -554,15 +554,15 @@ export type MagmaOrderFees = {
   seller?: Maybe<MagmaOrderFeeAmount>;
 };
 
+export type MagmaOrderInvoice = {
+  __typename?: 'MagmaOrderInvoice';
+  invoice?: Maybe<Scalars['String']['output']>;
+};
+
 export type MagmaOrderParty = {
   __typename?: 'MagmaOrderParty';
   alias?: Maybe<Scalars['String']['output']>;
   pubkey?: Maybe<Scalars['String']['output']>;
-};
-
-export type MagmaOrderInvoice = {
-  __typename?: 'MagmaOrderInvoice';
-  invoice?: Maybe<Scalars['String']['output']>;
 };
 
 export type MagmaOrderQueries = {
@@ -1355,6 +1355,18 @@ export type TapBalances = {
   balances: Array<TapAssetBalanceEntry>;
 };
 
+export type TapDaemonInfo = {
+  __typename?: 'TapDaemonInfo';
+  block_hash: Scalars['String']['output'];
+  block_height: Scalars['Int']['output'];
+  lnd_identity_pubkey: Scalars['String']['output'];
+  lnd_version: Scalars['String']['output'];
+  network: Scalars['String']['output'];
+  node_alias: Scalars['String']['output'];
+  sync_to_chain: Scalars['Boolean']['output'];
+  version: Scalars['String']['output'];
+};
+
 export type TapFederationServer = {
   __typename?: 'TapFederationServer';
   host: Scalars['String']['output'];
@@ -1588,6 +1600,7 @@ export type TaprootAssetsQueries = {
   get_assets: TapAssetList;
   get_balances: TapBalances;
   get_federation_servers: TapFederationServerList;
+  get_info: TapDaemonInfo;
   get_transfers: TapTransferList;
   get_universe_assets: TapUniverseAssetList;
   get_universe_info: TapUniverseInfo;

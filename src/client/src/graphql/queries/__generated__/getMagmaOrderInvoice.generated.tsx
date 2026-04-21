@@ -57,10 +57,7 @@ export function useGetMagmaOrderInvoiceQuery(
     GetMagmaOrderInvoiceQueryVariables
   > &
     (
-      | {
-          variables: GetMagmaOrderInvoiceQueryVariables;
-          skip?: boolean;
-        }
+      | { variables: GetMagmaOrderInvoiceQueryVariables; skip?: boolean }
       | { skip: boolean }
     )
 ) {
@@ -82,11 +79,52 @@ export function useGetMagmaOrderInvoiceLazyQuery(
     GetMagmaOrderInvoiceQueryVariables
   >(GetMagmaOrderInvoiceDocument, options);
 }
+// @ts-ignore
+export function useGetMagmaOrderInvoiceSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetMagmaOrderInvoiceQuery,
+    GetMagmaOrderInvoiceQueryVariables
+  >
+): Apollo.UseSuspenseQueryResult<
+  GetMagmaOrderInvoiceQuery,
+  GetMagmaOrderInvoiceQueryVariables
+>;
+export function useGetMagmaOrderInvoiceSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetMagmaOrderInvoiceQuery,
+        GetMagmaOrderInvoiceQueryVariables
+      >
+): Apollo.UseSuspenseQueryResult<
+  GetMagmaOrderInvoiceQuery | undefined,
+  GetMagmaOrderInvoiceQueryVariables
+>;
+export function useGetMagmaOrderInvoiceSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetMagmaOrderInvoiceQuery,
+        GetMagmaOrderInvoiceQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetMagmaOrderInvoiceQuery,
+    GetMagmaOrderInvoiceQueryVariables
+  >(GetMagmaOrderInvoiceDocument, options);
+}
 export type GetMagmaOrderInvoiceQueryHookResult = ReturnType<
   typeof useGetMagmaOrderInvoiceQuery
 >;
 export type GetMagmaOrderInvoiceLazyQueryHookResult = ReturnType<
   typeof useGetMagmaOrderInvoiceLazyQuery
+>;
+export type GetMagmaOrderInvoiceSuspenseQueryHookResult = ReturnType<
+  typeof useGetMagmaOrderInvoiceSuspenseQuery
 >;
 export type GetMagmaOrderInvoiceQueryResult = Apollo.QueryResult<
   GetMagmaOrderInvoiceQuery,

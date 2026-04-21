@@ -3,9 +3,7 @@ import * as Types from '../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetTapInfoQueryVariables = Types.Exact<{
-  [key: string]: never;
-}>;
+export type GetTapInfoQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type GetTapInfoQuery = {
   __typename?: 'Query';
@@ -93,10 +91,7 @@ export function useGetTapInfoSuspenseQuery(
 export function useGetTapInfoSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetTapInfoQuery,
-        GetTapInfoQueryVariables
-      >
+    | Apollo.SuspenseQueryHookOptions<GetTapInfoQuery, GetTapInfoQueryVariables>
 ): Apollo.UseSuspenseQueryResult<
   GetTapInfoQuery | undefined,
   GetTapInfoQueryVariables
@@ -104,10 +99,7 @@ export function useGetTapInfoSuspenseQuery(
 export function useGetTapInfoSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetTapInfoQuery,
-        GetTapInfoQueryVariables
-      >
+    | Apollo.SuspenseQueryHookOptions<GetTapInfoQuery, GetTapInfoQueryVariables>
 ) {
   const options =
     baseOptions === Apollo.skipToken
