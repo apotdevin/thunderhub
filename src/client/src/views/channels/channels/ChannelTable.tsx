@@ -16,7 +16,12 @@ import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getC
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
-import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
+import {
+  blockToTime,
+  formatNumber,
+  formatSeconds,
+  getPercent,
+} from '../../../utils/helpers';
 import { colorFromString } from '../../../utils/color';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
@@ -182,8 +187,8 @@ export const ChannelTable = () => {
               Number(asset.remoteBalance),
               Number(asset.localBalance)
             )}
-            formatLocal={String(asset.localBalance)}
-            formatRemote={String(asset.remoteBalance)}
+            formatLocal={formatNumber(asset.localBalance)}
+            formatRemote={formatNumber(asset.remoteBalance)}
             localColor={assetColor}
             remoteColor={REMOTE_COLOR}
           />
@@ -269,7 +274,7 @@ export const ChannelTable = () => {
                     />
                   </div>
                   <div className="text-xs">
-                    {asset.localBalance}{' '}
+                    {formatNumber(asset.localBalance)}{' '}
                     <span className="text-gray-500">
                       {asset.assetName || asset.assetId.slice(0, 8)}
                     </span>
@@ -317,7 +322,7 @@ export const ChannelTable = () => {
                     />
                   </div>
                   <div className="text-xs">
-                    {asset.remoteBalance}{' '}
+                    {formatNumber(asset.remoteBalance)}{' '}
                     <span className="text-gray-500">
                       {asset.assetName || asset.assetId.slice(0, 8)}
                     </span>
@@ -465,7 +470,7 @@ export const ChannelTable = () => {
                   </div>
                   {asset && (
                     <div className="text-xs">
-                      {asset.localBalance}{' '}
+                      {formatNumber(asset.localBalance)}{' '}
                       <span className="text-gray-500">
                         {asset.assetName || asset.assetId.slice(0, 8)}
                       </span>
@@ -487,7 +492,7 @@ export const ChannelTable = () => {
                   </div>
                   {asset && (
                     <div className="text-xs">
-                      {asset.remoteBalance}{' '}
+                      {formatNumber(asset.remoteBalance)}{' '}
                       <span className="text-gray-500">
                         {asset.assetName || asset.assetId.slice(0, 8)}
                       </span>
