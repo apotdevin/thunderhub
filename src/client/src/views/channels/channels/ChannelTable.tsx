@@ -415,11 +415,24 @@ export const ChannelTable = () => {
           {
             header: 'Capacity',
             accessorKey: 'capacity',
-            cell: ({ row }: any) => (
-              <div className="whitespace-nowrap">
-                <Price amount={row.original.capacity} />
-              </div>
-            ),
+            cell: ({ row }: any) => {
+              const asset = row.original.asset;
+              return (
+                <div className="whitespace-nowrap">
+                  <div>
+                    <Price amount={row.original.capacity} />
+                  </div>
+                  {asset && (
+                    <div className="text-xs">
+                      {asset.capacity}{' '}
+                      <span className="text-gray-500">
+                        {asset.assetName || asset.assetId.slice(0, 8)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            },
           },
           { header: 'Block Age', accessorKey: 'channel_age' },
           {
