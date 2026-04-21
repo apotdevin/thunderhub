@@ -29,6 +29,7 @@ import {
   UniverseAssetStats,
   AddFederationServerResponse,
 } from '@lightningpolar/tapd-api';
+import { GetInfoResponse as TapGetInfoResponse } from '@lightningpolar/tapd-api/dist/types/taprpc/GetInfoResponse';
 import { AddInvoiceResponse as TapAddInvoiceResponse } from '@lightningpolar/tapd-api/dist/types/tapchannelrpc/AddInvoiceResponse';
 import { Payment as LnrpcPayment } from '@lightningpolar/tapd-api/dist/types/lnrpc/Payment';
 import { AccountsService } from '../../accounts/accounts.service';
@@ -97,6 +98,17 @@ export class TapdNodeService {
     }
 
     return tapd;
+  }
+
+  // ── Info ──
+
+  async getInfo(opts: { id: string }): Promise<TapGetInfoResponse> {
+    const tapd = this.getTapd(opts.id);
+    // The barrel export resolves GetInfoResponse to lnrpc's variant, but
+    // taprootAssets.getInfo() actually returns taprpc.GetInfoResponse at runtime.
+    const result = await tapd.taprootAssets.getInfo({});
+
+    return result as unknown as TapGetInfoResponse;
   }
 
   // ── Assets ──

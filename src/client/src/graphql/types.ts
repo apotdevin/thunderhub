@@ -1620,6 +1620,7 @@ export type TeamMutationsEdit_NodeArgs = {
 
 export type TradeQuoteInput = {
   assetAmount: Scalars['String']['input'];
+  expiry?: InputMaybe<Scalars['Float']['input']>;
   peerPubkey: Scalars['String']['input'];
   tapdAssetId: Scalars['String']['input'];
   tapdGroupKey?: InputMaybe<Scalars['String']['input']>;

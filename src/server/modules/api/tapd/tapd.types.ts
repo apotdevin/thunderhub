@@ -205,6 +205,35 @@ export class TapFinalizeBatchResponse {
   batch_key: string;
 }
 
+// ─── Daemon Info ───────────────────────────────────────────────
+
+@ObjectType()
+export class TapDaemonInfo {
+  @Field()
+  version: string;
+
+  @Field()
+  lnd_version: string;
+
+  @Field()
+  network: string;
+
+  @Field()
+  lnd_identity_pubkey: string;
+
+  @Field()
+  node_alias: string;
+
+  @Field(() => Int)
+  block_height: number;
+
+  @Field()
+  block_hash: string;
+
+  @Field()
+  sync_to_chain: boolean;
+}
+
 // ─── Universe ───────────────────────────────────────────────────
 
 @ObjectType()

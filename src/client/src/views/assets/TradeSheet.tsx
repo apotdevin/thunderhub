@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Loader2,
@@ -109,6 +109,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   onOpenChange,
 }) => {
   const [amount, setAmount] = useState('');
+  const prefilled = useRef(false);
   const [step, setStep] = useState<'input' | 'confirm'>('input');
   const [quotedSats, setQuotedSats] = useState<string | null>(null);
   const [quotePaymentRequest, setQuotePaymentRequest] = useState<string | null>(
@@ -240,9 +241,14 @@ export const TradeSheet: FC<TradeSheetProps> = ({
         ? asset.assetId === tapdAssetId
         : false;
 
+  // Reset prefill flag when the sheet closes.
+  useEffect(() => {
+    if (!open) prefilled.current = false;
+  }, [open]);
+
   // Prefill sats amount from existing or pending asset inbound capacity.
   useEffect(() => {
-    if (!open || !offer?.node.pubkey || amount) return;
+    if (!open || !offer?.node.pubkey || prefilled.current) return;
     if (transactionType !== TapTransactionType.Purchase) return;
 
     const rate = offer.rate.fullAmount;
@@ -268,7 +274,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     if (assetAtomic <= 0n) return;
 
     const sats = (assetAtomic * BigInt(100_000_000)) / BigInt(rate);
-    if (sats > 0n) setAmount(sats.toString());
+    if (sats > 0n) {
+      prefilled.current = true;
+      setAmount(sats.toString());
+    }
   }, [
     pendingData,
     channelsData,
@@ -277,7 +286,6 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     transactionType,
     tapdGroupKey,
     tapdAssetId,
-    amount,
   ]);
 
   if (!offer) return null;
