@@ -509,7 +509,7 @@ export const TradingOffers: FC = () => {
                   className="text-left py-3 px-3 font-medium cursor-pointer select-none"
                   onClick={() => toggleSort(TapOfferSortBy.Rate)}
                 >
-                  {selectedSymbol ? `${selectedSymbol}/BTC` : 'Rate'}
+                  {selectedSymbol ? `BTC/${selectedSymbol}` : 'Rate'}
                   <SortIcon field={TapOfferSortBy.Rate} activeSortBy={sortBy} />
                 </th>
                 <th
