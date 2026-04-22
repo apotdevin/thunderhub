@@ -390,7 +390,7 @@ export const TradingOffers: FC = () => {
           </span>
         ) : (
           <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-40 rounded-md">
               <SelectValue placeholder="Select asset" />
             </SelectTrigger>
             <SelectContent>
