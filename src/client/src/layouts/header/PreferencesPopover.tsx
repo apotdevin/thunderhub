@@ -15,6 +15,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
 import { usePriceState } from '../../context/PriceContext';
+import { LogoutButton } from '../../components/logoutButton';
 export const PreferencesPopover = () => {
   const { theme, currency, sidebar, rightSidebar } = useConfigState();
   const dispatch = useConfigDispatch();
@@ -125,6 +126,15 @@ export const PreferencesPopover = () => {
                 Right
               </Button>
             </div>
+          </div>
+
+          <div className="border-t border-border/60 pt-3">
+            <LogoutButton
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-2 text-xs h-7 text-muted-foreground hover:text-foreground"
+              label="Log out"
+            />
           </div>
         </div>
       </PopoverContent>

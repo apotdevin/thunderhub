@@ -9,7 +9,6 @@ import {
   ArrowUpFromLine,
 } from 'lucide-react';
 import { useNodePath } from '../../hooks/useNodeSlug';
-import { LogoutButton } from '../../components/logoutButton';
 import {
   useDonate,
   DonateModal,
@@ -168,8 +167,6 @@ export const Header = () => {
             <Settings size={14} />
           </Button>
         </Link>
-        <div className="w-px h-4 bg-border mx-0.5" />
-        <LogoutButton />
       </div>
     </>
   );
