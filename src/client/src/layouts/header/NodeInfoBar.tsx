@@ -117,139 +117,141 @@ export const NodeInfoBar = () => {
   const aliasStyle = getAliasStyle();
 
   return (
-    <div className="flex items-center min-h-9 text-xs text-muted-foreground flex-wrap gap-1.5 px-4 py-1.5">
-      {/* Node alias */}
-      <div
-        className="flex items-center shrink-0 rounded-md px-2 py-0.5"
-        style={{ backgroundColor: aliasStyle.backgroundColor }}
-      >
-        <span
-          className="font-medium truncate max-w-35"
-          style={{ color: getAliasStyle().color }}
+    <div className="flex items-center min-h-9 text-xs text-muted-foreground px-4 py-1.5 gap-3">
+      {/* Node identity — pinned left */}
+      <div className="flex items-center gap-1.5 shrink-0">
+        <div
+          className="flex items-center shrink-0 rounded-md px-2 py-0.5"
+          style={{ backgroundColor: aliasStyle.backgroundColor }}
         >
-          {alias}
-        </span>
-      </div>
-
-      {/* Sync status */}
-      <Badge
-        variant={syncedToChain ? 'secondary' : 'destructive'}
-        className={cn(
-          'shrink-0 text-[10px] rounded-sm',
-          syncedToChain && 'bg-green-500/10 text-green-600 dark:text-green-400'
-        )}
-      >
-        {syncedToChain ? (
-          'Synced'
-        ) : (
-          <>
-            <Spinner className="size-3" />
-            {syncPercentage ? `Syncing ${syncPercentage}%` : 'Syncing...'}
-          </>
-        )}
-      </Badge>
-
-      <div className={separator} />
-
-      {/* Total balance */}
-      <div className={pill}>
-        <Wallet size={11} className="text-muted-foreground/60" />
-        <span className={label}>Balance</span>
-        <span className={value}>
-          <Price amount={totalBalance} />
-        </span>
-      </div>
-
-      {/* Lightning balance */}
-      <div className={pill}>
-        <Zap
-          size={11}
-          className={cn(
-            'fill-current',
-            channelPending === 0 ? 'text-yellow-500' : 'text-violet-500'
-          )}
-        />
-        <span className={label}>Lightning</span>
-        <span className={value}>
-          <Price amount={totalLightning} />
-        </span>
-        {channelPending > 0 && (
-          <span className="text-muted-foreground/50 text-[10px]">
-            +<Price amount={String(lightning.pending)} /> pending
+          <span
+            className="font-medium truncate max-w-35"
+            style={{ color: getAliasStyle().color }}
+          >
+            {alias}
           </span>
-        )}
-      </div>
-
-      {/* On-chain balance */}
-      <div className={pill}>
-        <Anchor
-          size={11}
-          className={cn(
-            chainPending === 0 ? 'text-blue-400' : 'text-violet-500'
-          )}
-        />
-        <span className={label}>On-chain</span>
-        <span className={value}>
-          <Price amount={totalChain} />
-        </span>
-        {chainPending > 0 && (
-          <span className="text-muted-foreground/50 text-[10px]">
-            +<Price amount={String(onchain.pending)} /> pending
-          </span>
-        )}
-      </div>
-
-      <div className={separator} />
-
-      {/* Channels */}
-      <div className={pill}>
-        <Radio size={11} className="text-emerald-500" />
-        <span className={label}>Channels</span>
-        <span className={value}>{activeChannelCount}</span>
-        {pendingChannelCount > 0 && (
-          <span className="text-muted-foreground/50 text-[10px]">
-            {pendingChannelCount} pending
-          </span>
-        )}
-        {closedChannelCount > 0 && (
-          <span className="text-muted-foreground/50 text-[10px]">
-            {closedChannelCount} closed
-          </span>
-        )}
-      </div>
-
-      {/* Peers */}
-      <div className={pill}>
-        <Users size={11} className="text-violet-400" />
-        <span className={label}>Peers</span>
-        <span className={value}>{peersCount}</span>
-      </div>
-
-      <div className={separator} />
-
-      {/* Mempool fees */}
-      {!dontShowFees && (
-        <div className={pill}>
-          <Gauge size={11} className="text-orange-500" />
-          <span className={value}>{fast} sat/vB</span>
-          {halfHour !== fast && (
-            <span className="text-muted-foreground/50">30m: {halfHour}</span>
-          )}
-          <span className="text-muted-foreground/50">1h: {hour}</span>
-          <span className="text-muted-foreground/50">min: {minimum}</span>
         </div>
-      )}
+        <Badge
+          variant={syncedToChain ? 'secondary' : 'destructive'}
+          className={cn(
+            'shrink-0 text-[10px] rounded-sm',
+            syncedToChain &&
+              'bg-green-500/10 text-green-600 dark:text-green-400'
+          )}
+        >
+          {syncedToChain ? (
+            'Synced'
+          ) : (
+            <>
+              <Spinner className="size-3" />
+              {syncPercentage ? `Syncing ${syncPercentage}%` : 'Syncing...'}
+            </>
+          )}
+        </Badge>
+      </div>
 
-      <div className={separator} />
-
-      {/* Block height */}
-      {currentBlockHeight > 0 && (
+      {/* Stats — centered in remaining space */}
+      <div className="flex items-center justify-center flex-1 flex-wrap gap-1.5">
+        {/* Total balance */}
         <div className={pill}>
-          <Box size={11} className="text-sky-500" />
-          <span className={label}>Block</span>
-          <span className={value}>{currentBlockHeight.toLocaleString()}</span>
+          <Wallet size={11} className="text-muted-foreground/60" />
+          <span className={label}>Balance</span>
+          <span className={value}>
+            <Price amount={totalBalance} />
+          </span>
         </div>
-      )}
+
+        {/* Lightning balance */}
+        <div className={pill}>
+          <Zap
+            size={11}
+            className={cn(
+              'fill-current',
+              channelPending === 0 ? 'text-yellow-500' : 'text-violet-500'
+            )}
+          />
+          <span className={label}>Lightning</span>
+          <span className={value}>
+            <Price amount={totalLightning} />
+          </span>
+          {channelPending > 0 && (
+            <span className="text-muted-foreground/50 text-[10px]">
+              +<Price amount={String(lightning.pending)} /> pending
+            </span>
+          )}
+        </div>
+
+        {/* On-chain balance */}
+        <div className={pill}>
+          <Anchor
+            size={11}
+            className={cn(
+              chainPending === 0 ? 'text-blue-400' : 'text-violet-500'
+            )}
+          />
+          <span className={label}>On-chain</span>
+          <span className={value}>
+            <Price amount={totalChain} />
+          </span>
+          {chainPending > 0 && (
+            <span className="text-muted-foreground/50 text-[10px]">
+              +<Price amount={String(onchain.pending)} /> pending
+            </span>
+          )}
+        </div>
+
+        <div className={separator} />
+
+        {/* Channels */}
+        <div className={pill}>
+          <Radio size={11} className="text-emerald-500" />
+          <span className={label}>Channels</span>
+          <span className={value}>{activeChannelCount}</span>
+          {pendingChannelCount > 0 && (
+            <span className="text-muted-foreground/50 text-[10px]">
+              {pendingChannelCount} pending
+            </span>
+          )}
+          {closedChannelCount > 0 && (
+            <span className="text-muted-foreground/50 text-[10px]">
+              {closedChannelCount} closed
+            </span>
+          )}
+        </div>
+
+        {/* Peers */}
+        <div className={pill}>
+          <Users size={11} className="text-violet-400" />
+          <span className={label}>Peers</span>
+          <span className={value}>{peersCount}</span>
+        </div>
+
+        <div className={separator} />
+
+        {/* Mempool fees */}
+        {!dontShowFees && (
+          <div className={pill}>
+            <Gauge size={11} className="text-orange-500" />
+            <span className={value}>{fast} sat/vB</span>
+            {halfHour !== fast && (
+              <span className="text-muted-foreground/50">30m: {halfHour}</span>
+            )}
+            <span className="text-muted-foreground/50">1h: {hour}</span>
+            <span className="text-muted-foreground/50">min: {minimum}</span>
+          </div>
+        )}
+
+        <div className={separator} />
+
+        {/* Block height */}
+        {currentBlockHeight > 0 && (
+          <div className={pill}>
+            <Box size={11} className="text-sky-500" />
+            <span className={label}>Block</span>
+            <span className={value}>{currentBlockHeight.toLocaleString()}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
