@@ -343,7 +343,7 @@ export const TradingOffers: FC = () => {
 
       {/* Buy / Sell toggle + Asset selector */}
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex rounded-md overflow-hidden border border-border">
+        <div className="flex h-9 rounded-md overflow-hidden border border-border">
           {(
             [TapTransactionType.Purchase, TapTransactionType.Sale] as const
           ).map(t => (
@@ -390,7 +390,7 @@ export const TradingOffers: FC = () => {
           </span>
         ) : (
           <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-            <SelectTrigger className="w-40 rounded-md">
+            <SelectTrigger className="w-40 rounded-md !h-9 px-4 text-sm font-medium">
               <SelectValue placeholder="Select asset" />
             </SelectTrigger>
             <SelectContent>
