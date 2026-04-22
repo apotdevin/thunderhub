@@ -210,7 +210,7 @@ export const ChannelTable = () => {
 
         const assetColor = colorFromString(key);
         assetFields[`${prefix}_balanceBar`] = match ? (
-          <div className="min-w-[180px]">
+          <div className="min-w-45">
             <BalanceBars
               local={getPercent(
                 Number(c.asset!.local_balance),
