@@ -66,6 +66,17 @@ export type GetChannelsQuery = {
         min_htlc_mtokens?: string | null;
       } | null;
     } | null;
+    asset?: {
+      __typename?: 'ChannelAsset';
+      asset_id: string;
+      asset_name: string;
+      asset_type: string;
+      asset_precision: number;
+      group_key?: string | null;
+      local_balance: string;
+      remote_balance: string;
+      capacity: string;
+    } | null;
   }>;
 };
 
@@ -140,6 +151,16 @@ export const GetChannelsDocument = gql`
           max_htlc_mtokens
           min_htlc_mtokens
         }
+      }
+      asset {
+        asset_id
+        asset_name
+        asset_type
+        asset_precision
+        group_key
+        local_balance
+        remote_balance
+        capacity
       }
     }
   }

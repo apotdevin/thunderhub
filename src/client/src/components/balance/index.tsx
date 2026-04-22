@@ -9,6 +9,8 @@ type BalanceProps = {
   formatRemote?: JSX.Element | string;
   height?: number;
   withBorderColor?: boolean;
+  localColor?: string;
+  remoteColor?: string;
 };
 
 export const BalanceBars = ({
@@ -18,6 +20,8 @@ export const BalanceBars = ({
   formatRemote,
   height = 20,
   withBorderColor = false,
+  localColor,
+  remoteColor,
 }: BalanceProps) => {
   const localOpposite = 100 - local;
   const remoteOpposite = 100 - remote;
@@ -51,8 +55,18 @@ export const BalanceBars = ({
         </div>
       )}
       <ProgressBar barHeight={height} order={4} percent={localOpposite} />
-      <ProgressBar barHeight={height} order={1} percent={local} />
-      <ProgressBar barHeight={height} order={2} percent={remote} />
+      <ProgressBar
+        barHeight={height}
+        order={1}
+        percent={local}
+        style={localColor ? { backgroundColor: localColor } : undefined}
+      />
+      <ProgressBar
+        barHeight={height}
+        order={2}
+        percent={remote}
+        style={remoteColor ? { backgroundColor: remoteColor } : undefined}
+      />
       <ProgressBar barHeight={height} order={4} percent={remoteOpposite} />
     </div>
   );

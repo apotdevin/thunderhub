@@ -212,11 +212,14 @@ export type Channel = {
 
 export type ChannelAsset = {
   __typename?: 'ChannelAsset';
-  assetId: Scalars['String']['output'];
+  asset_id: Scalars['String']['output'];
+  asset_name: Scalars['String']['output'];
+  asset_type: Scalars['String']['output'];
+  asset_precision: Scalars['Float']['output'];
   capacity: Scalars['String']['output'];
-  groupKey?: Maybe<Scalars['String']['output']>;
-  localBalance: Scalars['String']['output'];
-  remoteBalance: Scalars['String']['output'];
+  group_key?: Maybe<Scalars['String']['output']>;
+  local_balance: Scalars['String']['output'];
+  remote_balance: Scalars['String']['output'];
 };
 
 export type ChannelInfo = {
@@ -1347,6 +1350,18 @@ export type TapBalances = {
   balances: Array<TapAssetBalanceEntry>;
 };
 
+export type TapDaemonInfo = {
+  __typename?: 'TapDaemonInfo';
+  block_hash: Scalars['String']['output'];
+  block_height: Scalars['Int']['output'];
+  lnd_identity_pubkey: Scalars['String']['output'];
+  lnd_version: Scalars['String']['output'];
+  network: Scalars['String']['output'];
+  node_alias: Scalars['String']['output'];
+  sync_to_chain: Scalars['Boolean']['output'];
+  version: Scalars['String']['output'];
+};
+
 export type TapFederationServer = {
   __typename?: 'TapFederationServer';
   host: Scalars['String']['output'];
@@ -1580,6 +1595,7 @@ export type TaprootAssetsQueries = {
   get_assets: TapAssetList;
   get_balances: TapBalances;
   get_federation_servers: TapFederationServerList;
+  get_info: TapDaemonInfo;
   get_transfers: TapTransferList;
   get_universe_assets: TapUniverseAssetList;
   get_universe_info: TapUniverseInfo;

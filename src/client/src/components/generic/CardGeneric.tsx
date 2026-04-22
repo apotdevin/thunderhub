@@ -13,13 +13,13 @@ export const Progress = forwardRef<
 // ─── ProgressBar ─────────────────────────────────────────
 
 const chartColors = {
-  purple: '#6938f1',
-  lightblue: '#1890ff',
-  green: '#a0d911',
-  orange: '#ffa940',
-  orange2: '#FD5F00',
-  darkyellow: '#ffd300',
-  red: 'red',
+  purple: 'rgba(105, 56, 241, 0.8)',
+  lightblue: 'rgba(24, 144, 255, 0.8)',
+  green: 'rgba(160, 217, 17, 0.8)',
+  orange: 'rgba(255, 169, 64, 0.8)',
+  orange2: 'rgba(253, 95, 0, 0.8)',
+  darkyellow: 'rgba(255, 211, 0, 0.8)',
+  red: 'rgba(255, 0, 0, 0.8)',
 };
 
 const orderColors: Record<number, string | null> = {

@@ -21,10 +21,10 @@ export type GetPeerChannelsQuery = {
     transaction_vout: number;
     asset?: {
       __typename?: 'ChannelAsset';
-      assetId: string;
-      groupKey?: string | null;
-      localBalance: string;
-      remoteBalance: string;
+      asset_id: string;
+      group_key?: string | null;
+      local_balance: string;
+      remote_balance: string;
       capacity: string;
     } | null;
   }>;
@@ -42,10 +42,10 @@ export const GetPeerChannelsDocument = gql`
       transaction_id
       transaction_vout
       asset {
-        assetId
-        groupKey
-        localBalance
-        remoteBalance
+        asset_id
+        group_key
+        local_balance
+        remote_balance
         capacity
       }
     }

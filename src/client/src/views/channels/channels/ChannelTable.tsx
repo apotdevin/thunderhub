@@ -15,7 +15,13 @@ import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getC
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
-import { blockToTime, formatSeconds, getPercent } from '../../../utils/helpers';
+import {
+  blockToTime,
+  formatNumber,
+  formatSeconds,
+  getPercent,
+} from '../../../utils/helpers';
+import { colorFromString } from '../../../utils/color';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
@@ -24,6 +30,8 @@ const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
   return Math.min(percent, 100);
 };
+
+const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
 export const ChannelTable = () => {
   const chartColors = useChartColors();
@@ -51,6 +59,27 @@ export const ChannelTable = () => {
     },
     []
   );
+
+  const uniqueAssets = useMemo(() => {
+    const channelData = data?.getChannels || [];
+    const map = new Map<
+      string,
+      { asset_id: string; asset_name: string; group_key?: string }
+    >();
+    for (const c of channelData) {
+      if (c.asset) {
+        const key = c.asset.group_key || c.asset.asset_id;
+        if (!map.has(key)) {
+          map.set(key, {
+            asset_id: c.asset.asset_id,
+            asset_name: c.asset.asset_name,
+            group_key: c.asset.group_key ?? undefined,
+          });
+        }
+      }
+    }
+    return map;
+  }, [data]);
 
   const tableData = useMemo(() => {
     const channelData = data?.getChannels || [];
@@ -156,6 +185,50 @@ export const ChannelTable = () => {
         ),
       };
 
+      // Build dynamic asset fields for each unique asset
+      const assetFields: Record<string, any> = {};
+      for (const [key] of uniqueAssets) {
+        const channelAssetKey = c.asset
+          ? c.asset.group_key || c.asset.asset_id
+          : null;
+        const match = channelAssetKey === key;
+        const prefix = `asset_${key}`;
+
+        assetFields[`${prefix}_capacity`] = match ? c.asset!.capacity : null;
+        assetFields[`${prefix}_local`] = match
+          ? Number(c.asset!.local_balance)
+          : null;
+        assetFields[`${prefix}_remote`] = match
+          ? Number(c.asset!.remote_balance)
+          : null;
+        assetFields[`${prefix}_balancePercent`] = match
+          ? getPercent(
+              Number(c.asset!.local_balance),
+              Number(c.asset!.remote_balance)
+            )
+          : 0;
+
+        const assetColor = colorFromString(key);
+        assetFields[`${prefix}_balanceBar`] = match ? (
+          <div className="min-w-[180px]">
+            <BalanceBars
+              local={getPercent(
+                Number(c.asset!.local_balance),
+                Number(c.asset!.remote_balance)
+              )}
+              remote={getPercent(
+                Number(c.asset!.remote_balance),
+                Number(c.asset!.local_balance)
+              )}
+              formatLocal={formatNumber(c.asset!.local_balance)}
+              formatRemote={formatNumber(c.asset!.remote_balance)}
+              localColor={assetColor}
+              remoteColor={REMOTE_COLOR}
+            />
+          </div>
+        ) : null;
+      }
+
       return {
         ...c,
         ...status,
@@ -163,6 +236,7 @@ export const ChannelTable = () => {
         ...pending,
         ...partnerInfo,
         ...actions,
+        ...assetFields,
         alias: c.partner_node_info.node?.alias || 'Unknown',
         undercaseAlias: (
           c.partner_node_info.node?.alias || 'Unknown'
@@ -239,7 +313,7 @@ export const ChannelTable = () => {
         ),
       };
     });
-  }, [data, chartColors]);
+  }, [data, chartColors, uniqueAssets]);
 
   const columns = useMemo(
     () => [
@@ -488,8 +562,65 @@ export const ChannelTable = () => {
           },
         ],
       },
+      ...Array.from(uniqueAssets.entries()).map(([key, assetInfo]) => {
+        const prefix = `asset_${key}`;
+        const name = assetInfo.asset_name || assetInfo.asset_id.slice(0, 8);
+        const label = `Asset (${name})`;
+
+        return {
+          id: prefix,
+          header: label,
+          columns: [
+            {
+              header: 'Capacity',
+              accessorKey: `${prefix}_capacity`,
+              cell: ({ cell }: any) => {
+                const val = cell.getValue();
+                return val != null ? (
+                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                );
+              },
+            },
+            {
+              header: 'Local',
+              accessorKey: `${prefix}_local`,
+              cell: ({ cell }: any) => {
+                const val = cell.getValue();
+                return val != null ? (
+                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                );
+              },
+            },
+            {
+              header: 'Remote',
+              accessorKey: `${prefix}_remote`,
+              cell: ({ cell }: any) => {
+                const val = cell.getValue();
+                return val != null ? (
+                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                );
+              },
+            },
+            {
+              header: 'Balance',
+              accessorKey: `${prefix}_balanceBar`,
+              sortingFn: numberStringSorting(`${prefix}_balancePercent`),
+              cell: ({ cell }: any) =>
+                cell.renderValue() || (
+                  <span className="text-muted-foreground">-</span>
+                ),
+            },
+          ],
+        };
+      }),
     ],
-    [numberStringSorting]
+    [numberStringSorting, uniqueAssets]
   );
 
   const handleToggle = (hide: boolean, id: string) => {
