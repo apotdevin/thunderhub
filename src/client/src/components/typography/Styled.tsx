@@ -21,7 +21,7 @@ export const Title = forwardRef<HTMLHeadingElement, TitleProps>(
     <h1
       ref={ref}
       className={cn(
-        'w-full text-center text-2xl md:text-[40px]',
+        'w-full text-center text-2xl md:text-[40px] font-bold tracking-tight',
         !textColor && 'text-muted-foreground',
         className
       )}
@@ -39,7 +39,7 @@ export const SectionTitle = forwardRef<HTMLHeadingElement, TitleProps>(
     <h2
       ref={ref}
       className={cn(
-        'text-2xl',
+        'text-2xl font-semibold tracking-tight',
         !textColor && 'text-muted-foreground',
         className
       )}
@@ -57,7 +57,7 @@ export const Subtitle = forwardRef<HTMLHeadingElement, TitleProps>(
     <h2
       ref={ref}
       className={cn(
-        'text-base max-w-150',
+        'text-base font-medium max-w-150',
         !textColor && 'text-muted-foreground',
         className
       )}

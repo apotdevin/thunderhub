@@ -122,10 +122,16 @@
   * {
     @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
-    }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
+    }
+  body {
+    @apply bg-background text-foreground antialiased;
+    }
+  ::selection {
+    @apply bg-primary/15 text-foreground;
+    }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring/50;
     }
 }

@@ -123,11 +123,11 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     const content = (
       <div
         className={cn(
-          'group relative flex items-center gap-2.5 rounded-md text-xs font-medium transition-colors',
+          'group relative flex items-center gap-2.5 rounded-md text-xs font-medium transition-all duration-150',
           open ? 'px-2.5 py-1.5' : 'justify-center p-2',
           isActive
-            ? 'bg-primary/10 text-primary'
-            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+            ? 'bg-primary/10 text-primary border-l-[2.5px] border-primary'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50 border-l-[2.5px] border-transparent active:scale-[0.98]'
         )}
       >
         <NavIcon size={15} className="shrink-0" />
@@ -180,10 +180,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     const content = (
       <div
         className={cn(
-          'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors',
+          'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-all duration-150',
           isActive
-            ? 'bg-primary/10 text-primary font-medium'
-            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+            ? 'bg-primary/10 text-primary font-medium border-l-[2.5px] border-primary'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50 border-l-[2.5px] border-transparent active:scale-[0.98]'
         )}
         onClick={() => setOpen && setOpen(false)}
       >
