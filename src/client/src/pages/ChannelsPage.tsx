@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, SlidersHorizontal } from 'lucide-react';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import { useGetNodeInfoQuery } from '../graphql/queries/__generated__/getNodeInfo.generated';
+import { useGetPendingChannelsQuery } from '../graphql/queries/__generated__/getPendingChannels.generated';
 import { PendingChannels } from '../views/channels/pendingChannels/PendingChannels';
 import { ClosedChannels } from '../views/channels/closedChannels/ClosedChannels';
 import { ChannelTable } from '../views/channels/channels/ChannelTable';
@@ -48,31 +49,27 @@ const ChannelView = () => {
   const [openDialog, setOpenDialog] = useState<'open' | 'details' | null>(null);
   const [amounts, setAmounts] = useState({
     active: 0,
-    pending: 0,
     closed: 0,
   });
 
   const { data } = useGetNodeInfoQuery();
+  const { data: pendingData } = useGetPendingChannelsQuery();
 
   useEffect(() => {
     if (data?.getNodeInfo) {
-      const {
-        active_channels_count,
-        closed_channels_count,
-        pending_channels_count,
-      } = data.getNodeInfo;
+      const { active_channels_count, closed_channels_count } = data.getNodeInfo;
 
-      setAmounts({
+      setAmounts(prev => ({
+        ...prev,
         active: active_channels_count,
-        pending: pending_channels_count,
         closed: closed_channels_count,
-      });
+      }));
     }
   }, [data]);
 
   const counts: Record<ChannelTab, number> = {
     open: amounts.active,
-    pending: amounts.pending,
+    pending: pendingData?.getPendingChannels?.length ?? amounts.pending,
     closed: amounts.closed,
   };
 
