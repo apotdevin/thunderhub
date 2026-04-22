@@ -31,6 +31,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type ChannelStatus = {
   btc: 'none' | 'pending' | 'open';
@@ -334,9 +341,9 @@ export const TradingOffers: FC = () => {
         </div>
       )}
 
-      {/* Buy / Sell toggle + Asset pills */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <div className="flex rounded-md overflow-hidden border border-border">
+      {/* Buy / Sell toggle + Asset selector */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex h-9 rounded-md overflow-hidden border border-border">
           {(
             [TapTransactionType.Purchase, TapTransactionType.Sale] as const
           ).map(t => (
@@ -374,36 +381,27 @@ export const TradingOffers: FC = () => {
           ))}
         </div>
 
-        <div className="flex gap-1 ml-2 items-center">
-          {assetsLoading ? (
-            <Loader2 className="animate-spin text-muted-foreground" size={16} />
-          ) : supportedAssets.length === 0 &&
-            txType === TapTransactionType.Sale ? (
-            <span className="text-sm text-muted-foreground">
-              You don't have any supported assets to sell
-            </span>
-          ) : (
-            supportedAssets.map(a => {
-              const value = a.id;
-              const label = a.symbol || a.id.slice(0, 8);
-              const isActive = selectedAsset === value;
-              return (
-                <button
-                  key={a.id}
-                  onClick={() => setSelectedAsset(value)}
-                  className={cn(
-                    'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-muted text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  {label}
-                </button>
-              );
-            })
-          )}
-        </div>
+        {assetsLoading ? (
+          <Loader2 className="animate-spin text-muted-foreground" size={16} />
+        ) : supportedAssets.length === 0 &&
+          txType === TapTransactionType.Sale ? (
+          <span className="text-sm text-muted-foreground">
+            No supported assets to sell
+          </span>
+        ) : (
+          <Select value={selectedAsset} onValueChange={setSelectedAsset}>
+            <SelectTrigger className="w-40 rounded-md !h-9 px-4 text-sm font-medium">
+              <SelectValue placeholder="Select asset" />
+            </SelectTrigger>
+            <SelectContent>
+              {supportedAssets.map(a => (
+                <SelectItem key={a.id} value={a.id}>
+                  {a.symbol || a.id.slice(0, 8)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {/* Trading partners */}
@@ -511,7 +509,7 @@ export const TradingOffers: FC = () => {
                   className="text-left py-3 px-3 font-medium cursor-pointer select-none"
                   onClick={() => toggleSort(TapOfferSortBy.Rate)}
                 >
-                  {selectedSymbol ? `${selectedSymbol}/BTC` : 'Rate'}
+                  {selectedSymbol ? `BTC/${selectedSymbol}` : 'Rate'}
                   <SortIcon field={TapOfferSortBy.Rate} activeSortBy={sortBy} />
                 </th>
                 <th

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Loader2,
@@ -109,7 +109,6 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   onOpenChange,
 }) => {
   const [amount, setAmount] = useState('');
-  const prefilled = useRef(false);
   const [step, setStep] = useState<'input' | 'confirm'>('input');
   const [quotedSats, setQuotedSats] = useState<string | null>(null);
   const [quotePaymentRequest, setQuotePaymentRequest] = useState<string | null>(
@@ -240,53 +239,6 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       : tapdAssetId
         ? asset.asset_id === tapdAssetId
         : false;
-
-  // Reset prefill flag when the sheet closes.
-  useEffect(() => {
-    if (!open) prefilled.current = false;
-  }, [open]);
-
-  // Prefill sats amount from existing or pending asset inbound capacity.
-  useEffect(() => {
-    if (!open || !offer?.node.pubkey || prefilled.current) return;
-    if (transactionType !== TapTransactionType.Purchase) return;
-
-    const rate = offer.rate.fullAmount;
-    if (!rate || rate === '0') return;
-
-    // Sum inbound from open asset channels
-    const openRemote = (channelsData?.getChannels || [])
-      .filter(ch => ch.asset && matchAsset(ch.asset))
-      .reduce((sum, ch) => sum + BigInt(ch.asset?.remote_balance || '0'), 0n);
-
-    // Sum capacity from pending asset channels
-    const pendingCap = (pendingData?.getPendingChannels || [])
-      .filter(
-        ch =>
-          ch.is_opening &&
-          ch.partner_public_key === offer.node.pubkey &&
-          ch.asset &&
-          matchAsset(ch.asset)
-      )
-      .reduce((sum, ch) => sum + BigInt(ch.asset?.capacity || '0'), 0n);
-
-    const assetAtomic = openRemote > 0n ? openRemote : pendingCap;
-    if (assetAtomic <= 0n) return;
-
-    const sats = (assetAtomic * BigInt(100_000_000)) / BigInt(rate);
-    if (sats > 0n) {
-      prefilled.current = true;
-      setAmount(sats.toString());
-    }
-  }, [
-    pendingData,
-    channelsData,
-    open,
-    offer,
-    transactionType,
-    tapdGroupKey,
-    tapdAssetId,
-  ]);
 
   if (!offer) return null;
 
@@ -598,7 +550,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Rate</span>
                   <span>
-                    {rateDisplay} {assetSymbol}/BTC
+                    {rateDisplay} BTC/{assetSymbol}
                   </span>
                 </div>
               )}
@@ -828,7 +780,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Rate</span>
                   <span>
-                    {rateDisplay} {assetSymbol}/BTC
+                    {rateDisplay} BTC/{assetSymbol}
                   </span>
                 </div>
               )}
