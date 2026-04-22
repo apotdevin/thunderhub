@@ -59,17 +59,16 @@ const ChannelView = () => {
     if (data?.getNodeInfo) {
       const { active_channels_count, closed_channels_count } = data.getNodeInfo;
 
-      setAmounts(prev => ({
-        ...prev,
+      setAmounts({
         active: active_channels_count,
         closed: closed_channels_count,
-      }));
+      });
     }
   }, [data]);
 
   const counts: Record<ChannelTab, number> = {
     open: amounts.active,
-    pending: pendingData?.getPendingChannels?.length ?? amounts.pending,
+    pending: pendingData?.getPendingChannels?.length ?? 0,
     closed: amounts.closed,
   };
 
