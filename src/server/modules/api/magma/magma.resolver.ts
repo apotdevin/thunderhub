@@ -28,6 +28,7 @@ import {
   AmbossOrderList,
   CancelMagmaOrderInput,
   CancelMagmaOrderResult,
+  MagmaOrderInvoice,
   MagmaQueries,
   MagmaOrderQueries,
   MagmaMutations,
@@ -38,6 +39,7 @@ import {
   getSupportedAssetsQuery,
   createMagmaOrderMutation,
   getOrdersQuery,
+  getOrderPaymentQuery,
   cancelMagmaOrderMutation,
 } from './magma.gql';
 
@@ -648,6 +650,45 @@ export class MagmaOrderQueriesResolver {
       purchases: purchases.list.map(mapOrder),
       sales: sales.list.map(mapOrder),
       magmaUrl: magmaUrl.replace('/graphql', ''),
+    };
+  }
+
+  @ResolveField(() => MagmaOrderInvoice)
+  async get_invoice(
+    @CurrentUser() user: UserId,
+    @Args('orderId') orderId: string
+  ): Promise<MagmaOrderInvoice> {
+    const ambossAuth = await this.ambossTokenService.getOrCreate(user);
+    const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
+
+    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+      user: {
+        market: {
+          orders: {
+            get_order: {
+              id: string;
+              payment?: {
+                lightning?: { invoice?: string };
+              };
+            };
+          };
+        };
+      };
+    }>(
+      magmaUrl,
+      getOrderPaymentQuery,
+      { orderId },
+      { authorization: `Bearer ${ambossAuth}` }
+    );
+
+    if (error || !data?.user?.market?.orders?.get_order) {
+      if (error)
+        this.logger.error('Error fetching Magma order invoice', { error });
+      return {};
+    }
+
+    return {
+      invoice: data.user.market.orders.get_order.payment?.lightning?.invoice,
     };
   }
 }

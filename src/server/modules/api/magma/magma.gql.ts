@@ -139,6 +139,25 @@ export const getOrdersQuery = gql`
   }
 `;
 
+export const getOrderPaymentQuery = gql`
+  query GetOrderPayment($orderId: String!) {
+    user {
+      market {
+        orders {
+          get_order(order_id: $orderId) {
+            id
+            payment {
+              lightning {
+                invoice
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getSupportedAssetsQuery = gql`
   query GetSupportedAssets($input: SupportedAssetsInput) {
     public {

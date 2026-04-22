@@ -557,6 +557,11 @@ export type MagmaOrderFees = {
   seller?: Maybe<MagmaOrderFeeAmount>;
 };
 
+export type MagmaOrderInvoice = {
+  __typename?: 'MagmaOrderInvoice';
+  invoice?: Maybe<Scalars['String']['output']>;
+};
+
 export type MagmaOrderParty = {
   __typename?: 'MagmaOrderParty';
   alias?: Maybe<Scalars['String']['output']>;
@@ -566,6 +571,11 @@ export type MagmaOrderParty = {
 export type MagmaOrderQueries = {
   __typename?: 'MagmaOrderQueries';
   find_many?: Maybe<MagmaPendingOrders>;
+  get_invoice: MagmaOrderInvoice;
+};
+
+export type MagmaOrderQueriesGet_InvoiceArgs = {
+  orderId: Scalars['String']['input'];
 };
 
 export type MagmaPendingOrders = {
