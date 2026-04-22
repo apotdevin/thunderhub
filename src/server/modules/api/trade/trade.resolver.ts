@@ -507,7 +507,14 @@ export class TradeResolver {
 
     if (payError || !payResult) {
       this.logger.error('Failed to execute sell trade', { error: payError });
-      throw new GraphQLError('Failed to execute sell trade');
+      const detail =
+        (payError as any)?.details ||
+        (payError instanceof Error ? payError.message : undefined);
+      throw new GraphQLError(
+        detail
+          ? `Failed to execute sell trade: ${detail}`
+          : 'Failed to execute sell trade'
+      );
     }
 
     return {
