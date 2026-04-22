@@ -8,16 +8,14 @@ export const Footer = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="absolute bottom-0 w-full h-[120px]">
+    <div className="absolute bottom-0 w-full h-30">
       <div className="dark w-full bg-background px-4 border-t border-border/60">
         <div
           className={
-            pathname === '/login'
-              ? 'max-w-[1000px] mx-auto px-4 lg:px-0'
-              : undefined
+            pathname === '/login' ? 'max-w-250 mx-auto px-4 lg:px-0' : undefined
           }
         >
-          <div className="py-4 pb-8 md:pb-4 min-h-[120px] text-foreground flex flex-col justify-center items-center">
+          <div className="py-4 pb-8 md:pb-4 min-h-30 text-foreground flex flex-col justify-center items-center">
             <div className="w-full flex flex-col justify-center items-center md:flex-row md:justify-between">
               <div className="flex flex-col justify-center items-center md:justify-start md:items-start">
                 <div className="flex justify-center items-center">

@@ -28,7 +28,7 @@ export const AddPeer = ({ closeCbk }: { closeCbk?: () => void }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <label className="text-sm font-medium min-w-[80px]">Format</label>
+        <label className="text-sm font-medium min-w-20">Format</label>
         <div className="flex rounded-md bg-secondary p-0.5">
           <Button
             variant={!separate ? 'default' : 'ghost'}

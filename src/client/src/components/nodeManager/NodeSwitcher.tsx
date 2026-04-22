@@ -151,7 +151,7 @@ export const NodeSwitcher = () => {
             className="h-7 gap-1.5 px-2 text-xs font-medium text-muted-foreground hover:text-foreground"
           >
             <Server size={12} className="shrink-0" />
-            <span className="max-w-[120px] truncate">{currentName}</span>
+            <span className="max-w-30 truncate">{currentName}</span>
             {currentNode?.type && (
               <span
                 className={cn(

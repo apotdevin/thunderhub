@@ -173,7 +173,7 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
 
   return (
     <div className="relative min-h-screen">
-      <div className="pb-[120px]">
+      <div className="pb-30">
         {!isRoot && <Header />}
         <Listener isRoot={isRoot} />
         <div className="flex">

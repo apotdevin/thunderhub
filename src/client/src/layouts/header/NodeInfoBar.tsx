@@ -124,8 +124,8 @@ export const NodeInfoBar = () => {
         style={{ backgroundColor: aliasStyle.backgroundColor }}
       >
         <span
-          className="font-semibold truncate max-w-[140px]"
-          style={{ color: aliasStyle.color }}
+          className="font-medium truncate max-w-35"
+          style={{ color: getAliasStyle().color }}
         >
           {alias}
         </span>

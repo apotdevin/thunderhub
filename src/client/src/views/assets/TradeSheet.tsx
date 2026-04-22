@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Loader2,
@@ -109,7 +109,6 @@ export const TradeSheet: FC<TradeSheetProps> = ({
   onOpenChange,
 }) => {
   const [amount, setAmount] = useState('');
-  const prefilled = useRef(false);
   const [step, setStep] = useState<'input' | 'confirm'>('input');
   const [quotedSats, setQuotedSats] = useState<string | null>(null);
   const [quotePaymentRequest, setQuotePaymentRequest] = useState<string | null>(
@@ -232,61 +231,14 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     });
 
   const matchAsset = (asset: {
-    groupKey?: string | null;
-    assetId: string;
+    group_key?: string | null;
+    asset_id: string;
   }): boolean =>
     tapdGroupKey
-      ? asset.groupKey === tapdGroupKey
+      ? asset.group_key === tapdGroupKey
       : tapdAssetId
-        ? asset.assetId === tapdAssetId
+        ? asset.asset_id === tapdAssetId
         : false;
-
-  // Reset prefill flag when the sheet closes.
-  useEffect(() => {
-    if (!open) prefilled.current = false;
-  }, [open]);
-
-  // Prefill sats amount from existing or pending asset inbound capacity.
-  useEffect(() => {
-    if (!open || !offer?.node.pubkey || prefilled.current) return;
-    if (transactionType !== TapTransactionType.Purchase) return;
-
-    const rate = offer.rate.fullAmount;
-    if (!rate || rate === '0') return;
-
-    // Sum inbound from open asset channels
-    const openRemote = (channelsData?.getChannels || [])
-      .filter(ch => ch.asset && matchAsset(ch.asset))
-      .reduce((sum, ch) => sum + BigInt(ch.asset?.remoteBalance || '0'), 0n);
-
-    // Sum capacity from pending asset channels
-    const pendingCap = (pendingData?.getPendingChannels || [])
-      .filter(
-        ch =>
-          ch.is_opening &&
-          ch.partner_public_key === offer.node.pubkey &&
-          ch.asset &&
-          matchAsset(ch.asset)
-      )
-      .reduce((sum, ch) => sum + BigInt(ch.asset?.capacity || '0'), 0n);
-
-    const assetAtomic = openRemote > 0n ? openRemote : pendingCap;
-    if (assetAtomic <= 0n) return;
-
-    const sats = (assetAtomic * BigInt(100_000_000)) / BigInt(rate);
-    if (sats > 0n) {
-      prefilled.current = true;
-      setAmount(sats.toString());
-    }
-  }, [
-    pendingData,
-    channelsData,
-    open,
-    offer,
-    transactionType,
-    tapdGroupKey,
-    tapdAssetId,
-  ]);
 
   if (!offer) return null;
 
@@ -320,11 +272,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     0
   );
   const totalAssetLocal = assetChannels.reduce(
-    (sum, ch) => sum + BigInt(ch.asset?.localBalance || '0'),
+    (sum, ch) => sum + BigInt(ch.asset?.local_balance || '0'),
     0n
   );
   const totalAssetRemote = assetChannels.reduce(
-    (sum, ch) => sum + BigInt(ch.asset?.remoteBalance || '0'),
+    (sum, ch) => sum + BigInt(ch.asset?.remote_balance || '0'),
     0n
   );
   const totalBtcRemote = btcOnlyChannels.reduce(
@@ -644,11 +596,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       txId={ch.transaction_id}
                       capacity={`${atomicToDisplay(ch.asset!.capacity, assetPrecision)} ${assetSymbol}`}
                       local={atomicToDisplay(
-                        ch.asset!.localBalance,
+                        ch.asset!.local_balance,
                         assetPrecision
                       )}
                       remote={atomicToDisplay(
-                        ch.asset!.remoteBalance,
+                        ch.asset!.remote_balance,
                         assetPrecision
                       )}
                     />
@@ -669,11 +621,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                       channelId={ch.id}
                       capacity={`${atomicToDisplay(ch.asset!.capacity, assetPrecision)} ${assetSymbol}`}
                       local={atomicToDisplay(
-                        ch.asset!.localBalance,
+                        ch.asset!.local_balance,
                         assetPrecision
                       )}
                       remote={atomicToDisplay(
-                        ch.asset!.remoteBalance,
+                        ch.asset!.remote_balance,
                         assetPrecision
                       )}
                       isActive={ch.is_active}
@@ -944,18 +896,26 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 readyToTrade ? handleReviewTrade : () => setStep('confirm')
               }
               disabled={
+                quoteLoading ||
                 !isValid ||
                 (!readyToTrade && !needsOnlyOutboundBtc && !offer.magmaOfferId)
               }
               className="w-full"
             >
-              {readyToTrade
-                ? 'Review Trade'
-                : needsOnlyOutboundBtc
-                  ? 'Review Channel'
-                  : !offer.magmaOfferId
-                    ? 'No offer available for setup'
-                    : 'Review Setup'}
+              {readyToTrade && quoteLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Getting quote...
+                </>
+              ) : readyToTrade ? (
+                'Review Trade'
+              ) : needsOnlyOutboundBtc ? (
+                'Review Channel'
+              ) : !offer.magmaOfferId ? (
+                'No offer available for setup'
+              ) : (
+                'Review Setup'
+              )}
             </Button>
           )}
           {step === 'confirm' && (

@@ -16,7 +16,7 @@ export const LiquidityGraph = () => {
           <CardTitle>Liquidity Report</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[240px] w-full items-center justify-center">
+          <div className="flex h-60 w-full items-center justify-center">
             <LoadingCard noCard={true} />
           </div>
         </CardContent>
@@ -31,7 +31,7 @@ export const LiquidityGraph = () => {
           <CardTitle>Liquidity Report</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[240px] w-full items-center justify-center text-sm text-muted-foreground">
+          <div className="flex h-60 w-full items-center justify-center text-sm text-muted-foreground">
             Unable to get liquidity data.
           </div>
         </CardContent>
@@ -71,7 +71,7 @@ export const LiquidityGraph = () => {
           <CardTitle>Liquidity Report</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[240px] w-full">
+          <div className="h-60 w-full">
             <HorizontalBarChart
               dataKey="Value"
               data={liquidity}

@@ -26,10 +26,10 @@ export const GET_PENDING_CHANNELS = gql`
         }
       }
       asset {
-        assetId
-        groupKey
-        localBalance
-        remoteBalance
+        asset_id
+        group_key
+        local_balance
+        remote_balance
         capacity
       }
     }

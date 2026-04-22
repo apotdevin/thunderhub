@@ -59,7 +59,7 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
     <div className="space-y-4 pt-2">
       <Separator />
       <div className="flex flex-col items-center gap-3">
-        <div className="w-[248px] h-[248px] bg-white p-3 rounded-lg">
+        <div className="w-62 h-62 bg-white p-3 rounded-lg">
           <QRCodeSVG value={data.getTwofaSecret.url} size={224} />
         </div>
         <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
@@ -74,7 +74,7 @@ const Enable: FC<{ callback: () => void }> = ({ callback }) => {
           value={token}
           onChange={e => setToken(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleClick()}
-          className="sm:max-w-[280px]"
+          className="sm:max-w-70"
         />
         <Button
           className="w-full sm:w-auto"
@@ -125,7 +125,7 @@ const Disable: FC<{ callback: () => void }> = ({ callback }) => {
           value={token}
           onChange={e => setToken(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleClick()}
-          className="sm:max-w-[280px]"
+          className="sm:max-w-70"
         />
         <Button
           variant="destructive"

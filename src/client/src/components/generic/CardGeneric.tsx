@@ -7,19 +7,19 @@ export const Progress = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('m-[5px] bg-muted', className)} {...props} />
+  <div ref={ref} className={cn('m-1.25 bg-muted', className)} {...props} />
 ));
 
 // ─── ProgressBar ─────────────────────────────────────────
 
 const chartColors = {
-  purple: '#6938f1',
-  lightblue: '#1890ff',
-  green: '#a0d911',
-  orange: '#ffa940',
-  orange2: '#FD5F00',
-  darkyellow: '#ffd300',
-  red: 'red',
+  purple: 'rgba(105, 56, 241, 0.8)',
+  lightblue: 'rgba(24, 144, 255, 0.8)',
+  green: 'rgba(160, 217, 17, 0.8)',
+  orange: 'rgba(255, 169, 64, 0.8)',
+  orange2: 'rgba(253, 95, 0, 0.8)',
+  darkyellow: 'rgba(255, 211, 0, 0.8)',
+  red: 'rgba(255, 0, 0, 0.8)',
 };
 
 const orderColors: Record<number, string | null> = {
@@ -70,7 +70,7 @@ export const NodeTitle = forwardRef<
   <div
     ref={ref}
     className={cn(
-      'text-base font-bold w-auto mb-2 whitespace-nowrap overflow-hidden text-ellipsis md:w-[240px] md:mb-0 flex items-center',
+      'text-base font-bold w-auto mb-2 whitespace-nowrap overflow-hidden text-ellipsis md:w-60 md:mb-0 flex items-center',
       className
     )}
     {...props}
@@ -84,7 +84,7 @@ export const StatusLine = forwardRef<
   <div
     ref={ref}
     className={cn(
-      'w-full relative -right-3 -top-3 flex justify-end mb-[-8px]',
+      'w-full relative -right-3 -top-3 flex justify-end -mb-2',
       className
     )}
     {...props}

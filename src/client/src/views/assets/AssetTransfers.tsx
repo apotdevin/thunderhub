@@ -54,7 +54,7 @@ export const AssetTransfers: FC = () => {
             <CardContent className="p-4">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono truncate max-w-[400px]">
+                  <span className="text-xs font-mono truncate max-w-100">
                     {transfer.anchor_tx_hash}
                   </span>
                   <span className="text-xs text-muted-foreground shrink-0 ml-2">
@@ -73,7 +73,7 @@ export const AssetTransfers: FC = () => {
                         key={j}
                         className="flex items-center gap-1 text-muted-foreground"
                       >
-                        <span className="font-mono truncate max-w-[120px]">
+                        <span className="font-mono truncate max-w-30">
                           {inp.asset_id?.slice(0, 12)}...
                         </span>
                         <span className="font-semibold text-foreground">
@@ -88,7 +88,7 @@ export const AssetTransfers: FC = () => {
                   <div className="flex flex-col gap-1">
                     {(transfer.outputs || []).map((out, j) => (
                       <div key={j} className="flex items-center gap-1">
-                        <span className="font-mono text-muted-foreground truncate max-w-[120px]">
+                        <span className="font-mono text-muted-foreground truncate max-w-30">
                           {out.asset_id?.slice(0, 12)}...
                         </span>
                         <span className="font-semibold">{out.amount}</span>

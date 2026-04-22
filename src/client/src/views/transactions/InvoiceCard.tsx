@@ -45,7 +45,7 @@ const StatusBadge = ({
     return (
       <Badge
         variant="secondary"
-        className="w-[70px] justify-center text-[10px] rounded-sm bg-green-500/10 text-green-600 dark:text-green-400"
+        className="w-17.5 justify-center text-[10px] rounded-sm bg-green-500/10 text-green-600 dark:text-green-400"
       >
         Paid
       </Badge>
@@ -55,7 +55,7 @@ const StatusBadge = ({
     return (
       <Badge
         variant="destructive"
-        className="w-[70px] justify-center text-[10px] rounded-sm"
+        className="w-17.5 justify-center text-[10px] rounded-sm"
       >
         Canceled
       </Badge>
@@ -64,7 +64,7 @@ const StatusBadge = ({
   return (
     <Badge
       variant="secondary"
-      className="w-[70px] justify-center text-[10px] rounded-sm"
+      className="w-17.5 justify-center text-[10px] rounded-sm"
     >
       Pending
     </Badge>

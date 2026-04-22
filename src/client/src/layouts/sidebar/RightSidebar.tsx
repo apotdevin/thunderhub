@@ -10,7 +10,7 @@ export const RightSidebar = () => {
 
   return (
     <div className="hidden lg:flex flex-col shrink-0 w-[320px] border-l border-border/60">
-      <div className="sticky top-[77px] flex flex-col max-h-[calc(100vh-77px)]">
+      <div className="sticky top-19.25 flex flex-col max-h-[calc(100vh-77px)]">
         <div className="w-[320px] shrink-0">
           <BalancesContent />
           <SidebarSwap />
