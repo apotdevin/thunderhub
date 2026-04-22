@@ -320,6 +320,16 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       ? displayToAtomic(amount, assetPrecision)
       : 0n;
 
+  const availableAtomic = offer.available.fullAmount
+    ? BigInt(offer.available.fullAmount)
+    : null;
+
+  const exceedsAvailable =
+    isValid &&
+    !needsOnlyOutboundBtc &&
+    availableAtomic !== null &&
+    atomicTradeAmount > availableAtomic;
+
   // Amount-aware capacity checks: passes only if existing channels cover the
   // requested trade size. Falls back to > 0 when no amount has been entered.
   const hasOutbound = needsOnlyOutboundBtc
@@ -764,6 +774,12 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                     {needsOnlyOutboundBtc ? 'sats' : assetSymbol}
                   </span>
                 </div>
+                {exceedsAvailable && availableDisplay && (
+                  <p className="text-xs text-destructive mt-1">
+                    Amount exceeds available liquidity (
+                    {Number(availableDisplay).toLocaleString()} {assetSymbol})
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -898,6 +914,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               disabled={
                 quoteLoading ||
                 !isValid ||
+                exceedsAvailable ||
                 (!readyToTrade && !needsOnlyOutboundBtc && !offer.magmaOfferId)
               }
               className="w-full"
@@ -941,7 +958,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                     quoteLoading ||
                     !displaySats ||
                     quoteExpired ||
-                    quotedSatsInsufficient
+                    quotedSatsInsufficient ||
+                    exceedsAvailable
                   }
                   className="flex-1"
                 >
