@@ -1,5 +1,15 @@
 import { useSyncExternalStore } from 'react';
-import { Zap, Anchor, Users, Radio, Wallet, Gauge, Box } from 'lucide-react';
+import {
+  Zap,
+  Anchor,
+  Users,
+  Radio,
+  Wallet,
+  Gauge,
+  Box,
+  Server,
+  CircleCheck,
+} from 'lucide-react';
 import { Price } from '../../components/price/Price';
 import { useNodeInfo } from '../../hooks/UseNodeInfo';
 import { useNodeBalances } from '../../hooks/UseNodeBalances';
@@ -121,12 +131,13 @@ export const NodeInfoBar = () => {
       {/* Node identity — pinned left */}
       <div className="flex items-center gap-1.5 shrink-0">
         <div
-          className="flex items-center shrink-0 rounded-md px-2 py-0.5"
+          className="flex items-center gap-1 shrink-0 rounded-md px-2 py-0.5"
           style={{ backgroundColor: aliasStyle.backgroundColor }}
         >
+          <Server size={11} style={{ color: aliasStyle.color }} />
           <span
             className="font-medium truncate max-w-35"
-            style={{ color: getAliasStyle().color }}
+            style={{ color: aliasStyle.color }}
           >
             {alias}
           </span>
@@ -140,7 +151,10 @@ export const NodeInfoBar = () => {
           )}
         >
           {syncedToChain ? (
-            'Synced'
+            <>
+              <CircleCheck size={10} />
+              Synced
+            </>
           ) : (
             <>
               <Spinner className="size-3" />
