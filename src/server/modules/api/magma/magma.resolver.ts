@@ -233,8 +233,11 @@ export class MagmaResolver {
           const invoice = order?.payment?.lightning?.invoice;
 
           if (error || !order || !invoice) {
-            if (error)
-              this.logger.error('Magma order creation failed', { error });
+            this.logger.error('Magma order creation failed', {
+              error,
+              orderId: order?.id,
+              hasInvoice: !!invoice,
+            });
             throw new GraphQLError('Failed to create Magma channel order');
           }
 

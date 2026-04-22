@@ -218,9 +218,9 @@ export const TradingOffers: FC = () => {
       const s = ensure(ch.partner_public_key);
       if (ch.asset) {
         const match = selectedTapdGroupKey
-          ? ch.asset.groupKey === selectedTapdGroupKey
+          ? ch.asset.group_key === selectedTapdGroupKey
           : selectedTapdAssetId
-            ? ch.asset.assetId === selectedTapdAssetId
+            ? ch.asset.asset_id === selectedTapdAssetId
             : false;
         if (match && s.asset === 'none') {
           s.asset = 'pending';

@@ -254,10 +254,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     <div
       className={cn(
         'hidden md:flex flex-col shrink-0 transition-[width] duration-200 border-r border-border/60',
-        sidebar ? 'w-[180px]' : 'w-[52px]'
+        sidebar ? 'w-45' : 'w-13'
       )}
     >
-      <div className="sticky top-[77px] p-4 pr-2">
+      <div className="sticky top-19.25 p-4 pr-2">
         <div className="flex flex-col h-full">
           {sidebar && (
             <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">

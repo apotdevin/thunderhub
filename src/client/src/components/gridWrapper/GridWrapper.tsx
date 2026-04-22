@@ -14,7 +14,7 @@ export const GridWrapper: FC<GridProps & { centerContent?: boolean }> = ({
     <BitcoinPrice />
     <BitcoinFees />
     {centerContent ? (
-      <div className="max-w-[1000px] mx-auto">{children}</div>
+      <div className="max-w-250 mx-auto">{children}</div>
     ) : (
       children
     )}

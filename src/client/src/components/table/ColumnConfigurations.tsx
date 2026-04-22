@@ -20,13 +20,20 @@ export const ColumnConfigurations: FC<ColumnConfigurationsProps> = ({
     return grouped;
   }, [table]);
 
+  const groupLabel = (groupId: string): string => {
+    if (groupId === 'undefined') return 'General';
+    const col = table.getColumn(groupId);
+    const header = col?.columnDef?.header;
+    return typeof header === 'string' ? header : groupId;
+  };
+
   return (
     <div className="flex flex-wrap gap-4 rounded border border-border p-3">
       {Object.keys(groupedHideableColumns).map(
         (group: string, index: number) => (
           <div key={`${group}-${index}`} className="flex flex-col gap-1.5">
             <span className="text-xs font-medium text-muted-foreground">
-              {group === 'undefined' ? 'General' : group}
+              {groupLabel(group)}
             </span>
             <div className="flex flex-col gap-1">
               {groupedHideableColumns[group].map((column: any) => {
