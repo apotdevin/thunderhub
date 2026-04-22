@@ -45,9 +45,9 @@ const getLuminance = (hex: string) => {
 };
 
 const pill =
-  'flex items-center gap-1 rounded-md bg-muted/50 px-2 py-0.5 shrink-0';
-const label = 'text-muted-foreground/70';
-const value = 'text-foreground font-medium';
+  'flex items-center gap-1 rounded-md bg-muted/50 px-2 py-0.5 shrink-0 whitespace-nowrap';
+const label = 'text-foreground font-medium';
+const value = 'text-muted-foreground';
 const separator = 'w-px h-3.5 bg-border shrink-0';
 
 export const NodeInfoBar = () => {
@@ -165,7 +165,7 @@ export const NodeInfoBar = () => {
       </div>
 
       {/* Stats — centered in remaining space */}
-      <div className="flex items-center justify-center flex-1 flex-wrap gap-1.5">
+      <div className="flex items-center justify-center flex-1 flex-wrap gap-3">
         {/* Total balance */}
         <div className={pill}>
           <Wallet size={11} className="text-muted-foreground/60" />
@@ -189,7 +189,7 @@ export const NodeInfoBar = () => {
             <Price amount={totalLightning} />
           </span>
           {channelPending > 0 && (
-            <span className="text-muted-foreground/50 text-[10px]">
+            <span className="text-muted-foreground/50 text-[10px] inline-flex items-center gap-0.5">
               +<Price amount={String(lightning.pending)} /> pending
             </span>
           )}
@@ -208,7 +208,7 @@ export const NodeInfoBar = () => {
             <Price amount={totalChain} />
           </span>
           {chainPending > 0 && (
-            <span className="text-muted-foreground/50 text-[10px]">
+            <span className="text-muted-foreground/50 text-[10px] inline-flex items-center gap-0.5">
               +<Price amount={String(onchain.pending)} /> pending
             </span>
           )}
