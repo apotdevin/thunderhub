@@ -45,6 +45,11 @@ export const BarChart = ({
   const seriesData = useMemo(() => {
     if (data.length === 0) return { dates: [], series: [] };
 
+    const gradient = new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+      { offset: 0, color: colorRange[0] },
+      { offset: 1, color: colorRange[1] || colorRange[0] },
+    ]);
+
     const series = [
       {
         name: title,
@@ -52,7 +57,8 @@ export const BarChart = ({
         emphasis: { focus: 'series' },
         data: data.map((d: any) => d[dataKey]),
         itemStyle: {
-          borderRadius: [2, 2, 0, 0],
+          color: gradient,
+          borderRadius: [4, 4, 0, 0],
         },
         barMaxWidth: 32,
       },

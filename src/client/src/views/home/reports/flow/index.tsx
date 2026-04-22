@@ -34,10 +34,16 @@ export const FlowBox = ({
             variant="outline"
             size="sm"
           >
-            <ToggleGroupItem value="invoices" className="text-xs px-2">
+            <ToggleGroupItem
+              value="invoices"
+              className="text-xs px-2 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+            >
               Invoices
             </ToggleGroupItem>
-            <ToggleGroupItem value="payments" className="text-xs px-2">
+            <ToggleGroupItem
+              value="payments"
+              className="text-xs px-2 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+            >
               Payments
             </ToggleGroupItem>
           </ToggleGroup>
@@ -48,10 +54,16 @@ export const FlowBox = ({
             variant="outline"
             size="sm"
           >
-            <ToggleGroupItem value="count" className="text-xs px-2">
+            <ToggleGroupItem
+              value="count"
+              className="text-xs px-2 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+            >
               Count
             </ToggleGroupItem>
-            <ToggleGroupItem value="tokens" className="text-xs px-2">
+            <ToggleGroupItem
+              value="tokens"
+              className="text-xs px-2 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+            >
               Volume
             </ToggleGroupItem>
           </ToggleGroup>

@@ -102,7 +102,9 @@ export const TransactionsGraph: FC<TransactionsGraphProps> = ({
   }
 
   const finalArray = showPay ? paymentsByDate : invoicesByDate;
-  const finalColor = showPay ? [chartColors.darkyellow] : [chartColors.orange2];
+  const finalColor = showPay
+    ? [chartColors.darkyellow, chartColors.orange]
+    : [chartColors.orange2, chartColors.orange];
 
   return (
     <div className="w-full h-75">

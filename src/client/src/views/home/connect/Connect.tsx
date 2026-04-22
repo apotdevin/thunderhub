@@ -1,15 +1,68 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Radio, Copy, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Radio,
+  Copy,
+  Globe,
+  Shield,
+  Key,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { useGetNodeInfoQuery } from '../../../graphql/queries/__generated__/getNodeInfo.generated';
 import { getErrorContent } from '../../../utils/error';
 import { LoadingCard } from '../../../components/loading/LoadingCard';
 
+const truncate = (str: string, start = 8, end = 8) =>
+  str.length > start + end + 3
+    ? `${str.slice(0, start)}...${str.slice(-end)}`
+    : str;
+
+const CopyRow = ({
+  label,
+  value,
+  icon: Icon,
+  iconClassName,
+}: {
+  label: string;
+  value: string;
+  icon: typeof Key;
+  iconClassName?: string;
+}) => {
+  const copy = () =>
+    navigator.clipboard
+      .writeText(value)
+      .then(() => toast.success(`${label} copied`));
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="group/row flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-150 hover:bg-muted/60 cursor-pointer w-full text-left"
+    >
+      <div className="flex items-center justify-center size-7 rounded-md bg-muted/60 shrink-0 group-hover/row:bg-muted">
+        <Icon size={13} className={iconClassName} />
+      </div>
+      <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+          {label}
+        </span>
+        <span className="text-xs font-mono text-foreground/80 truncate">
+          {truncate(value, 12, 12)}
+        </span>
+      </div>
+      <Copy
+        size={13}
+        className="shrink-0 text-muted-foreground/40 opacity-0 transition-opacity group-hover/row:opacity-100"
+      />
+    </button>
+  );
+};
+
 export const ConnectCard = () => {
-  const [open, openSet] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const { loading, data } = useGetNodeInfoQuery({
     onError: error => toast.error(getErrorContent(error)),
@@ -21,100 +74,62 @@ export const ConnectCard = () => {
 
   const { public_key, uris } = data.getNodeInfo || {};
 
-  const onionAddress = uris.find((uri: string) => uri.indexOf('onion') >= 0);
-  const normalAddress = uris.find((uri: string) => uri.indexOf('onion') < 0);
-
-  let clear: string | null = null;
-  let tor: string | null = null;
-
-  if (normalAddress) {
-    clear = normalAddress.split('@')[1];
-  }
-  if (onionAddress) {
-    tor = onionAddress.split('@')[1];
-  }
+  const onionUri = uris.find((u: string) => u.includes('onion'));
+  const clearUri = uris.find((u: string) => !u.includes('onion'));
+  const hasAddresses = !!onionUri || !!clearUri;
 
   return (
-    <Card>
+    <Card size="sm">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Radio size={16} className="text-primary" />
+            <div className="flex items-center justify-center size-7 rounded-lg bg-primary/10">
+              <Radio size={14} className="text-primary" />
+            </div>
             <CardTitle>Connect</CardTitle>
           </div>
-          <div className="flex gap-2">
-            {onionAddress && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  navigator.clipboard
-                    .writeText(onionAddress)
-                    .then(() => toast.success('Onion Address Copied'))
-                }
-              >
-                <Copy size={14} />
-                Onion
-              </Button>
-            )}
-            {normalAddress && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  navigator.clipboard
-                    .writeText(normalAddress)
-                    .then(() => toast.success('Public Address Copied'))
-                }
-              >
-                <Copy size={14} />
-                IP
-              </Button>
-            )}
+          {hasAddresses && (
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() => openSet(s => !s)}
+              variant="ghost"
+              size="icon-xs"
+              className="text-muted-foreground"
+              onClick={() => setExpanded(s => !s)}
             >
-              {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </Button>
-          </div>
+          )}
         </div>
       </CardHeader>
       <CardContent>
-        <div className="break-all text-xs text-muted-foreground font-mono">
-          {public_key}
+        <div className="-mx-3 -my-1">
+          <CopyRow
+            label="Public Key"
+            value={public_key}
+            icon={Key}
+            iconClassName="text-violet-500"
+          />
+          {expanded && (
+            <>
+              {onionUri && (
+                <CopyRow
+                  label="Tor (Onion)"
+                  value={onionUri}
+                  icon={Shield}
+                  iconClassName="text-emerald-500"
+                />
+              )}
+              {clearUri && (
+                <CopyRow
+                  label="Clearnet (IP)"
+                  value={clearUri}
+                  icon={Globe}
+                  iconClassName="text-blue-500"
+                />
+              )}
+            </>
+          )}
         </div>
       </CardContent>
-      {open && (
-        <>
-          <Separator />
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col gap-0.5">
-                <span className="text-xs text-muted-foreground">
-                  Public Key
-                </span>
-                <span className="break-all text-sm font-mono">
-                  {public_key}
-                </span>
-              </div>
-              {clear && (
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs text-muted-foreground">IP</span>
-                  <span className="break-all text-sm font-mono">{clear}</span>
-                </div>
-              )}
-              {tor && (
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs text-muted-foreground">TOR</span>
-                  <span className="break-all text-sm font-mono">{tor}</span>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </>
-      )}
     </Card>
   );
 };

@@ -14,8 +14,8 @@ const HomeView = () => (
     <AccountButtons />
     <ConnectCard />
     <TaprootAssetsUpsellCard />
-    <QuickActions />
     <FlowBox />
+    <QuickActions />
     <LiquidityGraph />
     <ForwardBox />
   </div>

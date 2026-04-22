@@ -8,6 +8,8 @@ export const CHART_COLORS = {
   lightblue: '#1890ff',
   green: '#a0d911',
   purple: '#6938f1',
+  purple2: '#8b5cf6',
+  purple3: '#a78bfa',
   red: 'red',
 };
 
