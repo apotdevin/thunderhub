@@ -87,7 +87,7 @@ export const Header = () => {
           <SheetContent
             side="right"
             showCloseButton={true}
-            className="p-0 w-[280px]"
+            className="p-0 w-70"
           >
             <BurgerMenu
               setOpen={setOpen}
@@ -267,7 +267,7 @@ export const Header = () => {
         <div
           className={cn(
             'flex h-10 items-center justify-between px-4 border-b border-border/60',
-            isRoot && 'max-w-[1000px] mx-auto border-transparent'
+            isRoot && 'max-w-250 mx-auto border-transparent'
           )}
         >
           <div className="flex items-center gap-1">

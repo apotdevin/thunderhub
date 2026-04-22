@@ -147,7 +147,7 @@ export const SendAsset: FC = () => {
                   {addrInfo.group_key && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Group Key</span>
-                      <span className="font-mono truncate max-w-[200px]">
+                      <span className="font-mono truncate max-w-50">
                         {addrInfo.group_key}
                       </span>
                     </div>
@@ -155,7 +155,7 @@ export const SendAsset: FC = () => {
                   {addrInfo.asset_id && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Asset ID</span>
-                      <span className="font-mono truncate max-w-[200px]">
+                      <span className="font-mono truncate max-w-50">
                         {addrInfo.asset_id}
                       </span>
                     </div>

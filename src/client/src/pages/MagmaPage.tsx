@@ -85,7 +85,7 @@ const MagmaView = () => {
           </ToggleGroup>
 
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[200px] h-8 text-xs">
+            <SelectTrigger className="w-50 h-8 text-xs">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>

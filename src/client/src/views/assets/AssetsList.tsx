@@ -48,7 +48,7 @@ const CopyableKey: FC<{ label: string; value: string }> = ({
 
   return (
     <div className="flex items-center gap-1">
-      <span className="text-xs text-muted-foreground font-mono truncate max-w-[250px]">
+      <span className="text-xs text-muted-foreground font-mono truncate max-w-62.5">
         {value}
       </span>
       <button

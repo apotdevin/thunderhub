@@ -254,7 +254,7 @@ export const ChannelTable = () => {
         balancePercent: getPercent(c.local_balance, c.remote_balance),
         balancePercentText: `${getPercent(c.local_balance, c.remote_balance)}%`,
         proportionalBars: (
-          <div className="min-w-[180px]">
+          <div className="min-w-45">
             <BalanceBars
               local={getBar(c.local_balance, maxBalance)}
               remote={getBar(c.remote_balance, maxBalance)}
@@ -276,7 +276,7 @@ export const ChannelTable = () => {
           </div>
         ),
         balanceBars: (
-          <div className="min-w-[180px]">
+          <div className="min-w-45">
             <BalanceBars
               local={getPercent(c.local_balance, c.remote_balance)}
               remote={getPercent(c.remote_balance, c.local_balance)}
@@ -298,7 +298,7 @@ export const ChannelTable = () => {
           </div>
         ),
         activityBars: (
-          <div className="min-w-[180px]">
+          <div className="min-w-45">
             <BalanceBars
               local={getPercent(c.received, c.sent)}
               remote={getPercent(c.sent, c.received)}

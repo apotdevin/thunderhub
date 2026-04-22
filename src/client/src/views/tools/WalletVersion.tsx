@@ -44,7 +44,7 @@ export const WalletVersion = () => {
               <span className="text-muted-foreground">Commit</span>
               <span className="font-mono text-xs break-all">{commit_hash}</span>
               <span className="text-muted-foreground">Build Tags</span>
-              <span className="break-words">{build_tags.join(', ')}</span>
+              <span className="wrap-break-word">{build_tags.join(', ')}</span>
             </div>
 
             <div className="border-t border-border pt-4">
