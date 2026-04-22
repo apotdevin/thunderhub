@@ -560,7 +560,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Rate</span>
                   <span>
-                    {rateDisplay} {assetSymbol}/BTC
+                    {rateDisplay} BTC/{assetSymbol}
                   </span>
                 </div>
               )}
@@ -796,7 +796,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Rate</span>
                   <span>
-                    {rateDisplay} {assetSymbol}/BTC
+                    {rateDisplay} BTC/{assetSymbol}
                   </span>
                 </div>
               )}
