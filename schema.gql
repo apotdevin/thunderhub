@@ -170,11 +170,14 @@ type Channel {
 }
 
 type ChannelAsset {
-  assetId: String!
+  asset_id: String!
+  asset_name: String!
+  asset_precision: Float!
+  asset_type: String!
   capacity: String!
-  groupKey: String
-  localBalance: String!
-  remoteBalance: String!
+  group_key: String
+  local_balance: String!
+  remote_balance: String!
 }
 
 type ChannelInfo {
@@ -938,6 +941,8 @@ type TapAssetBalanceEntry {
 
 type TapAssetChannelBalance {
   asset_id: String!
+  asset_name: String
+  asset_precision: Float!
   capacity: String!
   channel_point: String!
   group_key: String

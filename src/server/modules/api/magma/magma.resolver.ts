@@ -224,6 +224,7 @@ export class MagmaResolver {
                   pubkey: nodeInfo.publicKey,
                   size: magmaSize,
                   payment_method: 'SATS',
+                  is_private: true,
                   options: { asset_id: input.ambossAssetId },
                 },
               },
@@ -234,8 +235,11 @@ export class MagmaResolver {
           const invoice = order?.payment?.lightning?.invoice;
 
           if (error || !order || !invoice) {
-            if (error)
-              this.logger.error('Magma order creation failed', { error });
+            this.logger.error('Magma order creation failed', {
+              error,
+              orderId: order?.id,
+              hasInvoice: !!invoice,
+            });
             throw new GraphQLError('Failed to create Magma channel order');
           }
 

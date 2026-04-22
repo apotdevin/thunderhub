@@ -212,11 +212,14 @@ export type Channel = {
 
 export type ChannelAsset = {
   __typename?: 'ChannelAsset';
-  assetId: Scalars['String']['output'];
+  asset_id: Scalars['String']['output'];
+  asset_name: Scalars['String']['output'];
+  asset_type: Scalars['String']['output'];
+  asset_precision: Scalars['Float']['output'];
   capacity: Scalars['String']['output'];
-  groupKey?: Maybe<Scalars['String']['output']>;
-  localBalance: Scalars['String']['output'];
-  remoteBalance: Scalars['String']['output'];
+  group_key?: Maybe<Scalars['String']['output']>;
+  local_balance: Scalars['String']['output'];
+  remote_balance: Scalars['String']['output'];
 };
 
 export type ChannelInfo = {
@@ -1291,6 +1294,8 @@ export type TapAssetBalanceEntry = {
 export type TapAssetChannelBalance = {
   __typename?: 'TapAssetChannelBalance';
   asset_id: Scalars['String']['output'];
+  asset_name?: Maybe<Scalars['String']['output']>;
+  asset_precision: Scalars['Float']['output'];
   capacity: Scalars['String']['output'];
   channel_point: Scalars['String']['output'];
   group_key?: Maybe<Scalars['String']['output']>;

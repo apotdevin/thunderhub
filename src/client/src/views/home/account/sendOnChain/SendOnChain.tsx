@@ -230,7 +230,7 @@ export const SendOnChainCard = ({ setOpen }: { setOpen: () => void }) => {
             </div>
             <div className="flex items-center justify-between px-3 py-2">
               <span className="text-muted-foreground">Address</span>
-              <span className="max-w-[200px] truncate font-mono text-[11px] font-medium">
+              <span className="max-w-50 truncate font-mono text-[11px] font-medium">
                 {address}
               </span>
             </div>

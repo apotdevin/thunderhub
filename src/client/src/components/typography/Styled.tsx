@@ -57,7 +57,7 @@ export const Subtitle = forwardRef<HTMLHeadingElement, TitleProps>(
     <h2
       ref={ref}
       className={cn(
-        'text-base max-w-[600px]',
+        'text-base max-w-150',
         !textColor && 'text-muted-foreground',
         className
       )}
@@ -118,7 +118,7 @@ export const DetailCard = forwardRef<
     ref={ref}
     className={cn(
       'bg-card shadow-[0_8px_16px_-8px_rgba(0,0,0,0.1)] rounded border border-border w-full',
-      'm-[8px_16px] z-[1] flex-[1_0_100%] md:flex-[1_0_30%]',
+      'm-[8px_16px] z-1 flex-[1_0_100%] md:flex-[1_0_30%]',
       className
     )}
     style={{ padding: '16px', marginBottom: 0 }}
@@ -133,7 +133,7 @@ export const DetailLine = forwardRef<
   <div
     ref={ref}
     className={cn(
-      'mx-0 flex justify-center items-center flex-wrap md:mx-[-16px]',
+      'mx-0 flex justify-center items-center flex-wrap md:-mx-4',
       className
     )}
     {...props}
