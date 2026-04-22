@@ -200,27 +200,26 @@ function OrderTable({
                     </Button>
                   )}
                   {order.status === 'WAITING_FOR_BUYER_PAYMENT' &&
-                  role === 'buyer' ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onPayRequest(order.id)}
-                    >
-                      <Zap className="mr-1 size-3.5" />
-                      Pay
-                    </Button>
-                  ) : (
-                    <Button variant="ghost" size="sm" asChild>
-                      <a
-                        href={`${magmaUrl}/order/${order.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    role === 'buyer' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onPayRequest(order.id)}
                       >
-                        <ExternalLink className="mr-1 size-3.5" />
-                        View on Amboss
-                      </a>
-                    </Button>
-                  )}
+                        <Zap className="mr-1 size-3.5" />
+                        Pay
+                      </Button>
+                    )}
+                  <Button variant="ghost" size="sm" asChild>
+                    <a
+                      href={`${magmaUrl}/order/${order.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="mr-1 size-3.5" />
+                      View on Amboss
+                    </a>
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
@@ -257,8 +256,10 @@ export const MagmaOrders = ({
   const [cancelReason, setCancelReason] =
     useState<OrderCancellationReason | null>(null);
   const [payDialogOpen, setPayDialogOpen] = useState(false);
-  const [fetchInvoice, { data: invoiceData, loading: invoiceLoading }] =
-    useGetMagmaOrderInvoiceLazyQuery();
+  const [
+    fetchInvoice,
+    { data: invoiceData, loading: invoiceLoading, reset: resetInvoice },
+  ] = useGetMagmaOrderInvoiceLazyQuery();
 
   const payingInvoice =
     invoiceData?.magma?.orders?.get_invoice?.invoice ?? null;
@@ -359,7 +360,12 @@ export const MagmaOrders = ({
 
       <Dialog
         open={payDialogOpen}
-        onOpenChange={open => !open && setPayDialogOpen(false)}
+        onOpenChange={open => {
+          if (!open) {
+            setPayDialogOpen(false);
+            resetInvoice();
+          }
+        }}
       >
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
@@ -400,6 +406,7 @@ export const MagmaOrders = ({
                     navigator.clipboard
                       .writeText(payingInvoice)
                       .then(() => toast.success('Copied to clipboard'))
+                      .catch(() => toast.error('Failed to copy to clipboard'))
                   }
                 >
                   <Copy size={14} className="mr-1" />
@@ -411,6 +418,7 @@ export const MagmaOrders = ({
                 predefinedRequest={payingInvoice}
                 payCallback={() => {
                   setPayDialogOpen(false);
+                  resetInvoice();
                   refetch();
                 }}
               />

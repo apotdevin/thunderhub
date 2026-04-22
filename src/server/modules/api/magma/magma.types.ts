@@ -397,8 +397,8 @@ export class MagmaOrderQueries {
   @Field(() => MagmaPendingOrders, { nullable: true })
   find_many?: MagmaPendingOrders;
 
-  @Field(() => MagmaOrderInvoice)
-  get_invoice: MagmaOrderInvoice;
+  @Field(() => MagmaOrderInvoice, { nullable: true })
+  get_invoice?: MagmaOrderInvoice;
 }
 
 @ObjectType()

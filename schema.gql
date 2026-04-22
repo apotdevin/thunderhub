@@ -493,7 +493,7 @@ type MagmaOrderParty {
 
 type MagmaOrderQueries {
   find_many: MagmaPendingOrders
-  get_invoice(orderId: String!): MagmaOrderInvoice!
+  get_invoice(orderId: String!): MagmaOrderInvoice
 }
 
 type MagmaPendingOrders {
