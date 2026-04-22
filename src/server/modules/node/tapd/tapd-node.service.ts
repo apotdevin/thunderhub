@@ -47,6 +47,7 @@ type AssetChannelInfo = {
   assetId: string;
   assetName: string;
   assetPrecision: number;
+  assetType: string;
   groupKey: string;
   localBalance: string;
   remoteBalance: string;
@@ -468,6 +469,7 @@ export class TapdNodeService {
                 assetId,
                 assetName: fundingAsset?.asset_genesis?.name || '',
                 assetPrecision: fundingAsset?.decimal_display ?? 0,
+                assetType: fundingAsset?.asset_genesis?.asset_type || 'NORMAL',
                 groupKey,
                 localBalance: String(data.local_balance ?? 0),
                 remoteBalance: String(data.remote_balance ?? 0),
@@ -538,6 +540,7 @@ export class TapdNodeService {
                 assetId,
                 assetName: fundingAsset?.asset_genesis?.name || '',
                 assetPrecision: fundingAsset?.decimal_display ?? 0,
+                assetType: fundingAsset?.asset_genesis?.asset_type || 'NORMAL',
                 groupKey,
                 localBalance: String(data.local_balance ?? 0),
                 remoteBalance: String(data.remote_balance ?? 0),

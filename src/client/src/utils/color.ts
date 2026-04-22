@@ -9,5 +9,5 @@ function stringToHue(input: string): number {
 
 export function colorFromString(input: string): string {
   const hue = stringToHue(input);
-  return `hsl(${hue}, 70%, 55%)`;
+  return `hsla(${hue}, 70%, 55%, 0.8)`;
 }

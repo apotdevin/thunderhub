@@ -94,15 +94,19 @@ export class SingleChannel {
 @ObjectType()
 export class ChannelAsset {
   @Field()
-  assetId: string;
+  asset_id: string;
   @Field()
-  assetName: string;
+  asset_name: string;
+  @Field()
+  asset_type: string;
+  @Field()
+  asset_precision: number;
   @Field({ nullable: true })
-  groupKey?: string;
+  group_key?: string;
   @Field()
-  localBalance: string;
+  local_balance: string;
   @Field()
-  remoteBalance: string;
+  remote_balance: string;
   @Field()
   capacity: string;
 }

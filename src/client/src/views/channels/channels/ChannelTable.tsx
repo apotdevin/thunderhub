@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp, Check, Circle, Edit, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { BalanceBars } from '../../../components/balance';
-import { ProgressBar } from '../../../components/generic/CardGeneric';
 import {
   getChannelLink,
   getNodeLink,
@@ -27,23 +26,12 @@ import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
 
-const AssetLabel = ({
-  asset,
-}: {
-  asset: { assetName: string; assetId: string };
-}) => (
-  <span className="text-gray-500">
-    {asset.assetName || asset.assetId.slice(0, 8)}
-  </span>
-);
-
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
   return Math.min(percent, 100);
 };
 
-const BTC_COLOR = '#f7931a';
-const REMOTE_COLOR = '#9ca3af';
+const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
 export const ChannelTable = () => {
   const chartColors = useChartColors();
@@ -71,6 +59,27 @@ export const ChannelTable = () => {
     },
     []
   );
+
+  const uniqueAssets = useMemo(() => {
+    const channelData = data?.getChannels || [];
+    const map = new Map<
+      string,
+      { asset_id: string; asset_name: string; group_key?: string }
+    >();
+    for (const c of channelData) {
+      if (c.asset) {
+        const key = c.asset.group_key || c.asset.asset_id;
+        if (!map.has(key)) {
+          map.set(key, {
+            asset_id: c.asset.asset_id,
+            asset_name: c.asset.asset_name,
+            group_key: c.asset.group_key ?? undefined,
+          });
+        }
+      }
+    }
+    return map;
+  }, [data]);
 
   const tableData = useMemo(() => {
     const channelData = data?.getChannels || [];
@@ -176,34 +185,49 @@ export const ChannelTable = () => {
         ),
       };
 
-      const asset = c.asset;
-      const localBal = asset ? Number(asset.localBalance) : c.local_balance;
-      const remoteBal = asset ? Number(asset.remoteBalance) : c.remote_balance;
+      // Build dynamic asset fields for each unique asset
+      const assetFields: Record<string, any> = {};
+      for (const [key] of uniqueAssets) {
+        const channelAssetKey = c.asset
+          ? c.asset.group_key || c.asset.asset_id
+          : null;
+        const match = channelAssetKey === key;
+        const prefix = `asset_${key}`;
 
-      const assetKey = asset?.groupKey || asset?.assetId || '';
-      const assetColor = asset ? colorFromString(assetKey) : undefined;
+        assetFields[`${prefix}_capacity`] = match ? c.asset!.capacity : null;
+        assetFields[`${prefix}_local`] = match
+          ? Number(c.asset!.local_balance)
+          : null;
+        assetFields[`${prefix}_remote`] = match
+          ? Number(c.asset!.remote_balance)
+          : null;
+        assetFields[`${prefix}_balancePercent`] = match
+          ? getPercent(
+              Number(c.asset!.local_balance),
+              Number(c.asset!.remote_balance)
+            )
+          : 0;
 
-      const assetBar = asset ? (
-        <div className="mt-1">
-          <div className="text-xs mb-0.5 text-center">
-            <AssetLabel asset={asset} />
+        const assetColor = colorFromString(key);
+        assetFields[`${prefix}_balanceBar`] = match ? (
+          <div className="min-w-[180px]">
+            <BalanceBars
+              local={getPercent(
+                Number(c.asset!.local_balance),
+                Number(c.asset!.remote_balance)
+              )}
+              remote={getPercent(
+                Number(c.asset!.remote_balance),
+                Number(c.asset!.local_balance)
+              )}
+              formatLocal={formatNumber(c.asset!.local_balance)}
+              formatRemote={formatNumber(c.asset!.remote_balance)}
+              localColor={assetColor}
+              remoteColor={REMOTE_COLOR}
+            />
           </div>
-          <BalanceBars
-            local={getPercent(
-              Number(asset.localBalance),
-              Number(asset.remoteBalance)
-            )}
-            remote={getPercent(
-              Number(asset.remoteBalance),
-              Number(asset.localBalance)
-            )}
-            formatLocal={formatNumber(asset.localBalance)}
-            formatRemote={formatNumber(asset.remoteBalance)}
-            localColor={assetColor}
-            remoteColor={REMOTE_COLOR}
-          />
-        </div>
-      ) : null;
+        ) : null;
+      }
 
       return {
         ...c,
@@ -212,6 +236,7 @@ export const ChannelTable = () => {
         ...pending,
         ...partnerInfo,
         ...actions,
+        ...assetFields,
         alias: c.partner_node_info.node?.alias || 'Unknown',
         undercaseAlias: (
           c.partner_node_info.node?.alias || 'Unknown'
@@ -226,118 +251,52 @@ export const ChannelTable = () => {
           144 *
           30
         ).toFixed(2),
-        balancePercent: getPercent(localBal, remoteBal),
-        remoteBalancePercent: getPercent(remoteBal, localBal),
-        balancePercentText: `${getPercent(localBal, remoteBal)}%`,
+        balancePercent: getPercent(c.local_balance, c.remote_balance),
+        balancePercentText: `${getPercent(c.local_balance, c.remote_balance)}%`,
         proportionalBars: (
           <div className="min-w-[180px]">
             <BalanceBars
               local={getBar(c.local_balance, maxBalance)}
               remote={getBar(c.remote_balance, maxBalance)}
               formatLocal={
-                <Price amount={c.local_balance} breakNumber={true} />
+                <Price
+                  amount={c.local_balance}
+                  breakNumber={true}
+                  noUnit={true}
+                />
               }
               formatRemote={
-                <Price amount={c.remote_balance} breakNumber={true} />
+                <Price
+                  amount={c.remote_balance}
+                  breakNumber={true}
+                  noUnit={true}
+                />
               }
-              localColor={BTC_COLOR}
-              remoteColor={REMOTE_COLOR}
             />
-            {assetBar}
           </div>
         ),
-        balanceBarsLocal: (() => {
-          const btcPct = getPercent(c.local_balance, c.remote_balance);
-          const assetPct = asset
-            ? getPercent(
-                Number(asset.localBalance),
-                Number(asset.remoteBalance)
-              )
-            : 0;
-          return (
-            <div className="min-w-[80px]">
-              <div className="w-full flex">
-                <ProgressBar
-                  barHeight={10}
-                  order={1}
-                  percent={btcPct}
-                  style={{ backgroundColor: BTC_COLOR }}
+        balanceBars: (
+          <div className="min-w-[180px]">
+            <BalanceBars
+              local={getPercent(c.local_balance, c.remote_balance)}
+              remote={getPercent(c.remote_balance, c.local_balance)}
+              formatLocal={
+                <Price
+                  amount={c.local_balance}
+                  breakNumber={true}
+                  noUnit={true}
                 />
-                <ProgressBar barHeight={10} order={4} percent={100 - btcPct} />
-              </div>
-              <div>
-                <Price amount={c.local_balance} breakNumber={true} />
-              </div>
-              {asset && (
-                <>
-                  <div className="w-full flex mt-1">
-                    <ProgressBar
-                      barHeight={10}
-                      order={1}
-                      percent={assetPct}
-                      style={{ backgroundColor: assetColor }}
-                    />
-                    <ProgressBar
-                      barHeight={10}
-                      order={4}
-                      percent={100 - assetPct}
-                    />
-                  </div>
-                  <div className="text-xs">
-                    {formatNumber(asset.localBalance)}{' '}
-                    <AssetLabel asset={asset} />
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })(),
-        balanceBarsRemote: (() => {
-          const btcPct = getPercent(c.remote_balance, c.local_balance);
-          const assetPct = asset
-            ? getPercent(
-                Number(asset.remoteBalance),
-                Number(asset.localBalance)
-              )
-            : 0;
-          return (
-            <div className="min-w-[80px]">
-              <div className="w-full flex">
-                <ProgressBar
-                  barHeight={10}
-                  order={2}
-                  percent={btcPct}
-                  style={{ backgroundColor: REMOTE_COLOR }}
+              }
+              formatRemote={
+                <Price
+                  amount={c.remote_balance}
+                  breakNumber={true}
+                  noUnit={true}
                 />
-                <ProgressBar barHeight={10} order={4} percent={100 - btcPct} />
-              </div>
-              <div>
-                <Price amount={c.remote_balance} breakNumber={true} />
-              </div>
-              {asset && (
-                <>
-                  <div className="w-full flex mt-1">
-                    <ProgressBar
-                      barHeight={10}
-                      order={2}
-                      percent={assetPct}
-                      style={{ backgroundColor: REMOTE_COLOR }}
-                    />
-                    <ProgressBar
-                      barHeight={10}
-                      order={4}
-                      percent={100 - assetPct}
-                    />
-                  </div>
-                  <div className="text-xs">
-                    {formatNumber(asset.remoteBalance)}{' '}
-                    <AssetLabel asset={asset} />
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })(),
+              }
+            />
+          </div>
+        ),
         activityBars: (
           <div className="min-w-[180px]">
             <BalanceBars
@@ -354,7 +313,7 @@ export const ChannelTable = () => {
         ),
       };
     });
-  }, [data, chartColors]);
+  }, [data, chartColors, uniqueAssets]);
 
   const columns = useMemo(
     () => [
@@ -426,21 +385,11 @@ export const ChannelTable = () => {
           {
             header: 'Capacity',
             accessorKey: 'capacity',
-            cell: ({ row }: any) => {
-              const asset = row.original.asset;
-              return (
-                <div className="whitespace-nowrap">
-                  <div>
-                    <Price amount={row.original.capacity} />
-                  </div>
-                  {asset && (
-                    <div className="text-xs">
-                      {asset.capacity} <AssetLabel asset={asset} />
-                    </div>
-                  )}
-                </div>
-              );
-            },
+            cell: ({ row }: any) => (
+              <div className="whitespace-nowrap">
+                <Price amount={row.original.capacity} />
+              </div>
+            ),
           },
           { header: 'Block Age', accessorKey: 'channel_age' },
           {
@@ -464,42 +413,20 @@ export const ChannelTable = () => {
           {
             header: 'Local',
             accessorKey: 'local_balance',
-            cell: ({ row }: any) => {
-              const asset = row.original.asset;
-              return (
-                <div className="whitespace-nowrap">
-                  <div>
-                    <Price amount={row.original.local_balance} />
-                  </div>
-                  {asset && (
-                    <div className="text-xs">
-                      {formatNumber(asset.localBalance)}{' '}
-                      <AssetLabel asset={asset} />
-                    </div>
-                  )}
-                </div>
-              );
-            },
+            cell: ({ row }: any) => (
+              <div className="whitespace-nowrap">
+                <Price amount={row.original.local_balance} />
+              </div>
+            ),
           },
           {
             header: 'Remote',
             accessorKey: 'remote_balance',
-            cell: ({ row }: any) => {
-              const asset = row.original.asset;
-              return (
-                <div className="whitespace-nowrap">
-                  <div>
-                    <Price amount={row.original.remote_balance} />
-                  </div>
-                  {asset && (
-                    <div className="text-xs">
-                      {formatNumber(asset.remoteBalance)}{' '}
-                      <AssetLabel asset={asset} />
-                    </div>
-                  )}
-                </div>
-              );
-            },
+            cell: ({ row }: any) => (
+              <div className="whitespace-nowrap">
+                <Price amount={row.original.remote_balance} />
+              </div>
+            ),
           },
           {
             header: 'Percent',
@@ -617,20 +544,9 @@ export const ChannelTable = () => {
         columns: [
           {
             header: 'Balance',
-            columns: [
-              {
-                header: 'Local',
-                accessorKey: 'balanceBarsLocal',
-                sortingFn: numberStringSorting('balancePercent'),
-                cell: ({ cell }: any) => cell.renderValue(),
-              },
-              {
-                header: 'Remote',
-                accessorKey: 'balanceBarsRemote',
-                sortingFn: numberStringSorting('remoteBalancePercent'),
-                cell: ({ cell }: any) => cell.renderValue(),
-              },
-            ],
+            accessorKey: 'balanceBars',
+            sortingFn: numberStringSorting('balancePercent'),
+            cell: ({ cell }: any) => cell.renderValue(),
           },
           {
             header: 'Proportional',
@@ -646,8 +562,65 @@ export const ChannelTable = () => {
           },
         ],
       },
+      ...Array.from(uniqueAssets.entries()).map(([key, assetInfo]) => {
+        const prefix = `asset_${key}`;
+        const name = assetInfo.asset_name || assetInfo.asset_id.slice(0, 8);
+        const label = `Asset (${name})`;
+
+        return {
+          id: prefix,
+          header: label,
+          columns: [
+            {
+              header: 'Capacity',
+              accessorKey: `${prefix}_capacity`,
+              cell: ({ cell }: any) => {
+                const val = cell.getValue();
+                return val != null ? (
+                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                );
+              },
+            },
+            {
+              header: 'Local',
+              accessorKey: `${prefix}_local`,
+              cell: ({ cell }: any) => {
+                const val = cell.getValue();
+                return val != null ? (
+                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                );
+              },
+            },
+            {
+              header: 'Remote',
+              accessorKey: `${prefix}_remote`,
+              cell: ({ cell }: any) => {
+                const val = cell.getValue();
+                return val != null ? (
+                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                );
+              },
+            },
+            {
+              header: 'Balance',
+              accessorKey: `${prefix}_balanceBar`,
+              sortingFn: numberStringSorting(`${prefix}_balancePercent`),
+              cell: ({ cell }: any) =>
+                cell.renderValue() || (
+                  <span className="text-muted-foreground">-</span>
+                ),
+            },
+          ],
+        };
+      }),
     ],
-    [numberStringSorting]
+    [numberStringSorting, uniqueAssets]
   );
 
   const handleToggle = (hide: boolean, id: string) => {
@@ -705,7 +678,7 @@ export const ChannelTable = () => {
         data={tableData}
         withGlobalSort={true}
         withSorting={true}
-        initSorting={[{ id: 'balanceBarsLocal', desc: false }]}
+        initSorting={[{ id: 'balanceBars', desc: false }]}
         toggleConfiguration={handleToggle}
         defaultHiddenColumns={hiddenColumnState}
         filterPlaceholder="channels"

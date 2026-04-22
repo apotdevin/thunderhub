@@ -12,10 +12,10 @@ export const GET_PEER_CHANNELS = gql`
       transaction_id
       transaction_vout
       asset {
-        assetId
-        groupKey
-        localBalance
-        remoteBalance
+        asset_id
+        group_key
+        local_balance
+        remote_balance
         capacity
       }
     }

@@ -68,10 +68,13 @@ export type GetChannelsQuery = {
     } | null;
     asset?: {
       __typename?: 'ChannelAsset';
-      assetId: string;
-      assetName: string;
-      localBalance: string;
-      remoteBalance: string;
+      asset_id: string;
+      asset_name: string;
+      asset_type: string;
+      asset_precision: number;
+      group_key?: string | null;
+      local_balance: string;
+      remote_balance: string;
       capacity: string;
     } | null;
   }>;
@@ -150,10 +153,13 @@ export const GetChannelsDocument = gql`
         }
       }
       asset {
-        assetId
-        assetName
-        localBalance
-        remoteBalance
+        asset_id
+        asset_name
+        asset_type
+        asset_precision
+        group_key
+        local_balance
+        remote_balance
         capacity
       }
     }

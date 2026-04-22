@@ -56,10 +56,13 @@ export const GET_CHANNELS = gql`
         }
       }
       asset {
-        assetId
-        assetName
-        localBalance
-        remoteBalance
+        asset_id
+        asset_name
+        asset_type
+        asset_precision
+        group_key
+        local_balance
+        remote_balance
         capacity
       }
     }
