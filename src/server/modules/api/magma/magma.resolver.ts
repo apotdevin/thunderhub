@@ -240,7 +240,12 @@ export class MagmaResolver {
               orderId: order?.id,
               hasInvoice: !!invoice,
             });
-            throw new GraphQLError('Failed to create Magma channel order');
+            const detail = typeof error === 'string' ? error : undefined;
+            throw new GraphQLError(
+              detail
+                ? `Failed to create Magma channel order: ${detail}`
+                : 'Failed to create Magma channel order'
+            );
           }
 
           this.logger.info('Magma order created', {
