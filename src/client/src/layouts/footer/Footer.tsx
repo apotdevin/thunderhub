@@ -144,27 +144,16 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <div className="mb-1.5 text-[9px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-                  Resources
-                </div>
-                <div className="grid gap-2">
-                  {RESOURCES.map(item => (
-                    <FooterLinkCard key={item.label} {...item} />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-1.5 text-[9px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-                  Community
-                </div>
-                <div className="grid gap-2">
-                  {COMMUNITY.map(item => (
-                    <FooterLinkCard key={item.label} {...item} />
-                  ))}
-                </div>
+            <div>
+              <div className="flex flex-wrap gap-2">
+                {[...RESOURCES, ...COMMUNITY].map(item => (
+                  <div
+                    key={item.label}
+                    className="min-w-0 flex-1 basis-[12rem] sm:basis-[10rem]"
+                  >
+                    <FooterLinkCard {...item} />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
