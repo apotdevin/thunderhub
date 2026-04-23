@@ -35,6 +35,7 @@ import {
   bufToHex,
   buildXCoordToFullKeyMap,
   resolveFullGroupKey,
+  reversedBytes,
 } from '../../../utils/string';
 import { toWithError } from '../../../utils/async';
 import { grpcErrorMessage } from '../../../utils/grpcError';
@@ -256,32 +257,36 @@ export class TaprootAssetsQueriesResolver {
       }
     }
 
-    const transfers = (result.transfers || []).map((t: AssetTransfer) => ({
-      anchor_tx_hash: bufToHex(t.anchorTxHash) || '',
-      anchor_tx_height_hint: t.anchorTxHeightHint,
-      anchor_tx_chain_fees: t.anchorTxChainFees.toString(),
-      transfer_timestamp: t.transferTimestamp.toString(),
-      label: t.label || '',
-      inputs: (t.inputs || []).map((i: TransferInput) => {
-        const assetId = bufToHex(i.assetId) || '';
-        return {
-          anchor_point: i.anchorPoint,
-          asset_id: assetId,
-          amount: i.amount.toString(),
-          precision: precisionByAssetId.get(assetId) ?? 0,
-        };
-      }),
-      outputs: (t.outputs || []).map((o: TransferOutput) => {
-        const assetId = bufToHex(o.assetId) || '';
-        return {
-          asset_id: assetId,
-          amount: o.amount.toString(),
-          script_key_is_local: o.scriptKeyIsLocal,
-          output_type: o.outputType.toString(),
-          precision: precisionByAssetId.get(assetId) ?? 0,
-        };
-      }),
-    }));
+    const transfers = (result.transfers || [])
+      .map((t: AssetTransfer) => ({
+        anchor_tx_hash: reversedBytes(bufToHex(t.anchorTxHash) || ''),
+        anchor_tx_height_hint: t.anchorTxHeightHint,
+        anchor_tx_chain_fees: t.anchorTxChainFees.toString(),
+        transfer_timestamp: t.transferTimestamp.toString(),
+        label: t.label || '',
+        inputs: (t.inputs || []).map((i: TransferInput) => {
+          const assetId = bufToHex(i.assetId) || '';
+          return {
+            anchor_point: i.anchorPoint,
+            asset_id: assetId,
+            amount: i.amount.toString(),
+            precision: precisionByAssetId.get(assetId) ?? 0,
+          };
+        }),
+        outputs: (t.outputs || []).map((o: TransferOutput) => {
+          const assetId = bufToHex(o.assetId) || '';
+          return {
+            asset_id: assetId,
+            amount: o.amount.toString(),
+            script_key_is_local: o.scriptKeyIsLocal,
+            output_type: o.outputType.toString(),
+            precision: precisionByAssetId.get(assetId) ?? 0,
+          };
+        }),
+      }))
+      .sort(
+        (a, b) => Number(b.transfer_timestamp) - Number(a.transfer_timestamp)
+      );
     return { transfers };
   }
 

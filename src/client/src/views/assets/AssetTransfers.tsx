@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useGetTapTransfersQuery } from '../../graphql/queries/__generated__/getTapTransfers.generated';
+import { getTransactionLink } from '../../components/generic/helpers';
 import { getErrorContent } from '../../utils/error';
 import { formatAssetAmount } from '../../utils/helpers';
 
@@ -53,8 +54,8 @@ export const AssetTransfers: FC = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Transaction</TableHead>
               <TableHead>Date</TableHead>
+              <TableHead>Transaction</TableHead>
               <TableHead>Inputs</TableHead>
               <TableHead>Outputs</TableHead>
               <TableHead className="text-right">Fees</TableHead>
@@ -63,17 +64,15 @@ export const AssetTransfers: FC = () => {
           <TableBody>
             {transfers.map((transfer, i) => (
               <TableRow key={`${transfer.anchor_tx_hash}-${i}`}>
-                <TableCell>
-                  <span className="font-mono truncate max-w-40 block">
-                    {transfer.anchor_tx_hash?.slice(0, 16)}...
-                  </span>
-                </TableCell>
                 <TableCell className="text-muted-foreground">
                   {transfer.transfer_timestamp
                     ? new Date(
                         Number(transfer.transfer_timestamp) * 1000
                       ).toLocaleString()
                     : 'Pending'}
+                </TableCell>
+                <TableCell>
+                  {getTransactionLink(transfer.anchor_tx_hash)}
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1">

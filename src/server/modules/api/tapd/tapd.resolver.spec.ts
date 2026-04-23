@@ -343,7 +343,7 @@ describe('TaprootAssetsQueriesResolver', () => {
       const result = await resolver.get_transfers(userId);
 
       expect(result.transfers).toHaveLength(1);
-      expect(result.transfers[0].anchor_tx_hash).toBe('deadbeef');
+      expect(result.transfers[0].anchor_tx_hash).toBe('efbeadde');
       expect(result.transfers[0].inputs[0].asset_id).toBe('aa');
       expect(result.transfers[0].outputs[0].asset_id).toBe('bb');
     });
