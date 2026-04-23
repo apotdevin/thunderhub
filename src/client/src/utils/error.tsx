@@ -36,7 +36,7 @@ export const getErrorContent = (error: ApolloError): JSX.Element => {
     <div>
       {errors.map((errorMsg, i) => {
         return (
-          <div key={i} className="py-1 break-all">
+          <div key={i} className="py-1 break-words">
             {getMessage(errorMsg)}
           </div>
         );
