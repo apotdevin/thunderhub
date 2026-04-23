@@ -14,6 +14,7 @@ import {
   ArrowUpFromLine,
   ChevronLeft,
   ExternalLink,
+  Gem,
   Loader2,
   Zap,
   Link as LinkIcon,
@@ -34,9 +35,11 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { ChannelSelect } from '../../../../components/select/specific/ChannelSelect';
 import { decode } from 'light-bolt11-decoder';
+import { useGetNodeCapabilitiesQuery } from '../../../../graphql/queries/__generated__/getNodeCapabilities.generated';
 import { CURRENCY_PROVIDERS, CurrencyProvider } from './currencyProviders';
+import { TapWithdrawStep } from './TapWithdrawStep';
 
-type Network = 'lightning' | 'onchain' | 'fiat-provider';
+type Network = 'lightning' | 'onchain' | 'fiat-provider' | 'taproot-assets';
 type FiatStep = 'select-fiat-method' | 'enter-address' | 'pay';
 type FiatMethod = 'lightning' | 'onchain';
 
@@ -64,8 +67,8 @@ export const WithdrawModal = ({
             <ArrowUpFromLine size={16} className="text-orange-500" />
           </div>
           <div>
-            <DialogTitle>Withdraw</DialogTitle>
-            <DialogDescription>Send BTC from your node</DialogDescription>
+            <DialogTitle>Send</DialogTitle>
+            <DialogDescription>Send from your node</DialogDescription>
           </div>
         </div>
       </DialogHeader>
@@ -102,6 +105,10 @@ const WithdrawFlow = ({ onClose }: { onClose: () => void }) => {
     return <OnchainSendStep onBack={goBack} onClose={onClose} />;
   }
 
+  if (network === 'taproot-assets') {
+    return <TapWithdrawStep onBack={goBack} onClose={onClose} />;
+  }
+
   if (network === 'fiat-provider' && provider) {
     return (
       <FiatWithdrawFlow provider={provider} onBack={goBack} onClose={onClose} />
@@ -115,77 +122,104 @@ const NetworkSelect = ({
   onSelect,
 }: {
   onSelect: (n: Network, p?: CurrencyProvider) => void;
-}) => (
-  <div className="flex flex-col gap-3">
-    <span className="text-xs font-medium text-muted-foreground">
-      Select a network
-    </span>
-    <div className="grid gap-2">
-      <button
-        className="flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/50"
-        onClick={() => onSelect('lightning')}
-      >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-500/10">
-          <Zap size={16} className="text-yellow-500" />
-        </div>
-        <div className="min-w-0">
-          <div className="text-sm font-medium">Lightning</div>
-          <div className="flex flex-wrap gap-1.5 mt-0.5">
-            <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-              Instant
-            </span>
-            <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-              No minimum
-            </span>
-          </div>
-        </div>
-      </button>
-      <button
-        className="flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/50"
-        onClick={() => onSelect('onchain')}
-      >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10">
-          <LinkIcon size={16} className="text-blue-500" />
-        </div>
-        <div className="min-w-0">
-          <div className="text-sm font-medium">Onchain</div>
-          <div className="flex flex-wrap gap-1.5 mt-0.5">
-            <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-              ~10 minutes
-            </span>
-          </div>
-        </div>
-      </button>
-      {CURRENCY_PROVIDERS.map(p => (
+}) => {
+  const { data: capData } = useGetNodeCapabilitiesQuery();
+  const tapdAvailable =
+    capData?.node?.capabilities?.list?.includes('taproot_assets') ?? false;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <span className="text-xs font-medium text-muted-foreground">
+        Select a method
+      </span>
+      <div className="grid gap-2">
         <button
-          key={p.id}
           className="flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/50"
-          onClick={() => onSelect('fiat-provider', p)}
+          onClick={() => onSelect('lightning')}
         >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold">
-            {p.currencySymbol}
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-500/10">
+            <Zap size={16} className="text-yellow-500" />
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-medium">
-              {p.currency} via {p.name}
-            </div>
+            <div className="text-sm font-medium">Lightning</div>
             <div className="flex flex-wrap gap-1.5 mt-0.5">
               <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-                Convert BTC to {p.currency}
+                Instant
               </span>
               <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-                Onchain
-              </span>
-              <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
-                Lightning
+                No minimum
               </span>
             </div>
           </div>
         </button>
-      ))}
+        <button
+          className="flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/50"
+          onClick={() => onSelect('onchain')}
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10">
+            <LinkIcon size={16} className="text-blue-500" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-medium">Onchain</div>
+            <div className="flex flex-wrap gap-1.5 mt-0.5">
+              <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                ~10 minutes
+              </span>
+            </div>
+          </div>
+        </button>
+        {tapdAvailable && (
+          <button
+            className="flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/50"
+            onClick={() => onSelect('taproot-assets')}
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-500/10">
+              <Gem size={16} className="text-purple-500" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-medium">Taproot Assets</div>
+              <div className="flex flex-wrap gap-1.5 mt-0.5">
+                <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                  ~10 minutes
+                </span>
+                <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                  Multi-Asset
+                </span>
+              </div>
+            </div>
+          </button>
+        )}
+        {CURRENCY_PROVIDERS.map(p => (
+          <button
+            key={p.id}
+            className="flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/50"
+            onClick={() => onSelect('fiat-provider', p)}
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold">
+              {p.currencySymbol}
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-medium">
+                {p.currency} via {p.name}
+              </div>
+              <div className="flex flex-wrap gap-1.5 mt-0.5">
+                <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                  Convert BTC to {p.currency}
+                </span>
+                <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                  Onchain
+                </span>
+                <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5">
+                  Lightning
+                </span>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const BackButton = ({ onClick }: { onClick: () => void }) => (
   <Button

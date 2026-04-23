@@ -105,7 +105,7 @@ export const BurgerMenu = ({
               className="flex-1"
             >
               <ArrowDownToLine size={14} />
-              <span>Deposit</span>
+              <span>Receive</span>
             </Button>
           )}
           {openWithdraw && (
@@ -119,7 +119,7 @@ export const BurgerMenu = ({
               className="flex-1"
             >
               <ArrowUpFromLine size={14} />
-              <span>Withdraw</span>
+              <span>Send</span>
             </Button>
           )}
         </div>
