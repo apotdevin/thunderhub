@@ -1,80 +1,77 @@
 import { useState } from 'react';
+import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { AssetsList } from './AssetsList';
 import { PortfolioDistribution } from './PortfolioDistribution';
-import { MintAsset } from './MintAsset';
-import { BurnAsset } from './BurnAsset';
-import { SendAsset } from './SendAsset';
-import { ReceiveAsset } from './ReceiveAsset';
-import { AssetTransfers } from './AssetTransfers';
-import { FundAssetChannel } from './FundAssetChannel';
-import { UniverseManager } from './UniverseManager';
-import { TapDaemonInfo } from './TapDaemonInfo';
-import { cn } from '../../lib/utils';
-
-type Tab =
-  | 'assets'
-  | 'send'
-  | 'receive'
-  | 'channels'
-  | 'transfers'
-  | 'advanced';
-
-const tabs: { id: Tab; label: string }[] = [
-  { id: 'assets', label: 'Assets' },
-  { id: 'send', label: 'Send' },
-  { id: 'receive', label: 'Receive' },
-  { id: 'channels', label: 'Channels' },
-  { id: 'transfers', label: 'Transfers' },
-  { id: 'advanced', label: 'Advanced' },
-];
+import { TapWithdrawStep } from '../home/quickActions/exchange/TapWithdrawStep';
+import { TapDepositStep } from '../home/quickActions/exchange/TapDepositStep';
+import { Button } from '../../components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '../../components/ui/dialog';
 
 export const AssetsView = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('assets');
+  const [openDialog, setOpenDialog] = useState<'send' | 'receive' | null>(null);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-semibold">Taproot Assets</h2>
-      </div>
-
-      <div className="flex gap-1 border-b border-border overflow-x-auto">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={cn(
-              'px-3 py-2 text-sm font-medium transition-colors border-b-2 whitespace-nowrap',
-              activeTab === tab.id
-                ? 'border-primary text-primary'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-            )}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setOpenDialog('send')}
           >
-            {tab.label}
-          </button>
-        ))}
+            <ArrowUpRight className="mr-1 size-4" />
+            Send
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setOpenDialog('receive')}
+          >
+            <ArrowDownLeft className="mr-1 size-4" />
+            Receive
+          </Button>
+        </div>
       </div>
 
-      {activeTab === 'assets' && (
-        <div className="flex flex-col gap-4">
-          <PortfolioDistribution />
-          <AssetsList />
-        </div>
-      )}
-      {activeTab === 'send' && <SendAsset />}
-      {activeTab === 'receive' && <ReceiveAsset />}
-      {activeTab === 'channels' && <FundAssetChannel />}
-      {activeTab === 'transfers' && <AssetTransfers />}
-      {activeTab === 'advanced' && (
-        <div className="flex flex-col gap-6">
-          <MintAsset />
-          <div className="h-px bg-border" />
-          <BurnAsset />
-          <div className="h-px bg-border" />
-          <UniverseManager />
-          <div className="h-px bg-border" />
-          <TapDaemonInfo />
-        </div>
-      )}
+      <PortfolioDistribution />
+      <AssetsList />
+
+      <Dialog
+        open={openDialog === 'send'}
+        onOpenChange={open => !open && setOpenDialog(null)}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Send Asset</DialogTitle>
+            <DialogDescription>
+              Send a Taproot Asset to a recipient.
+            </DialogDescription>
+          </DialogHeader>
+          <TapWithdrawStep />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={openDialog === 'receive'}
+        onOpenChange={open => !open && setOpenDialog(null)}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Receive Asset</DialogTitle>
+            <DialogDescription>
+              Generate an invoice to receive a Taproot Asset.
+            </DialogDescription>
+          </DialogHeader>
+          <TapDepositStep />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -44,6 +44,9 @@ const SETTINGS = '/settings';
 const SWAP = '/swap';
 const AMBOSS = '/amboss';
 const ASSETS = '/assets';
+const ASSET_CHANNELS = '/asset-channels';
+const ASSET_TRANSACTIONS = '/asset-transactions';
+const ASSET_TOOLS = '/asset-tools';
 const TRADING = '/trading';
 const MAGMA = '/magma';
 
@@ -87,6 +90,9 @@ const ASSETS_SECTION: NavSection = {
   title: 'Taproot Assets',
   items: [
     { title: 'Assets', link: ASSETS, icon: Gem },
+    { title: 'Channels', link: ASSET_CHANNELS, icon: Cpu },
+    { title: 'Transactions', link: ASSET_TRANSACTIONS, icon: Server },
+    { title: 'Tools', link: ASSET_TOOLS, icon: Shield },
     { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
   ],
 };

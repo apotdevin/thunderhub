@@ -33,7 +33,10 @@ const getBar = (top: number, bottom: number) => {
 
 const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
-export const ChannelTable = () => {
+export const ChannelTable = ({
+  assetOnly,
+  storageKey = 'hiddenColumns-v2',
+}: { assetOnly?: boolean; storageKey?: string } = {}) => {
   const chartColors = useChartColors();
 
   const [channel, setChannel] = useState<{
@@ -47,7 +50,7 @@ export const ChannelTable = () => {
   });
 
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
-    'hiddenColumns-v2',
+    storageKey,
     defaultHiddenColumns
   );
 
@@ -61,7 +64,10 @@ export const ChannelTable = () => {
   );
 
   const uniqueAssets = useMemo(() => {
-    const channelData = data?.getChannels || [];
+    const allChannels = data?.getChannels || [];
+    const channelData = assetOnly
+      ? allChannels.filter(c => c.asset)
+      : allChannels;
     const map = new Map<
       string,
       { asset_id: string; asset_name: string; group_key?: string }
@@ -79,10 +85,13 @@ export const ChannelTable = () => {
       }
     }
     return map;
-  }, [data]);
+  }, [data, assetOnly]);
 
   const tableData = useMemo(() => {
-    const channelData = data?.getChannels || [];
+    const allChannels = data?.getChannels || [];
+    const channelData = assetOnly
+      ? allChannels.filter(c => c.asset)
+      : allChannels;
 
     const balanceArray = channelData.reduce(
       (p, c) => [...p, c.remote_balance || 0, c.local_balance || 0],
@@ -313,7 +322,7 @@ export const ChannelTable = () => {
         ),
       };
     });
-  }, [data, chartColors, uniqueAssets]);
+  }, [data, assetOnly, chartColors, uniqueAssets]);
 
   const columns = useMemo(
     () => [

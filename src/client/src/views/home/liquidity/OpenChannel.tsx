@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import {
   AlertTriangle,
+  ChevronDown,
   ChevronRight,
   Loader2,
-  Settings,
-  X,
   Zap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -339,33 +338,30 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
         )}
       </div>
 
-      <Separator />
-
-      {/* Advanced */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-muted-foreground">
-          Advanced
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setShowAdvanced(s => {
-              if (s) {
-                setPrivateChannel(false);
-                setPushType('none');
-                setPushTokens(0);
-              }
-              return !s;
-            });
-          }}
-        >
-          {showAdvanced ? <X size={14} /> : <Settings size={14} />}
-        </Button>
-      </div>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="self-start -ml-2 text-muted-foreground"
+        onClick={() => {
+          setShowAdvanced(s => {
+            if (s) {
+              setPrivateChannel(false);
+              setPushType('none');
+              setPushTokens(0);
+            }
+            return !s;
+          });
+        }}
+      >
+        <ChevronDown
+          size={14}
+          className={showAdvanced ? 'rotate-180 transition' : 'transition'}
+        />
+        Advanced
+      </Button>
 
       {showAdvanced && (
-        <div className="flex flex-col gap-3 rounded-lg border border-border p-3">
+        <>
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">
               Type
@@ -383,8 +379,6 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
               <ToggleGroupItem value="public">Public</ToggleGroupItem>
             </ToggleGroup>
           </div>
-
-          <Separator />
 
           <div className="flex flex-col gap-2 rounded border border-destructive/30 bg-destructive/5 p-3">
             <div className="flex items-center justify-between">
@@ -450,7 +444,7 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
               </div>
             )}
           </div>
-        </div>
+        </>
       )}
 
       {confirming ? (

@@ -43,6 +43,9 @@ import SwapPage from './pages/SwapPage';
 import SettingsPage from './pages/SettingsPage';
 import AmbossPage from './pages/AmbossPage';
 import AssetsPage from './pages/AssetsPage';
+import AssetChannelsPage from './pages/AssetChannelsPage';
+import AssetTransactionsPage from './pages/AssetTransactionsPage';
+import AssetToolsPage from './pages/AssetToolsPage';
 import TradingPage from './pages/TradingPage';
 import MagmaPage from './pages/MagmaPage';
 import SetupPage from './pages/SetupPage';
@@ -230,6 +233,10 @@ const AUTHENTICATED_ROUTES = (
     />
     <Route path="amboss" element={<AmbossPage />} />
     <Route path="assets" element={<AssetsPage />} />
+    <Route path="asset-channels" element={<AssetChannelsPage />} />
+    <Route path="asset-channels/pending" element={<AssetChannelsPage />} />
+    <Route path="asset-transactions" element={<AssetTransactionsPage />} />
+    <Route path="asset-tools" element={<AssetToolsPage />} />
     <Route path="trading" element={<TradingPage />} />
     <Route path="magma" element={<MagmaPage />} />
     <Route path="magma/sales" element={<MagmaPage />} />
@@ -254,6 +261,10 @@ const LEGACY_PATHS = [
   'settings/dashboard',
   'amboss',
   'assets',
+  'asset-channels',
+  'asset-channels/pending',
+  'asset-transactions',
+  'asset-tools',
   'trading',
   'magma',
   'magma/sales',
