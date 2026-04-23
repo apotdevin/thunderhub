@@ -80,7 +80,7 @@ const FooterLinkCard = ({
           <div className="text-[11px] font-semibold text-foreground sm:text-xs">
             {label}
           </div>
-          <div className="mt-0.5 max-w-[14rem] text-[10px] leading-snug text-muted-foreground">
+          <div className="mt-0.5 max-w-56 text-[10px] leading-snug text-muted-foreground">
             {description}
           </div>
         </div>
@@ -105,7 +105,7 @@ export const Footer = () => {
         )}
       >
         <div className="relative overflow-hidden rounded-t-[1.1rem] border-x border-border/45 bg-[radial-gradient(circle_at_top,rgba(255,166,0,0.07),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))] px-3 py-3 sm:px-4 sm:py-4 lg:px-5">
-          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <div className="absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
 
           <div className="grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
             <div className="space-y-3">

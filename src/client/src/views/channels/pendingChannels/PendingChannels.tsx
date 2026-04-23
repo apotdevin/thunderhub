@@ -12,13 +12,18 @@ import { Price } from '../../../components/price/Price';
 import { ColumnDef } from '@tanstack/react-table';
 import { PendingChannel } from '../../../graphql/types';
 
-export const PendingChannels = () => {
+export const PendingChannels = ({
+  assetOnly,
+}: { assetOnly?: boolean } = {}) => {
   const { loading, data } = useGetPendingChannelsQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 
   const tableData = useMemo(() => {
-    const channelData = data?.getPendingChannels || [];
+    const allChannels = data?.getPendingChannels || [];
+    const channelData = assetOnly
+      ? allChannels.filter(c => c.asset)
+      : allChannels;
 
     return channelData.map(c => ({
       ...c,
@@ -26,7 +31,7 @@ export const PendingChannels = () => {
       capacity: (c.local_balance || 0) + (c.remote_balance || 0),
       force_closed: c.is_timelocked ? 'Yes' : '-',
     }));
-  }, [data]);
+  }, [data, assetOnly]);
 
   const columns = useMemo<ColumnDef<PendingChannel, any>[]>(
     () => [
@@ -170,7 +175,7 @@ export const PendingChannels = () => {
     return <LoadingCard noCard={true} />;
   }
 
-  if (!data || !data.getPendingChannels?.length) {
+  if (!data || !tableData.length) {
     return (
       <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
         No pending channels found

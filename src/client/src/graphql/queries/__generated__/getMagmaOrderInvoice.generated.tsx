@@ -14,10 +14,10 @@ export type GetMagmaOrderInvoiceQuery = {
     id: string;
     orders: {
       __typename?: 'MagmaOrderQueries';
-      get_invoice: {
+      get_invoice?: {
         __typename?: 'MagmaOrderInvoice';
         invoice?: string | null;
-      };
+      } | null;
     };
   };
 };

@@ -17,7 +17,7 @@ import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
 import {
   blockToTime,
-  formatNumber,
+  formatAssetAmount,
   formatSeconds,
   getPercent,
 } from '../../../utils/helpers';
@@ -33,7 +33,10 @@ const getBar = (top: number, bottom: number) => {
 
 const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
-export const ChannelTable = () => {
+export const ChannelTable = ({
+  assetOnly,
+  storageKey = 'hiddenColumns-v2',
+}: { assetOnly?: boolean; storageKey?: string } = {}) => {
   const chartColors = useChartColors();
 
   const [channel, setChannel] = useState<{
@@ -47,7 +50,7 @@ export const ChannelTable = () => {
   });
 
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
-    'hiddenColumns-v2',
+    storageKey,
     defaultHiddenColumns
   );
 
@@ -61,10 +64,18 @@ export const ChannelTable = () => {
   );
 
   const uniqueAssets = useMemo(() => {
-    const channelData = data?.getChannels || [];
+    const allChannels = data?.getChannels || [];
+    const channelData = assetOnly
+      ? allChannels.filter(c => c.asset)
+      : allChannels;
     const map = new Map<
       string,
-      { asset_id: string; asset_name: string; group_key?: string }
+      {
+        asset_id: string;
+        asset_name: string;
+        group_key?: string;
+        asset_precision: number;
+      }
     >();
     for (const c of channelData) {
       if (c.asset) {
@@ -74,15 +85,19 @@ export const ChannelTable = () => {
             asset_id: c.asset.asset_id,
             asset_name: c.asset.asset_name,
             group_key: c.asset.group_key ?? undefined,
+            asset_precision: c.asset.asset_precision,
           });
         }
       }
     }
     return map;
-  }, [data]);
+  }, [data, assetOnly]);
 
   const tableData = useMemo(() => {
-    const channelData = data?.getChannels || [];
+    const allChannels = data?.getChannels || [];
+    const channelData = assetOnly
+      ? allChannels.filter(c => c.asset)
+      : allChannels;
 
     const balanceArray = channelData.reduce(
       (p, c) => [...p, c.remote_balance || 0, c.local_balance || 0],
@@ -187,19 +202,22 @@ export const ChannelTable = () => {
 
       // Build dynamic asset fields for each unique asset
       const assetFields: Record<string, any> = {};
-      for (const [key] of uniqueAssets) {
+      for (const [key, assetInfo] of uniqueAssets) {
         const channelAssetKey = c.asset
           ? c.asset.group_key || c.asset.asset_id
           : null;
         const match = channelAssetKey === key;
         const prefix = `asset_${key}`;
+        const precision = assetInfo.asset_precision;
 
-        assetFields[`${prefix}_capacity`] = match ? c.asset!.capacity : null;
+        assetFields[`${prefix}_capacity`] = match
+          ? formatAssetAmount(c.asset!.capacity, precision)
+          : null;
         assetFields[`${prefix}_local`] = match
-          ? Number(c.asset!.local_balance)
+          ? formatAssetAmount(c.asset!.local_balance, precision)
           : null;
         assetFields[`${prefix}_remote`] = match
-          ? Number(c.asset!.remote_balance)
+          ? formatAssetAmount(c.asset!.remote_balance, precision)
           : null;
         assetFields[`${prefix}_balancePercent`] = match
           ? getPercent(
@@ -220,8 +238,11 @@ export const ChannelTable = () => {
                 Number(c.asset!.remote_balance),
                 Number(c.asset!.local_balance)
               )}
-              formatLocal={formatNumber(c.asset!.local_balance)}
-              formatRemote={formatNumber(c.asset!.remote_balance)}
+              formatLocal={formatAssetAmount(c.asset!.local_balance, precision)}
+              formatRemote={formatAssetAmount(
+                c.asset!.remote_balance,
+                precision
+              )}
               localColor={assetColor}
               remoteColor={REMOTE_COLOR}
             />
@@ -313,7 +334,7 @@ export const ChannelTable = () => {
         ),
       };
     });
-  }, [data, chartColors, uniqueAssets]);
+  }, [data, assetOnly, chartColors, uniqueAssets]);
 
   const columns = useMemo(
     () => [
@@ -577,7 +598,7 @@ export const ChannelTable = () => {
               cell: ({ cell }: any) => {
                 const val = cell.getValue();
                 return val != null ? (
-                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                  <div className="whitespace-nowrap">{val}</div>
                 ) : (
                   <span className="text-muted-foreground">-</span>
                 );
@@ -589,7 +610,7 @@ export const ChannelTable = () => {
               cell: ({ cell }: any) => {
                 const val = cell.getValue();
                 return val != null ? (
-                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                  <div className="whitespace-nowrap">{val}</div>
                 ) : (
                   <span className="text-muted-foreground">-</span>
                 );
@@ -601,7 +622,7 @@ export const ChannelTable = () => {
               cell: ({ cell }: any) => {
                 const val = cell.getValue();
                 return val != null ? (
-                  <div className="whitespace-nowrap">{formatNumber(val)}</div>
+                  <div className="whitespace-nowrap">{val}</div>
                 ) : (
                   <span className="text-muted-foreground">-</span>
                 );

@@ -20,6 +20,7 @@ export type GetTapBalancesQuery = {
         group_key?: string | null;
         names?: Array<string> | null;
         balance: string;
+        precision: number;
       }>;
     };
   };
@@ -35,6 +36,7 @@ export const GetTapBalancesDocument = gql`
           group_key
           names
           balance
+          precision
         }
       }
     }

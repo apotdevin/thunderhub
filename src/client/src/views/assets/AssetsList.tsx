@@ -1,13 +1,22 @@
 import { FC, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, Copy, Check } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Loader2, Info, Copy, Check, Star } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
+import { formatAssetAmount } from '../../utils/helpers';
 import { formatUsd } from '../../lib/formatUsd';
 
 type PriceInfo = { usd: number; precision: number };
@@ -23,15 +32,6 @@ type UnifiedEntry = {
   priceEntry: PriceInfo | undefined;
   isAmbossListed: boolean;
 };
-
-const formatBalance = (atomic: number, precision: number): string =>
-  (atomic / 10 ** precision).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-const hasBothSources = (e: UnifiedEntry): boolean =>
-  e.onChainBalance > 0 && e.channelBalance > 0;
 
 const CopyableKey: FC<{ label: string; value: string }> = ({
   label,
@@ -62,7 +62,10 @@ const CopyableKey: FC<{ label: string; value: string }> = ({
   );
 };
 
+type ListingFilter = 'listed' | 'unlisted' | 'all';
+
 export const AssetsList: FC = () => {
+  const [listingFilter, setListingFilter] = useState<ListingFilter>('listed');
   const {
     data: balancesData,
     loading: balancesLoading,
@@ -189,6 +192,13 @@ export const AssetsList: FC = () => {
     return merged;
   }, [balances, channels, priceMap, supportedKeys]);
 
+  const filtered = useMemo(() => {
+    if (listingFilter === 'all') return unified;
+    if (listingFilter === 'listed')
+      return unified.filter(e => e.isAmbossListed);
+    return unified.filter(e => !e.isAmbossListed);
+  }, [unified, listingFilter]);
+
   if (balancesLoading || channelsLoading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -216,67 +226,88 @@ export const AssetsList: FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-3">
-        {unified.map(entry => {
-          const usdValue = entry.priceEntry
-            ? (entry.totalBalance / 10 ** entry.precision) *
-              entry.priceEntry.usd
-            : null;
+    <Card>
+      <CardContent>
+        <div className="mb-4">
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={listingFilter}
+            onValueChange={v => {
+              if (v) setListingFilter(v as ListingFilter);
+            }}
+          >
+            <ToggleGroupItem value="listed">Amboss Listed</ToggleGroupItem>
+            <ToggleGroupItem value="unlisted">Unlisted</ToggleGroupItem>
+            <ToggleGroupItem value="all">All</ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Asset</TableHead>
+              <TableHead>Key</TableHead>
+              <TableHead className="text-right">On-chain</TableHead>
+              <TableHead className="text-right">Channel</TableHead>
+              <TableHead className="text-right">Total</TableHead>
+              <TableHead className="text-right">USD Value</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filtered.map(entry => {
+              const usdValue = entry.priceEntry
+                ? (entry.totalBalance / 10 ** entry.precision) *
+                  entry.priceEntry.usd
+                : null;
 
-          return (
-            <Card key={entry.key}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex flex-col gap-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
+              return (
+                <TableRow key={entry.key}>
+                  <TableCell>
+                    <div className="flex items-center gap-1.5">
                       <span className="font-semibold">
                         {entry.names.length
                           ? entry.names.join(', ')
                           : 'Unknown'}
                       </span>
-                      {entry.isAmbossListed && (
-                        <Badge variant="outline" className="text-primary">
-                          Amboss Listed
-                        </Badge>
+                      {listingFilter === 'all' && entry.isAmbossListed && (
+                        <Star
+                          size={14}
+                          className="shrink-0 fill-yellow-400 text-yellow-400"
+                        />
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[10px] text-muted-foreground/60 shrink-0">
                         {entry.keyLabel}
                       </span>
                       <CopyableKey label={entry.keyLabel} value={entry.key} />
                     </div>
-                  </div>
-
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className="text-lg font-semibold">
-                      {formatBalance(entry.totalBalance, entry.precision)}
-                    </span>
-                    {usdValue != null && (
-                      <span className="text-xs text-muted-foreground">
-                        ≈ ${formatUsd(usdValue)}
-                      </span>
-                    )}
-                    {hasBothSources(entry) && (
-                      <div className="flex flex-col items-end gap-0.5 text-[11px] text-muted-foreground/70">
-                        <span>
-                          On-chain:{' '}
-                          {formatBalance(entry.onChainBalance, entry.precision)}
-                        </span>
-                        <span>
-                          Channel:{' '}
-                          {formatBalance(entry.channelBalance, entry.precision)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-muted-foreground">
+                    {entry.onChainBalance > 0
+                      ? formatAssetAmount(entry.onChainBalance, entry.precision)
+                      : '—'}
+                  </TableCell>
+                  <TableCell className="text-right text-muted-foreground">
+                    {entry.channelBalance > 0
+                      ? formatAssetAmount(entry.channelBalance, entry.precision)
+                      : '—'}
+                  </TableCell>
+                  <TableCell className="text-right font-semibold">
+                    {formatAssetAmount(entry.totalBalance, entry.precision)}
+                  </TableCell>
+                  <TableCell className="text-right text-muted-foreground">
+                    {usdValue != null ? `≈ $${formatUsd(usdValue)}` : '—'}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 };

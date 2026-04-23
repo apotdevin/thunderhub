@@ -112,7 +112,7 @@ export const Header = () => {
           className="text-muted-foreground hover:text-foreground text-xs h-7 px-2"
         >
           <ArrowDownToLine size={12} className="text-green-500" />
-          Deposit
+          Receive
         </Button>
         <Button
           onClick={openWithdraw}
@@ -121,7 +121,7 @@ export const Header = () => {
           className="text-muted-foreground hover:text-foreground text-xs h-7 px-2"
         >
           <ArrowUpFromLine size={12} className="text-orange-500" />
-          Withdraw
+          Send
         </Button>
 
         <div className="w-px h-4 bg-border mx-0.5" />

@@ -35,6 +35,7 @@ import {
   bufToHex,
   buildXCoordToFullKeyMap,
   resolveFullGroupKey,
+  reversedBytes,
 } from '../../../utils/string';
 import { toWithError } from '../../../utils/async';
 import { grpcErrorMessage } from '../../../utils/grpcError';
@@ -169,6 +170,20 @@ export class TaprootAssetsQueriesResolver {
       );
     }
 
+    // Build precision map from listAssets (keyed by asset_id and group_key)
+    const [assetsResult] = await toWithError(
+      this.tapdNodeService.listAssets({ id })
+    );
+    const precisionByAssetId = new Map<string, number>();
+    const precisionByGroupKey = new Map<string, number>();
+    for (const asset of assetsResult?.assets || []) {
+      const assetId = bufToHex(asset.assetGenesis?.assetId);
+      const precision = asset.decimalDisplay?.decimalDisplay ?? 0;
+      if (assetId) precisionByAssetId.set(assetId, precision);
+      const gk = bufToHex(asset.assetGroup?.tweakedGroupKey);
+      if (gk) precisionByGroupKey.set(gk, precision);
+    }
+
     if (mode === 'assetId') {
       const balances = Object.entries(result.assetBalances || {}).map(
         ([key, value]: [string, AssetBalance]) => ({
@@ -176,18 +191,19 @@ export class TaprootAssetsQueriesResolver {
           group_key: bufToHex(value.groupKey),
           names: [value.assetGenesis.name],
           balance: value.balance.toString(),
+          precision: precisionByAssetId.get(key) ?? 0,
         })
       );
       return { balances };
     }
 
     // groupKey mode: resolve names via a parallel assetId lookup
-    const [assetResult] = await toWithError(
+    const [assetBalResult] = await toWithError(
       this.tapdNodeService.listBalances({ id, groupBy: 'assetId' })
     );
     const namesByGroupKey = new Map<string, Set<string>>();
     for (const value of Object.values(
-      assetResult?.assetBalances || {}
+      assetBalResult?.assetBalances || {}
     ) as AssetBalance[]) {
       const gk = bufToHex(value.groupKey);
       if (gk && value.assetGenesis?.name) {
@@ -207,6 +223,7 @@ export class TaprootAssetsQueriesResolver {
           group_key: key,
           names: names.length > 0 ? names : null,
           balance: value.balance.toString(),
+          precision: precisionByGroupKey.get(key) ?? 0,
         };
       }
     );
@@ -224,24 +241,52 @@ export class TaprootAssetsQueriesResolver {
         grpcErrorMessage('Failed to list transfers', error)
       );
     }
-    const transfers = (result.transfers || []).map((t: AssetTransfer) => ({
-      anchor_tx_hash: bufToHex(t.anchorTxHash) || '',
-      anchor_tx_height_hint: t.anchorTxHeightHint,
-      anchor_tx_chain_fees: t.anchorTxChainFees.toString(),
-      transfer_timestamp: t.transferTimestamp.toString(),
-      label: t.label || '',
-      inputs: (t.inputs || []).map((i: TransferInput) => ({
-        anchor_point: i.anchorPoint,
-        asset_id: bufToHex(i.assetId) || '',
-        amount: i.amount.toString(),
-      })),
-      outputs: (t.outputs || []).map((o: TransferOutput) => ({
-        asset_id: bufToHex(o.assetId) || '',
-        amount: o.amount.toString(),
-        script_key_is_local: o.scriptKeyIsLocal,
-        output_type: o.outputType.toString(),
-      })),
-    }));
+
+    // Build precision map from listAssets
+    const [assetsResult] = await toWithError(
+      this.tapdNodeService.listAssets({ id })
+    );
+    const precisionByAssetId = new Map<string, number>();
+    for (const asset of assetsResult?.assets || []) {
+      const assetId = bufToHex(asset.assetGenesis?.assetId);
+      if (assetId) {
+        precisionByAssetId.set(
+          assetId,
+          asset.decimalDisplay?.decimalDisplay ?? 0
+        );
+      }
+    }
+
+    const transfers = (result.transfers || [])
+      .map((t: AssetTransfer) => ({
+        anchor_tx_hash: reversedBytes(bufToHex(t.anchorTxHash) || ''),
+        anchor_tx_height_hint: t.anchorTxHeightHint,
+        anchor_tx_chain_fees: t.anchorTxChainFees.toString(),
+        transfer_timestamp: t.transferTimestamp.toString(),
+        label: t.label || '',
+        inputs: (t.inputs || []).map((i: TransferInput) => {
+          const assetId = bufToHex(i.assetId) || '';
+          return {
+            anchor_point: i.anchorPoint,
+            asset_id: assetId,
+            amount: i.amount.toString(),
+            precision: precisionByAssetId.get(assetId) ?? 0,
+          };
+        }),
+        outputs: (t.outputs || []).map((o: TransferOutput) => {
+          const assetId = bufToHex(o.assetId) || '';
+          return {
+            asset_id: assetId,
+            amount: o.amount.toString(),
+            script_key_is_local: o.scriptKeyIsLocal,
+            output_type: o.outputType.toString(),
+            precision: precisionByAssetId.get(assetId) ?? 0,
+          };
+        }),
+      }))
+      .sort(
+        (a, b) => Number(b.transfer_timestamp) - Number(a.transfer_timestamp)
+      );
     return { transfers };
   }
 
