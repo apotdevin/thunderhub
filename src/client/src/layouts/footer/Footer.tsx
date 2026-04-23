@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   BookOpen,
   Github,
+  Heart,
   ShieldCheck,
   Send,
   Twitter,
@@ -14,6 +15,7 @@ import { useLocation } from 'react-router-dom';
 
 import { ThunderHubMark } from '@/components/branding/ThunderHubMark';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 const RESOURCES = [
@@ -165,6 +167,16 @@ export const Footer = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <Separator className="my-3 bg-border/60" />
+
+          <div className="flex items-center justify-center gap-1 text-center text-[10px] text-muted-foreground">
+            <span>Made in Munich with</span>
+            <Heart size={10} className="fill-orange-500 text-orange-500" />
+            <span>and</span>
+            <Zap size={10} className="text-primary" />
+            <span>.</span>
           </div>
         </div>
       </div>
