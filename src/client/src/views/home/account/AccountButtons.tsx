@@ -31,7 +31,7 @@ const ActionSection = ({
   active: ActiveState;
   onToggle: (key: ActiveState) => void;
 }) => (
-  <div className="flex items-center justify-between rounded-xl bg-card py-4 px-4 ring-1 ring-foreground/10 text-card-foreground">
+  <div className="flex items-center justify-between bg-card py-4 px-4 ring-1 ring-foreground/10 text-card-foreground">
     <div className="flex items-center gap-2">
       <Icon size={14} className={iconClassName} />
       <span className="text-sm font-medium">{label}</span>
