@@ -390,10 +390,13 @@ export const TradingOffers: FC = () => {
           </span>
         ) : (
           <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-            <SelectTrigger className="w-40 rounded-md !h-9 px-4 text-sm font-medium">
+            <SelectTrigger className="w-40 rounded-md h-9! px-4 text-sm font-medium">
               <SelectValue placeholder="Select asset" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent
+              position="popper"
+              className="rounded-md w-(--radix-select-trigger-width)"
+            >
               {supportedAssets.map(a => (
                 <SelectItem key={a.id} value={a.id}>
                   {a.symbol || a.id.slice(0, 8)}

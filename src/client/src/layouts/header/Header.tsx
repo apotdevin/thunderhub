@@ -1,20 +1,14 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import {
   Cpu,
   Menu,
   Settings,
   Heart,
-  Sun,
-  Moon,
-  Monitor,
-  PanelLeft,
   PanelRight,
-  LucideProps,
   ArrowDownToLine,
   ArrowUpFromLine,
 } from 'lucide-react';
 import { useNodePath } from '../../hooks/useNodeSlug';
-import { LogoutButton } from '../../components/logoutButton';
 import {
   useDonate,
   DonateModal,
@@ -32,14 +26,10 @@ import { Link } from '../../components/link/Link';
 import { cn } from '../../lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { useConfigState, useConfigDispatch } from '../../context/ConfigContext';
-import { usePriceState } from '../../context/PriceContext';
-import { NodeInfoBar } from './NodeInfoBar';
 import { BalancesContent } from '../sidebar/BalancesContent';
 import { NodeSwitcher } from '../../components/nodeManager/NodeSwitcher';
-
-export type Icon = FC<LucideProps>;
+import { NodeInfoBar } from './NodeInfoBar';
+import { PreferencesPopover } from './PreferencesPopover';
 
 const SSO = '/sso';
 const MAIN = '/login';
@@ -49,10 +39,6 @@ export const Header = () => {
   const nodePath = useNodePath();
   const [open, setOpen] = useState(false);
   const [balancesOpen, setBalancesOpen] = useState(false);
-
-  const { theme, currency, sidebar, rightSidebar } = useConfigState();
-  const dispatch = useConfigDispatch();
-  const { dontShow } = usePriceState();
 
   const {
     openDonate,
@@ -77,6 +63,7 @@ export const Header = () => {
 
   const renderLoggedIn = () => (
     <>
+      {/* Mobile controls */}
       <div className="md:hidden text-muted-foreground flex">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
@@ -116,6 +103,7 @@ export const Header = () => {
         </Sheet>
       </div>
 
+      {/* Desktop controls */}
       <div className="hidden md:flex items-center gap-1">
         <Button
           onClick={openDeposit}
@@ -138,86 +126,17 @@ export const Header = () => {
 
         <div className="w-px h-4 bg-border mx-0.5" />
 
-        {/* Currency toggle */}
-        <ToggleGroup
-          type="single"
-          value={currency}
-          onValueChange={value => {
-            if (value) dispatch({ type: 'change', currency: value });
-          }}
-          variant="outline"
-          size="sm"
-        >
-          <ToggleGroupItem value="sat" className="text-xs px-1.5">
-            sat
-          </ToggleGroupItem>
-          <ToggleGroupItem value="btc" className="text-xs px-1.5 font-bold">
-            ₿
-          </ToggleGroupItem>
-          {!dontShow && (
-            <ToggleGroupItem value="fiat" className="text-xs px-1.5 font-bold">
-              F
-            </ToggleGroupItem>
-          )}
-        </ToggleGroup>
+        <PreferencesPopover />
 
-        {/* Theme toggle */}
-        <ToggleGroup
-          type="single"
-          value={theme}
-          onValueChange={value => {
-            if (value) dispatch({ type: 'themeChange', theme: value });
-          }}
-          variant="outline"
-          size="sm"
-        >
-          <ToggleGroupItem value="light" className="px-1.5">
-            <Sun size={12} />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="dark" className="px-1.5">
-            <Moon size={12} />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="system" className="px-1.5">
-            <Monitor size={12} />
-          </ToggleGroupItem>
-        </ToggleGroup>
-
-        <div className="w-px h-4 bg-border mx-0.5" />
-
-        <Button
-          onClick={() => dispatch({ type: 'change', sidebar: !sidebar })}
-          variant="ghost"
-          size="icon-sm"
-          className={cn(
-            'hover:text-foreground',
-            sidebar ? 'text-foreground' : 'text-muted-foreground/40'
-          )}
-        >
-          <PanelLeft size={14} />
-        </Button>
-
-        <Button
-          onClick={() =>
-            dispatch({ type: 'change', rightSidebar: !rightSidebar })
-          }
-          variant="ghost"
-          size="icon-sm"
-          className={cn(
-            'hidden lg:flex hover:text-foreground',
-            rightSidebar ? 'text-foreground' : 'text-muted-foreground/40'
-          )}
-        >
-          <PanelRight size={14} />
-        </Button>
-
+        {/* Balances sheet for md-to-lg screens (right sidebar unavailable) */}
         <Sheet open={balancesOpen} onOpenChange={setBalancesOpen}>
           <SheetTrigger asChild>
             <Button
               variant="ghost"
               size="icon-sm"
-              className="lg:hidden text-muted-foreground"
+              className="lg:hidden text-muted-foreground hover:text-foreground"
             >
-              <PanelRight size={18} />
+              <PanelRight size={14} />
             </Button>
           </SheetTrigger>
           <SheetContent
@@ -230,8 +149,6 @@ export const Header = () => {
             </div>
           </SheetContent>
         </Sheet>
-
-        <div className="w-px h-4 bg-border mx-0.5" />
 
         <Button
           onClick={openDonate}
@@ -250,8 +167,6 @@ export const Header = () => {
             <Settings size={14} />
           </Button>
         </Link>
-        <div className="w-px h-4 bg-border mx-0.5" />
-        <LogoutButton />
       </div>
     </>
   );
