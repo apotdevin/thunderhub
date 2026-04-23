@@ -42,7 +42,7 @@ export const Footer = () => {
               </div>
             </div>
             <div className="text-sm text-muted-foreground w-full text-center mt-4">
-              Made in Munich with <Emoji symbol={'🧡 '} label={'heart'} /> and{' '}
+              Made with <Emoji symbol={'🧡 '} label={'heart'} /> and{' '}
               <Emoji symbol={'⚡'} label={'lightning'} />.
             </div>
           </div>
