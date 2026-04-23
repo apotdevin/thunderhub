@@ -15,6 +15,7 @@ import {
   ArrowLeftRight,
   ExternalLink,
   Flame,
+  FlaskConical,
   LucideProps,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -27,6 +28,7 @@ import {
   TooltipTrigger,
 } from '../../components/ui/tooltip';
 import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
+import { Badge } from '../../components/ui/badge';
 import { SideSettings } from './sideSettings/SideSettings';
 import { LITD_SETUP_DOCS_URL } from '../../utils/externalLinks';
 
@@ -60,6 +62,7 @@ interface NavItem {
 interface NavSection {
   title: string;
   items: NavItem[];
+  beta?: boolean;
 }
 
 const mainNav: NavItem[] = [
@@ -88,6 +91,7 @@ const AMBOSS_SECTION: NavSection = {
 
 const ASSETS_SECTION: NavSection = {
   title: 'Taproot Assets',
+  beta: true,
   items: [
     { title: 'Assets', link: ASSETS, icon: Gem },
     { title: 'Channels', link: ASSET_CHANNELS, icon: Cpu },
@@ -121,7 +125,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     TOOLS_SECTION,
   ];
 
-  const renderNavButton = (item: NavItem, open = true) => {
+  const renderNavButton = (item: NavItem, open = true, beta = false) => {
     const isActive = !!item.link && nodePath === item.link;
     const NavIcon = item.icon;
     const key = item.link ?? item.href ?? item.title;
@@ -169,7 +173,18 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         <Tooltip key={key}>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
           <TooltipContent side="right" className="text-xs">
-            {item.title}
+            <span className="flex items-center gap-1.5">
+              {item.title}
+              {beta && (
+                <Badge
+                  variant="outline"
+                  className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
+                >
+                  <FlaskConical size={8} />
+                  Beta
+                </Badge>
+              )}
+            </span>
           </TooltipContent>
         </Tooltip>
       );
@@ -236,8 +251,29 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         {sections.map(section => (
           <div key={section.title}>
             <div className="my-2 mx-3 h-px bg-border/60" />
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-3 mb-1">
-              {section.title}
+            <div className="flex items-center gap-1.5 px-3 mb-1">
+              <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                {section.title}
+              </span>
+              {section.beta && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button" className="cursor-default">
+                      <Badge
+                        variant="outline"
+                        className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
+                      >
+                        <FlaskConical size={8} />
+                        Beta
+                      </Badge>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="text-xs max-w-52">
+                    This feature is currently in beta. Functionality may change
+                    as we continue testing and improving.
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </div>
             <nav className="flex flex-col gap-0.5">
               {section.items.map(item => renderBurgerNav(item))}
@@ -287,8 +323,29 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                 )}
               />
               {sidebar && (
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">
-                  {section.title}
+                <div className="flex items-center gap-1.5 px-2.5 mb-1">
+                  <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                    {section.title}
+                  </span>
+                  {section.beta && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button type="button" className="cursor-default">
+                          <Badge
+                            variant="outline"
+                            className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
+                          >
+                            <FlaskConical size={8} />
+                            Beta
+                          </Badge>
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs max-w-52">
+                        This feature is currently in beta. Functionality may
+                        change as we continue testing and improving.
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </div>
               )}
               <nav
@@ -297,7 +354,9 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                   !sidebar && 'items-center'
                 )}
               >
-                {section.items.map(item => renderNavButton(item, sidebar))}
+                {section.items.map(item =>
+                  renderNavButton(item, sidebar, section.beta)
+                )}
               </nav>
             </div>
           ))}
