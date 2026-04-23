@@ -172,8 +172,8 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
   const checking = !isRoot && loading && !hasData;
 
   return (
-    <div className="relative min-h-screen">
-      <div className="pb-30">
+    <div className="flex min-h-screen flex-col">
+      <div className="flex-1">
         {!isRoot && <Header />}
         <Listener isRoot={isRoot} />
         <div className="flex">

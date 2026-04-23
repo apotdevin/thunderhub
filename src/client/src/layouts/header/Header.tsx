@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Cpu,
   Menu,
   Settings,
   Heart,
@@ -24,6 +23,7 @@ import {
 import { BurgerMenu } from '../../components/burgerMenu/BurgerMenu';
 import { Link } from '../../components/link/Link';
 import { cn } from '../../lib/utils';
+import { ThunderHubMark } from '@/components/branding/ThunderHubMark';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import { BalancesContent } from '../sidebar/BalancesContent';
@@ -188,9 +188,7 @@ export const Header = () => {
           <div className="flex items-center gap-1">
             <Link to={!isRoot ? '/home' : '/login'} noStyling>
               <div className="flex items-center gap-2 font-bold text-sm tracking-tight hover:opacity-80 transition-opacity">
-                <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 text-primary">
-                  <Cpu size={14} />
-                </div>
+                <ThunderHubMark className="h-6 w-6" iconClassName="size-3.5" />
                 <span>ThunderHub</span>
               </div>
             </Link>
