@@ -84,6 +84,7 @@ export type PayOptions = {
 
 export type CreateInvoiceOptions = {
   tokens?: number;
+  cltv_delta?: number;
   description?: string;
   description_hash?: string;
   expires_at?: string;
