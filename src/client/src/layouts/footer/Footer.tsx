@@ -149,7 +149,7 @@ export const Footer = () => {
                 {[...RESOURCES, ...COMMUNITY].map(item => (
                   <div
                     key={item.label}
-                    className="min-w-0 flex-1 basis-[12rem] sm:basis-[10rem]"
+                    className="min-w-0 flex-1 basis-48 sm:basis-40"
                   >
                     <FooterLinkCard {...item} />
                   </div>
