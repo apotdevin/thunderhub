@@ -244,9 +244,11 @@ export const useMagmaOrders = () => {
 export const MagmaOrders = ({
   tab,
   statusFilter,
+  nodeFilter,
 }: {
   tab: MagmaTab;
   statusFilter: string;
+  nodeFilter: string;
 }) => {
   const { purchases, sales, magmaUrl, refetch } = useMagmaOrders();
   const [cancelOrder, { loading: cancelling }] = useCancelMagmaOrderMutation({
@@ -266,13 +268,20 @@ export const MagmaOrders = ({
 
   const allOrders = tab === 'purchases' ? purchases : sales;
 
-  const filtered = useMemo(
-    () =>
-      statusFilter === 'all'
-        ? allOrders
-        : allOrders.filter(o => o.status === statusFilter),
-    [allOrders, statusFilter]
-  );
+  const filtered = useMemo(() => {
+    let orders = allOrders;
+    if (nodeFilter !== 'all') {
+      orders = orders.filter(o => {
+        const pubkey =
+          tab === 'purchases' ? o.destination?.pubkey : o.source?.pubkey;
+        return pubkey === nodeFilter;
+      });
+    }
+    if (statusFilter !== 'all') {
+      orders = orders.filter(o => o.status === statusFilter);
+    }
+    return orders;
+  }, [allOrders, nodeFilter, statusFilter, tab]);
 
   const handleCancelRequest = (id: string) => {
     setConfirmingId(id);

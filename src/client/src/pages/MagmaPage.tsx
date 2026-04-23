@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { useNodeSlug, useNodePath } from '../hooks/useNodeSlug';
+import { useNodeInfo } from '../hooks/UseNodeInfo';
 import {
   MagmaOrders,
   useMagmaOrders,
@@ -38,14 +39,53 @@ const MagmaView = () => {
   const nodePath = useNodePath();
   const activeTab = routeToTab(nodePath);
   const { purchases, sales } = useMagmaOrders();
+  const { publicKey, alias } = useNodeInfo();
   const [statusFilter, setStatusFilter] = useState('all');
+  const [nodeFilter, setNodeFilter] = useState<string | null>(null);
+
+  const effectiveNodeFilter = (nodeFilter ?? publicKey) || 'all';
+
+  const nodes = useMemo(() => {
+    const map = new Map<string, string>();
+    if (publicKey) {
+      map.set(publicKey, alias || publicKey.slice(0, 16) + '…');
+    }
+    for (const o of purchases) {
+      if (o.destination?.pubkey && !map.has(o.destination.pubkey)) {
+        map.set(
+          o.destination.pubkey,
+          o.destination.alias || o.destination.pubkey.slice(0, 16) + '…'
+        );
+      }
+    }
+    for (const o of sales) {
+      if (o.source?.pubkey && !map.has(o.source.pubkey)) {
+        map.set(
+          o.source.pubkey,
+          o.source.alias || o.source.pubkey.slice(0, 16) + '…'
+        );
+      }
+    }
+    return map;
+  }, [purchases, sales, publicKey, alias]);
+
+  const filteredPurchases = useMemo(() => {
+    if (effectiveNodeFilter === 'all') return purchases;
+    return purchases.filter(o => o.destination?.pubkey === effectiveNodeFilter);
+  }, [purchases, effectiveNodeFilter]);
+
+  const filteredSales = useMemo(() => {
+    if (effectiveNodeFilter === 'all') return sales;
+    return sales.filter(o => o.source?.pubkey === effectiveNodeFilter);
+  }, [sales, effectiveNodeFilter]);
 
   const counts: Record<MagmaTab, number> = {
-    purchases: purchases.length,
-    sales: sales.length,
+    purchases: filteredPurchases.length,
+    sales: filteredSales.length,
   };
 
-  const activeOrders = activeTab === 'purchases' ? purchases : sales;
+  const activeOrders =
+    activeTab === 'purchases' ? filteredPurchases : filteredSales;
 
   const statuses = useMemo(() => {
     const unique = [...new Set(activeOrders.map(o => o.status))];
@@ -84,6 +124,26 @@ const MagmaView = () => {
             ))}
           </ToggleGroup>
 
+          <Select
+            value={effectiveNodeFilter}
+            onValueChange={v => {
+              setNodeFilter(v);
+              setStatusFilter('all');
+            }}
+          >
+            <SelectTrigger className="w-44 h-8 text-xs">
+              <SelectValue placeholder="Filter by node" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All nodes</SelectItem>
+              {[...nodes.entries()].map(([pubkey, nodeAlias]) => (
+                <SelectItem key={pubkey} value={pubkey}>
+                  {nodeAlias}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-50 h-8 text-xs">
               <SelectValue placeholder="Filter by status" />
@@ -102,7 +162,11 @@ const MagmaView = () => {
 
       <Card>
         <CardContent>
-          <MagmaOrders tab={activeTab} statusFilter={statusFilter} />
+          <MagmaOrders
+            tab={activeTab}
+            statusFilter={statusFilter}
+            nodeFilter={effectiveNodeFilter}
+          />
         </CardContent>
       </Card>
     </div>
