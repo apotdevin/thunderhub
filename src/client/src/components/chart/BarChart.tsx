@@ -67,7 +67,7 @@ export const BarChart = ({
     return {
       color: colorRange,
       grid: {
-        containLabel: true,
+        outerBoundsMode: 'same',
         top: '16px',
         left: '8px',
         bottom: '8px',

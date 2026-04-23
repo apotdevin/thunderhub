@@ -91,7 +91,7 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   const option = useMemo(() => {
     return {
       grid: {
-        containLabel: true,
+        outerBoundsMode: 'same',
         top: '50px',
         left: '30px',
         bottom: '48px',

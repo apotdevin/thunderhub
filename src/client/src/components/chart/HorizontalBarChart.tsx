@@ -86,7 +86,7 @@ export const HorizontalBarChart = ({
         bottom: '8px',
         top: '8px',
         right: '80px',
-        containLabel: true,
+        outerBoundsMode: 'same',
       },
       tooltip: {
         trigger: 'axis',
