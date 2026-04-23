@@ -268,7 +268,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                       </Badge>
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="text-xs max-w-52">
+                  <TooltipContent
+                    side="right"
+                    className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:!hidden"
+                  >
                     This feature is currently in beta. Functionality may change
                     as we continue testing and improving.
                   </TooltipContent>
@@ -340,7 +343,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                           </Badge>
                         </button>
                       </TooltipTrigger>
-                      <TooltipContent side="right" className="text-xs max-w-52">
+                      <TooltipContent
+                        side="right"
+                        className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:!hidden"
+                      >
                         This feature is currently in beta. Functionality may
                         change as we continue testing and improving.
                       </TooltipContent>
