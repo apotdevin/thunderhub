@@ -20,6 +20,7 @@ import { useGetTapUniverseAssetsQuery } from '../../../../graphql/queries/__gene
 import { useGetTapFederationServersQuery } from '../../../../graphql/queries/__generated__/getTapFederationServers.generated';
 import { TapBalanceGroupBy } from '../../../../graphql/types';
 import { getErrorContent } from '../../../../utils/error';
+import { displayToAtomic } from '../../../assets/trade.helpers';
 
 type GroupEntry = {
   groupKey: string;
@@ -52,9 +53,14 @@ export const TapDepositStep: FC<{ onBack?: () => void }> = ({ onBack }) => {
   const federationServers =
     fedData?.taproot_assets?.get_federation_servers?.servers || [];
 
-  const ownedGroups = (
-    balancesData?.taproot_assets?.get_balances?.balances || []
-  )
+  const balances = balancesData?.taproot_assets?.get_balances?.balances || [];
+
+  const precisionByGroupKey = new Map<string, number>();
+  for (const b of balances) {
+    if (b.group_key) precisionByGroupKey.set(b.group_key, b.precision);
+  }
+
+  const ownedGroups = balances
     .filter(b => b.group_key)
     .map(
       (b): GroupEntry => ({
@@ -109,16 +115,21 @@ export const TapDepositStep: FC<{ onBack?: () => void }> = ({ onBack }) => {
     },
   });
 
+  const selectedPrecision = resolvedGroupKey
+    ? (precisionByGroupKey.get(resolvedGroupKey) ?? 0)
+    : 0;
+
   const handleGenerate = () => {
     if (!resolvedGroupKey || !amount) {
       toast.error('Group key and amount are required');
       return;
     }
+    const atomicAmt = displayToAtomic(amount, selectedPrecision).toString();
     setGeneratedAddr(null);
     newAddress({
       variables: {
         group_key: resolvedGroupKey,
-        amt: amount,
+        amt: atomicAmt,
         proof_courier_addr: resolvedCourier,
       },
     });
@@ -220,9 +231,17 @@ export const TapDepositStep: FC<{ onBack?: () => void }> = ({ onBack }) => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted-foreground">
-          Amount
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground">
+            Amount
+          </label>
+          {amount && (
+            <span className="text-[11px] text-muted-foreground">
+              {displayToAtomic(amount, selectedPrecision).toLocaleString()}{' '}
+              atomic units
+            </span>
+          )}
+        </div>
         <Input
           type="number"
           value={amount}

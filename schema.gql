@@ -937,6 +937,7 @@ type TapAssetBalanceEntry {
   balance: String!
   group_key: String
   names: [String!]
+  precision: Int!
 }
 
 type TapAssetChannelBalance {
@@ -1128,6 +1129,7 @@ type TapTransferInput {
   amount: String!
   anchor_point: String!
   asset_id: String!
+  precision: Int!
 }
 
 type TapTransferList {
@@ -1138,6 +1140,7 @@ type TapTransferOutput {
   amount: String!
   asset_id: String!
   output_type: String!
+  precision: Int!
   script_key_is_local: Boolean!
 }
 

@@ -26,6 +26,7 @@ export type GetTapTransfersQuery = {
           anchor_point: string;
           asset_id: string;
           amount: string;
+          precision: number;
         }>;
         outputs: Array<{
           __typename?: 'TapTransferOutput';
@@ -33,6 +34,7 @@ export type GetTapTransfersQuery = {
           amount: string;
           script_key_is_local: boolean;
           output_type: string;
+          precision: number;
         }>;
       }>;
     };
@@ -54,12 +56,14 @@ export const GetTapTransfersDocument = gql`
             anchor_point
             asset_id
             amount
+            precision
           }
           outputs {
             asset_id
             amount
             script_key_is_local
             output_type
+            precision
           }
         }
       }

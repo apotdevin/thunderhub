@@ -95,6 +95,9 @@ export class TapAssetBalanceEntry {
 
   @Field()
   balance: string;
+
+  @Field(() => Int)
+  precision: number;
 }
 
 @ObjectType()
@@ -144,6 +147,9 @@ export class TapTransferInput {
 
   @Field()
   amount: string;
+
+  @Field(() => Int)
+  precision: number;
 }
 
 @ObjectType()
@@ -159,6 +165,9 @@ export class TapTransferOutput {
 
   @Field()
   output_type: string;
+
+  @Field(() => Int)
+  precision: number;
 }
 
 @ObjectType()

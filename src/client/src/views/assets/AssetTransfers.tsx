@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { useGetTapTransfersQuery } from '../../graphql/queries/__generated__/getTapTransfers.generated';
 import { getErrorContent } from '../../utils/error';
+import { formatAssetAmount } from '../../utils/helpers';
 
 export const AssetTransfers: FC = () => {
   const { data, loading, error } = useGetTapTransfersQuery({
@@ -81,7 +82,9 @@ export const AssetTransfers: FC = () => {
                         <span className="font-mono text-muted-foreground">
                           {inp.asset_id?.slice(0, 12)}...
                         </span>
-                        <span className="font-semibold">{inp.amount}</span>
+                        <span className="font-semibold">
+                          {formatAssetAmount(inp.amount, inp.precision)}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -93,7 +96,9 @@ export const AssetTransfers: FC = () => {
                         <span className="font-mono text-muted-foreground">
                           {out.asset_id?.slice(0, 12)}...
                         </span>
-                        <span className="font-semibold">{out.amount}</span>
+                        <span className="font-semibold">
+                          {formatAssetAmount(out.amount, out.precision)}
+                        </span>
                         {out.script_key_is_local && (
                           <span className="text-[10px] bg-muted px-1 rounded">
                             local

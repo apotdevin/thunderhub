@@ -141,6 +141,10 @@ describe('TaprootAssetsQueriesResolver', () => {
   });
 
   describe('get_balances', () => {
+    beforeEach(() => {
+      service.listAssets.mockResolvedValue({ assets: [] });
+    });
+
     it('returns balances grouped by assetId', async () => {
       service.listBalances.mockResolvedValue({
         assetBalances: {
@@ -163,6 +167,7 @@ describe('TaprootAssetsQueriesResolver', () => {
         group_key: 'aa',
         names: ['TestCoin'],
         balance: '500',
+        precision: 0,
       });
     });
 
@@ -198,6 +203,7 @@ describe('TaprootAssetsQueriesResolver', () => {
         group_key: groupKeyHex,
         names: ['TestCoin'],
         balance: '1000',
+        precision: 0,
       });
     });
 
@@ -296,11 +302,16 @@ describe('TaprootAssetsQueriesResolver', () => {
         group_key: 'groupkey1',
         names: null,
         balance: '500',
+        precision: 0,
       });
     });
   });
 
   describe('get_transfers', () => {
+    beforeEach(() => {
+      service.listAssets.mockResolvedValue({ assets: [] });
+    });
+
     it('serializes transfers with nested inputs and outputs', async () => {
       service.listTransfers.mockResolvedValue({
         transfers: [

@@ -7,6 +7,8 @@ import { useBurnTapAssetMutation } from '../../graphql/mutations/__generated__/b
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
+import { formatAssetAmount } from '../../utils/helpers';
+import { displayToAtomic } from './trade.helpers';
 
 export const BurnAsset: FC = () => {
   const [selectedAsset, setSelectedAsset] = useState('');
@@ -25,11 +27,12 @@ export const BurnAsset: FC = () => {
       assetId: b.asset_id!,
       name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
+      precision: b.precision,
     }));
 
-  const selectedBalance = knownAssets.find(
-    a => a.assetId === selectedAsset
-  )?.balance;
+  const selectedAsset$ = knownAssets.find(a => a.assetId === selectedAsset);
+  const selectedBalance = selectedAsset$?.balance;
+  const selectedPrecision = selectedAsset$?.precision ?? 0;
 
   const [burnAsset, { loading }] = useBurnTapAssetMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -44,8 +47,9 @@ export const BurnAsset: FC = () => {
 
   const handleBurn = () => {
     if (!selectedAsset || !amount || !confirmed) return;
+    const atomicAmount = displayToAtomic(amount, selectedPrecision).toString();
     burnAsset({
-      variables: { asset_id: selectedAsset, amount },
+      variables: { asset_id: selectedAsset, amount: atomicAmount },
     });
   };
 
@@ -72,18 +76,34 @@ export const BurnAsset: FC = () => {
               <option value="">Select an asset...</option>
               {knownAssets.map(a => (
                 <option key={a.assetId} value={a.assetId}>
-                  {a.name} (balance: {a.balance})
+                  {a.name} (balance:{' '}
+                  {formatAssetAmount(Number(a.balance), a.precision)})
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">
-              Amount to burn
-              {selectedBalance && (
-                <span className="ml-1">(max: {selectedBalance})</span>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs text-muted-foreground">
+                Amount to burn
+                {selectedBalance && (
+                  <span className="ml-1">
+                    (max:{' '}
+                    {formatAssetAmount(
+                      Number(selectedBalance),
+                      selectedPrecision
+                    )}
+                    )
+                  </span>
+                )}
+              </label>
+              {amount && (
+                <span className="text-[11px] text-muted-foreground">
+                  {displayToAtomic(amount, selectedPrecision).toLocaleString()}{' '}
+                  atomic units
+                </span>
               )}
-            </label>
+            </div>
             <input
               type="number"
               value={amount}

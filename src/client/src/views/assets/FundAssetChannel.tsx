@@ -22,6 +22,8 @@ import { Price } from '../../components/price/Price';
 import { useBitcoinFees } from '../../hooks/UseBitcoinFees';
 import { useConfigState } from '../../context/ConfigContext';
 import { getErrorContent } from '../../utils/error';
+import { formatAssetAmount } from '../../utils/helpers';
+import { displayToAtomic } from './trade.helpers';
 
 export const FundAssetChannel: FC = () => {
   const { fetchFees } = useConfigState();
@@ -81,11 +83,12 @@ export const FundAssetChannel: FC = () => {
       groupKey: b.group_key!,
       name: b.names?.[0] || 'Unknown',
       balance: b.balance!,
+      precision: b.precision,
     }));
 
-  const selectedBalance = knownGroups.find(
-    g => g.groupKey === selectedGroup
-  )?.balance;
+  const selectedGroup$ = knownGroups.find(g => g.groupKey === selectedGroup);
+  const selectedBalance = selectedGroup$?.balance;
+  const selectedPrecision = selectedGroup$?.precision ?? 0;
 
   const [fundChannel, { loading }] = useFundTapAssetChannelMutation({
     onError: error => toast.error(getErrorContent(error)),
@@ -107,11 +110,15 @@ export const FundAssetChannel: FC = () => {
       toast.error('Peer pubkey, asset group, and amount are required');
       return;
     }
+    const atomicAmount = displayToAtomic(
+      assetAmount,
+      selectedPrecision
+    ).toString();
     fundChannel({
       variables: {
         input: {
           peer_pubkey: peerPubkey,
-          asset_amount: assetAmount,
+          asset_amount: atomicAmount,
           group_key: selectedGroup,
           fee_rate_sat_per_vbyte: fee > 0 ? fee : undefined,
           push_sat: pushSat ? parseInt(pushSat, 10) : undefined,
@@ -152,19 +159,31 @@ export const FundAssetChannel: FC = () => {
           <NativeSelectOption value="">Select a group...</NativeSelectOption>
           {knownGroups.map(g => (
             <NativeSelectOption key={g.groupKey} value={g.groupKey}>
-              {g.name} (balance: {g.balance})
+              {g.name} (balance:{' '}
+              {formatAssetAmount(Number(g.balance), g.precision)})
             </NativeSelectOption>
           ))}
         </NativeSelect>
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted-foreground">
-          Asset Amount{' '}
-          {selectedBalance && (
-            <span className="text-foreground">(max: {selectedBalance})</span>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-muted-foreground">
+            Asset Amount{' '}
+            {selectedBalance && (
+              <span className="text-foreground">
+                (max:{' '}
+                {formatAssetAmount(Number(selectedBalance), selectedPrecision)})
+              </span>
+            )}
+          </label>
+          {assetAmount && (
+            <span className="text-[11px] text-muted-foreground">
+              {displayToAtomic(assetAmount, selectedPrecision).toLocaleString()}{' '}
+              atomic units
+            </span>
           )}
-        </label>
+        </div>
         <Input
           type="number"
           value={assetAmount}

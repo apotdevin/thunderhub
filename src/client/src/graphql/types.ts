@@ -214,8 +214,8 @@ export type ChannelAsset = {
   __typename?: 'ChannelAsset';
   asset_id: Scalars['String']['output'];
   asset_name: Scalars['String']['output'];
-  asset_type: Scalars['String']['output'];
   asset_precision: Scalars['Float']['output'];
+  asset_type: Scalars['String']['output'];
   capacity: Scalars['String']['output'];
   group_key?: Maybe<Scalars['String']['output']>;
   local_balance: Scalars['String']['output'];
@@ -571,7 +571,7 @@ export type MagmaOrderParty = {
 export type MagmaOrderQueries = {
   __typename?: 'MagmaOrderQueries';
   find_many?: Maybe<MagmaPendingOrders>;
-  get_invoice: MagmaOrderInvoice;
+  get_invoice?: Maybe<MagmaOrderInvoice>;
 };
 
 export type MagmaOrderQueriesGet_InvoiceArgs = {
@@ -1289,6 +1289,7 @@ export type TapAssetBalanceEntry = {
   balance: Scalars['String']['output'];
   group_key?: Maybe<Scalars['String']['output']>;
   names?: Maybe<Array<Scalars['String']['output']>>;
+  precision: Scalars['Int']['output'];
 };
 
 export type TapAssetChannelBalance = {
@@ -1501,6 +1502,7 @@ export type TapTransferInput = {
   amount: Scalars['String']['output'];
   anchor_point: Scalars['String']['output'];
   asset_id: Scalars['String']['output'];
+  precision: Scalars['Int']['output'];
 };
 
 export type TapTransferList = {
@@ -1513,6 +1515,7 @@ export type TapTransferOutput = {
   amount: Scalars['String']['output'];
   asset_id: Scalars['String']['output'];
   output_type: Scalars['String']['output'];
+  precision: Scalars['Int']['output'];
   script_key_is_local: Scalars['Boolean']['output'];
 };
 

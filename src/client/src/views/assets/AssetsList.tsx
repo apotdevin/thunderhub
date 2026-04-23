@@ -16,6 +16,7 @@ import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { getErrorContent } from '../../utils/error';
+import { formatAssetAmount } from '../../utils/helpers';
 import { formatUsd } from '../../lib/formatUsd';
 
 type PriceInfo = { usd: number; precision: number };
@@ -31,12 +32,6 @@ type UnifiedEntry = {
   priceEntry: PriceInfo | undefined;
   isAmbossListed: boolean;
 };
-
-const formatBalance = (atomic: number, precision: number): string =>
-  (atomic / 10 ** precision).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 
 const CopyableKey: FC<{ label: string; value: string }> = ({
   label,
@@ -293,16 +288,16 @@ export const AssetsList: FC = () => {
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">
                     {entry.onChainBalance > 0
-                      ? formatBalance(entry.onChainBalance, entry.precision)
+                      ? formatAssetAmount(entry.onChainBalance, entry.precision)
                       : '—'}
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">
                     {entry.channelBalance > 0
-                      ? formatBalance(entry.channelBalance, entry.precision)
+                      ? formatAssetAmount(entry.channelBalance, entry.precision)
                       : '—'}
                   </TableCell>
                   <TableCell className="text-right font-semibold">
-                    {formatBalance(entry.totalBalance, entry.precision)}
+                    {formatAssetAmount(entry.totalBalance, entry.precision)}
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">
                     {usdValue != null ? `≈ $${formatUsd(usdValue)}` : '—'}

@@ -15,12 +15,14 @@ export const GET_TAP_TRANSFERS = gql`
             anchor_point
             asset_id
             amount
+            precision
           }
           outputs {
             asset_id
             amount
             script_key_is_local
             output_type
+            precision
           }
         }
       }

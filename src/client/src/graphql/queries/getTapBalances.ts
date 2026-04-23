@@ -10,6 +10,7 @@ export const GET_TAP_BALANCES = gql`
           group_key
           names
           balance
+          precision
         }
       }
     }

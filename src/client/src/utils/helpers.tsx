@@ -199,3 +199,12 @@ export const formatCurrency = (amount: string | number, currency: string) => {
 export const formatNumber = (amount: string | number) => {
   return new Intl.NumberFormat('en-US').format(Number(amount));
 };
+
+export const formatAssetAmount = (
+  atomic: number | string,
+  precision: number
+): string =>
+  (Number(atomic) / 10 ** precision).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
