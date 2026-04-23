@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, Copy, Check } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Loader2, Info, Copy, Check, Star } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
@@ -67,7 +67,10 @@ const CopyableKey: FC<{ label: string; value: string }> = ({
   );
 };
 
+type ListingFilter = 'listed' | 'unlisted' | 'all';
+
 export const AssetsList: FC = () => {
+  const [listingFilter, setListingFilter] = useState<ListingFilter>('listed');
   const {
     data: balancesData,
     loading: balancesLoading,
@@ -194,6 +197,13 @@ export const AssetsList: FC = () => {
     return merged;
   }, [balances, channels, priceMap, supportedKeys]);
 
+  const filtered = useMemo(() => {
+    if (listingFilter === 'all') return unified;
+    if (listingFilter === 'listed')
+      return unified.filter(e => e.isAmbossListed);
+    return unified.filter(e => !e.isAmbossListed);
+  }, [unified, listingFilter]);
+
   if (balancesLoading || channelsLoading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -223,6 +233,21 @@ export const AssetsList: FC = () => {
   return (
     <Card>
       <CardContent>
+        <div className="mb-4">
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={listingFilter}
+            onValueChange={v => {
+              if (v) setListingFilter(v as ListingFilter);
+            }}
+          >
+            <ToggleGroupItem value="listed">Amboss Listed</ToggleGroupItem>
+            <ToggleGroupItem value="unlisted">Unlisted</ToggleGroupItem>
+            <ToggleGroupItem value="all">All</ToggleGroupItem>
+          </ToggleGroup>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -235,7 +260,7 @@ export const AssetsList: FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {unified.map(entry => {
+            {filtered.map(entry => {
               const usdValue = entry.priceEntry
                 ? (entry.totalBalance / 10 ** entry.precision) *
                   entry.priceEntry.usd
@@ -244,16 +269,17 @@ export const AssetsList: FC = () => {
               return (
                 <TableRow key={entry.key}>
                   <TableCell>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <span className="font-semibold">
                         {entry.names.length
                           ? entry.names.join(', ')
                           : 'Unknown'}
                       </span>
-                      {entry.isAmbossListed && (
-                        <Badge variant="outline" className="text-primary">
-                          Amboss Listed
-                        </Badge>
+                      {listingFilter === 'all' && entry.isAmbossListed && (
+                        <Star
+                          size={14}
+                          className="shrink-0 fill-yellow-400 text-yellow-400"
+                        />
                       )}
                     </div>
                   </TableCell>
