@@ -592,6 +592,7 @@ export class RailsQueriesResolver {
 @Resolver(() => MagmaOrderQueries)
 export class MagmaOrderQueriesResolver {
   constructor(
+    private nodeService: NodeService,
     private fetchService: FetchService,
     private ambossTokenService: AmbossTokenService,
     private ambossService: AmbossService,
@@ -646,9 +647,20 @@ export class MagmaOrderQueriesResolver {
     });
 
     const { purchases, sales } = data.user.market.orders;
+
+    const [info] = await toWithError(this.nodeService.getWalletInfo(user.id));
+    const pubkey = info?.public_key;
+
+    const allPurchases = purchases.list.map(mapOrder);
+    const allSales = sales.list.map(mapOrder);
+
     return {
-      purchases: purchases.list.map(mapOrder),
-      sales: sales.list.map(mapOrder),
+      purchases: pubkey
+        ? allPurchases.filter(o => o.destination?.pubkey === pubkey)
+        : allPurchases,
+      sales: pubkey
+        ? allSales.filter(o => o.source?.pubkey === pubkey)
+        : allSales,
       magmaUrl: magmaUrl.replace('/graphql', ''),
     };
   }
