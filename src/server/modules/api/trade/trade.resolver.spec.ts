@@ -53,7 +53,7 @@ interface PrivateMethods {
     id: string,
     peerPubkey: string,
     taChannelScid: string,
-    taChannelPartnerScid: string | undefined,
+    taChannelPartnerScidAlias: string | undefined,
     taChannelCapacity: number,
     btcChannels: BtcChannel[],
     rebalanceSats: number

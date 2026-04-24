@@ -667,21 +667,21 @@ export class TradeResolver {
     for (const taChannel of taChannels) {
       // Need enough local sats above the commitment reserve to transport the
       // asset HTLC. SATS_RESERVE_BUFFER_PCT provides the headroom above this.
-      const effectiveReserve = taChannel.localReserve + invoiceSats;
+      const minRequiredBalance = taChannel.localReserve + invoiceSats;
 
       this.logger.info('ensureTaChannelSatReserve: channel balance check', {
         taChannelScid: taChannel.scid,
         localBalance: taChannel.localBalance,
         localReserve: taChannel.localReserve,
         invoiceSats,
-        effectiveReserve,
-        needsRebalance: taChannel.localBalance < effectiveReserve,
+        minRequiredBalance,
+        needsRebalance: taChannel.localBalance < minRequiredBalance,
       });
 
-      if (taChannel.localBalance >= effectiveReserve) continue;
+      if (taChannel.localBalance >= minRequiredBalance) continue;
 
       const rebalanceSats =
-        Math.ceil(effectiveReserve * (1 + SATS_RESERVE_BUFFER_PCT / 100)) -
+        Math.ceil(minRequiredBalance * (1 + SATS_RESERVE_BUFFER_PCT / 100)) -
         taChannel.localBalance;
 
       this.logger.info(
@@ -690,7 +690,7 @@ export class TradeResolver {
           taChannelScid: taChannel.scid,
           localBalance: taChannel.localBalance,
           localReserve: taChannel.localReserve,
-          effectiveReserve,
+          minRequiredBalance,
           rebalanceSats,
         }
       );
@@ -700,7 +700,7 @@ export class TradeResolver {
           id,
           peerPubkey,
           taChannel.scid,
-          taChannel.peerAlias,
+          taChannel.partnerScidAlias,
           taChannel.capacity,
           btcChannels,
           rebalanceSats
@@ -734,7 +734,7 @@ export class TradeResolver {
   ): Promise<
     Array<{
       scid: string;
-      peerAlias: string | undefined;
+      partnerScidAlias: string | undefined;
       capacity: number;
       localBalance: number;
       localReserve: number;
@@ -797,7 +797,7 @@ export class TradeResolver {
 
     const results: Array<{
       scid: string;
-      peerAlias: string | undefined;
+      partnerScidAlias: string | undefined;
       capacity: number;
       localBalance: number;
       localReserve: number;
@@ -822,7 +822,7 @@ export class TradeResolver {
           // look up the channel locally. The real SCID and our own aliases
           // (other_ids) are not in the peer's outgoing forwarding table for
           // private TA channels.
-          peerAlias: ch.partner_scid_alias,
+          partnerScidAlias: ch.partner_scid_alias,
           capacity: ch.capacity,
           localBalance: ch.local_balance,
           localReserve: ch.local_reserve,
@@ -842,7 +842,7 @@ export class TradeResolver {
     accountId: string,
     peerPubkey: string,
     taChannelScid: string,
-    taChannelPeerAlias: string | undefined,
+    taChannelPartnerScidAlias: string | undefined,
     taChannelCapacity: number,
     btcChannels: Array<BtcChannel>,
     rebalanceSats: number
@@ -956,7 +956,7 @@ export class TradeResolver {
           // the peer charges this fee for forwarding on their outgoing leg.
           // Use partner_scid_alias (the peer's own local alias) — the real SCID
           // and our own alias_scids give UnknownNextPeer for private TA channels.
-          channel: taChannelPeerAlias ?? taChannelScid,
+          channel: taChannelPartnerScidAlias ?? taChannelScid,
           channel_capacity: taChannelCapacity,
           fee: hop2Fee,
           fee_mtokens: String(hop2FeeMtokens),
@@ -975,7 +975,7 @@ export class TradeResolver {
 
     this.logger.info('Executing circular rebalance to top up TA channel', {
       taChannelScid,
-      taChannelPeerAlias,
+      taChannelPartnerScidAlias,
       btcChannelId: btcChannel.id,
       rebalanceSats,
       hop1Timeout,
@@ -1001,7 +1001,7 @@ export class TradeResolver {
 
     this.logger.info('Circular rebalance completed', {
       taChannelScid,
-      taChannelPeerAlias,
+      taChannelPartnerScidAlias,
       is_confirmed: rebalResult?.is_confirmed,
       hops: rebalResult?.hops?.map((h: { channel: string }) => h.channel),
     });
