@@ -15,7 +15,6 @@ import {
   ArrowLeftRight,
   ExternalLink,
   Flame,
-  FlaskConical,
   LucideProps,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -202,7 +201,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                   variant="outline"
                   className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
                 >
-                  <FlaskConical size={8} />
                   Beta
                 </Badge>
               )}
@@ -242,7 +240,6 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                       variant="outline"
                       className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
                     >
-                      <FlaskConical size={8} />
                       Beta
                     </Badge>
                   </span>
