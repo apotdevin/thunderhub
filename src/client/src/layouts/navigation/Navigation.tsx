@@ -57,12 +57,12 @@ interface NavItem {
   icon: Icon;
   link?: string;
   href?: string;
+  beta?: boolean;
 }
 
 interface NavSection {
   title: string;
   items: NavItem[];
-  beta?: boolean;
 }
 
 const mainNav: NavItem[] = [
@@ -91,13 +91,12 @@ const AMBOSS_SECTION: NavSection = {
 
 const ASSETS_SECTION: NavSection = {
   title: 'Taproot Assets',
-  beta: true,
   items: [
     { title: 'Assets', link: ASSETS, icon: Gem },
     { title: 'Channels', link: ASSET_CHANNELS, icon: Cpu },
     { title: 'Transactions', link: ASSET_TRANSACTIONS, icon: Server },
     { title: 'Tools', link: ASSET_TOOLS, icon: Shield },
-    { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
+    { title: 'Trading', link: TRADING, icon: ArrowLeftRight, beta: true },
   ],
 };
 
@@ -125,7 +124,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
     TOOLS_SECTION,
   ];
 
-  const renderNavButton = (item: NavItem, open = true, beta = false) => {
+  const renderNavButton = (item: NavItem, open = true) => {
     const isActive = !!item.link && nodePath === item.link;
     const NavIcon = item.icon;
     const key = item.link ?? item.href ?? item.title;
@@ -143,7 +142,30 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         <NavIcon size={15} className="shrink-0" />
         {open && (
           <span className="flex flex-1 items-center justify-between">
-            {item.title}
+            <span className="flex items-center gap-1.5">
+              {item.title}
+              {item.beta && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-block cursor-default">
+                      <Badge
+                        variant="outline"
+                        className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
+                      >
+                        Beta
+                      </Badge>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="right"
+                    className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:hidden!"
+                  >
+                    This feature is currently in beta. Functionality may change
+                    as we continue testing and improving.
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </span>
             {item.href && (
               <ExternalLink size={11} className="shrink-0 opacity-60" />
             )}
@@ -175,7 +197,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
           <TooltipContent side="right" className="text-xs">
             <span className="flex items-center gap-1.5">
               {item.title}
-              {beta && (
+              {item.beta && (
                 <Badge
                   variant="outline"
                   className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
@@ -210,7 +232,31 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       >
         <NavIcon size={16} />
         <span className="flex flex-1 items-center justify-between">
-          {item.title}
+          <span className="flex items-center gap-1.5">
+            {item.title}
+            {item.beta && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-block cursor-default">
+                    <Badge
+                      variant="outline"
+                      className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
+                    >
+                      <FlaskConical size={8} />
+                      Beta
+                    </Badge>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="right"
+                  className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:!hidden"
+                >
+                  This feature is currently in beta. Functionality may change as
+                  we continue testing and improving.
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </span>
           {item.href && (
             <ExternalLink size={12} className="shrink-0 opacity-60" />
           )}
@@ -251,32 +297,8 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         {sections.map(section => (
           <div key={section.title}>
             <div className="my-2 mx-3 h-px bg-border/60" />
-            <div className="flex items-center gap-1.5 px-3 mb-1">
-              <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                {section.title}
-              </span>
-              {section.beta && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button type="button" className="cursor-default">
-                      <Badge
-                        variant="outline"
-                        className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
-                      >
-                        <FlaskConical size={8} />
-                        Beta
-                      </Badge>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="right"
-                    className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:!hidden"
-                  >
-                    This feature is currently in beta. Functionality may change
-                    as we continue testing and improving.
-                  </TooltipContent>
-                </Tooltip>
-              )}
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-3 mb-1">
+              {section.title}
             </div>
             <nav className="flex flex-col gap-0.5">
               {section.items.map(item => renderBurgerNav(item))}
@@ -326,32 +348,8 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                 )}
               />
               {sidebar && (
-                <div className="flex items-center gap-1.5 px-2.5 mb-1">
-                  <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                    {section.title}
-                  </span>
-                  {section.beta && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button type="button" className="cursor-default">
-                          <Badge
-                            variant="outline"
-                            className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
-                          >
-                            <FlaskConical size={8} />
-                            Beta
-                          </Badge>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side="right"
-                        className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:!hidden"
-                      >
-                        This feature is currently in beta. Functionality may
-                        change as we continue testing and improving.
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-2.5 mb-1">
+                  {section.title}
                 </div>
               )}
               <nav
@@ -360,9 +358,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
                   !sidebar && 'items-center'
                 )}
               >
-                {section.items.map(item =>
-                  renderNavButton(item, sidebar, section.beta)
-                )}
+                {section.items.map(item => renderNavButton(item, sidebar))}
               </nav>
             </div>
           ))}
