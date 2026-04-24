@@ -46,6 +46,7 @@ describe('MagmaResolver', () => {
     resolveAuthUrl: jest.fn(),
     resolveTradeUrl: jest.fn(),
   };
+  const mockNodeService = { getWalletInfo: jest.fn() };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -576,7 +577,11 @@ describe('MagmaResolver', () => {
 
     beforeEach(() => {
       mockAmbossService.resolveMagmaUrl.mockResolvedValue(magmaUrl);
+      mockNodeService.getWalletInfo.mockResolvedValue({
+        public_key: 'dstpub',
+      });
       ordersResolver = new MagmaOrderQueriesResolver(
+        mockNodeService as never,
         mockFetchService as never,
         mockAmbossTokenService as never,
         mockAmbossService as never,
@@ -591,7 +596,16 @@ describe('MagmaResolver', () => {
             market: {
               orders: {
                 purchases: { total: 1, list: [rawOrder] },
-                sales: { total: 1, list: [{ ...rawOrder, id: 'order-2' }] },
+                sales: {
+                  total: 1,
+                  list: [
+                    {
+                      ...rawOrder,
+                      id: 'order-2',
+                      source: { pubkey: 'dstpub', alias: 'Bob' },
+                    },
+                  ],
+                },
               },
             },
           },
@@ -662,7 +676,7 @@ describe('MagmaResolver', () => {
         created_at: '2026-02-01T00:00:00Z',
         status: 'WAITING_FOR_SELLER_APPROVAL',
         source: {},
-        destination: {},
+        destination: { pubkey: 'dstpub' },
         amount: {},
         fees: {},
       };
