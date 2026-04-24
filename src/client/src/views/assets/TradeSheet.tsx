@@ -414,6 +414,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     (hasPendingOutbound &&
       (!isValid || pendingOutboundSats >= Number(satsAmount)));
 
+  // For sells, channel setup (setupTradePartner) is not yet implemented on the
+  // server. Show what's insufficient and block the setup flow.
+  const sellNeedsChannels = !isAssetPurchase && isValid && !readyToTrade;
+
   const handleSubmit = () => {
     if (!amount || !offer.node.pubkey) return;
 
@@ -782,6 +786,31 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 )}
               </div>
             )}
+
+            {sellNeedsChannels && (
+              <div className="rounded-md border border-yellow-500/20 bg-yellow-500/5 p-3 flex flex-col gap-1 text-sm text-yellow-600">
+                {!hasOutbound && (
+                  <p>
+                    Insufficient outbound — you have{' '}
+                    {atomicToDisplay(
+                      totalAssetLocal.toString(),
+                      assetPrecision
+                    )}{' '}
+                    {assetSymbol} available to sell.
+                  </p>
+                )}
+                {!hasInbound && (
+                  <p>
+                    Insufficient inbound BTC liquidity (
+                    {totalBtcRemote.toLocaleString()} sats available).
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Channel setup for sells is not yet supported — reduce the
+                  amount or open channels manually.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -915,6 +944,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 quoteLoading ||
                 !isValid ||
                 exceedsAvailable ||
+                sellNeedsChannels ||
                 (!readyToTrade && !needsOnlyOutboundBtc && !offer.magmaOfferId)
               }
               className="w-full"
