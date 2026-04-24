@@ -217,7 +217,7 @@ export class TradeResolver {
   }
 
   private async executePurchase(
-    id: string,
+    accountId: string,
     input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
     const { paymentRequest } = input;
@@ -229,7 +229,7 @@ export class TradeResolver {
     }
 
     const [decoded, decodeError] = await toWithError(
-      this.nodeService.decodePaymentRequest(id, paymentRequest)
+      this.nodeService.decodePaymentRequest(accountId, paymentRequest)
     );
 
     if (decodeError || decoded?.tokens == null) {
@@ -272,7 +272,10 @@ export class TradeResolver {
       cltvDelta: routeHint.cltv_delta,
     });
 
-    const btcChannels = await this.getBtcChannelsWithPeer(id, input.peerPubkey);
+    const btcChannels = await this.getBtcChannelsWithPeer(
+      accountId,
+      input.peerPubkey
+    );
 
     if (btcChannels.length === 0) {
       throw new GraphQLError(
@@ -296,9 +299,9 @@ export class TradeResolver {
       [identity, identityError],
       [channelInfo, channelInfoError],
     ] = await Promise.all([
-      toWithError(this.nodeService.getHeight(id)),
-      toWithError(this.nodeService.getIdentity(id)),
-      toWithError(this.nodeService.getChannel(id, btcChannel.id)),
+      toWithError(this.nodeService.getHeight(accountId)),
+      toWithError(this.nodeService.getIdentity(accountId)),
+      toWithError(this.nodeService.getChannel(accountId, btcChannel.id)),
     ]);
 
     if (channelInfoError) {
@@ -396,7 +399,7 @@ export class TradeResolver {
       | undefined;
 
     try {
-      payResult = await this.nodeService.payViaRoutes(id, {
+      payResult = await this.nodeService.payViaRoutes(accountId, {
         id: decoded.id,
         routes: [route],
       });
@@ -430,7 +433,7 @@ export class TradeResolver {
   }
 
   private async executeSale(
-    id: string,
+    accountId: string,
     input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
     const { rfqId } = input;
@@ -444,7 +447,7 @@ export class TradeResolver {
     // Re-derive satsAmount server-side from the accepted quote instead of
     // trusting the client-provided value.
     const [quote, quoteError] = await toWithError(
-      this.tapdNodeService.queryAcceptedSellQuote({ id, rfqId })
+      this.tapdNodeService.queryAcceptedSellQuote({ id: accountId, rfqId })
     );
 
     if (quoteError || !quote) {
@@ -473,7 +476,10 @@ export class TradeResolver {
     }
 
     // Fetch BTC channels once for both the return-hint and the liquidity check.
-    const btcChannels = await this.getBtcChannelsWithPeer(id, input.peerPubkey);
+    const btcChannels = await this.getBtcChannelsWithPeer(
+      accountId,
+      input.peerPubkey
+    );
     if (btcChannels.length === 0) {
       throw new GraphQLError(
         'No active BTC channel with trade partner — cannot execute trade'
@@ -491,7 +497,7 @@ export class TradeResolver {
     }
 
     await this.ensureTaChannelSatReserve(
-      id,
+      accountId,
       input.peerPubkey,
       input.tapdAssetId || undefined,
       input.tapdGroupKey || undefined,
@@ -504,13 +510,13 @@ export class TradeResolver {
     // an explicit BTC-only route hint so pathfinding only sees the valid return
     // path — omitting TA channels prevents "same incoming and outgoing channel".
     const btcHopHint = await this.buildBtcReturnHint(
-      id,
+      accountId,
       input.peerPubkey,
       btcChannels
     );
 
     const [invoice, invoiceError] = await toWithError(
-      this.nodeService.createInvoice(id, {
+      this.nodeService.createInvoice(accountId, {
         tokens: invoiceSats,
         routes: btcHopHint ? [btcHopHint] : undefined,
       })
@@ -533,7 +539,7 @@ export class TradeResolver {
 
     const [payResult, payError] = await toWithError(
       this.tapdNodeService.sendAssetPayment({
-        id,
+        id: accountId,
         assetId: input.tapdAssetId || undefined,
         groupKey: input.tapdGroupKey || undefined,
         assetAmount: input.assetAmount,
@@ -833,7 +839,7 @@ export class TradeResolver {
    * the TA channel's sat balance above the reserve requirement.
    */
   private async rebalanceTaChannel(
-    id: string,
+    accountId: string,
     peerPubkey: string,
     taChannelScid: string,
     taChannelPeerAlias: string | undefined,
@@ -861,9 +867,9 @@ export class TradeResolver {
       [identity, identityError],
       [btcChannelInfo, btcChannelInfoError],
     ] = await Promise.all([
-      toWithError(this.nodeService.getHeight(id)),
-      toWithError(this.nodeService.getIdentity(id)),
-      toWithError(this.nodeService.getChannel(id, btcChannel.id)),
+      toWithError(this.nodeService.getHeight(accountId)),
+      toWithError(this.nodeService.getIdentity(accountId)),
+      toWithError(this.nodeService.getChannel(accountId, btcChannel.id)),
     ]);
 
     if (btcChannelInfoError) {
@@ -888,7 +894,7 @@ export class TradeResolver {
       btcPeerPolicy?.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
 
     const [taChannelInfo] = await toWithError(
-      this.nodeService.getChannel(id, taChannelScid)
+      this.nodeService.getChannel(accountId, taChannelScid)
     );
     const taOurPolicy = taChannelInfo?.policies?.find(
       (p: { public_key: string }) => p.public_key === identity.public_key
@@ -903,7 +909,7 @@ export class TradeResolver {
     const taFeeRate = BigInt(taPeerPolicy?.fee_rate ?? 2500);
 
     const [invoice, invoiceError] = await toWithError(
-      this.nodeService.createInvoice(id, {
+      this.nodeService.createInvoice(accountId, {
         tokens: rebalanceSats,
         cltv_delta: DEFAULT_INVOICE_CLTV_DELTA,
       })
@@ -979,7 +985,7 @@ export class TradeResolver {
 
     let rebalResult: PayViaRoutesResult | undefined;
     try {
-      rebalResult = await this.nodeService.payViaRoutes(id, {
+      rebalResult = await this.nodeService.payViaRoutes(accountId, {
         id: invoice.id,
         routes: [rebalanceRoute],
       });
