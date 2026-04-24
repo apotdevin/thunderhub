@@ -27,10 +27,39 @@ import {
   TooltipTrigger,
 } from '../../components/ui/tooltip';
 import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
+import { Badge } from '../../components/ui/badge';
 import { SideSettings } from './sideSettings/SideSettings';
 import { LITD_SETUP_DOCS_URL } from '../../utils/externalLinks';
 
 type Icon = FC<LucideProps>;
+
+const BetaBadge = ({ withTooltip = true }: { withTooltip?: boolean }) => {
+  const badge = (
+    <Badge
+      variant="outline"
+      className="h-3.5 rounded-sm px-1 py-0 text-[8px] font-semibold uppercase tracking-wide border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-0.5"
+    >
+      Beta
+    </Badge>
+  );
+
+  if (!withTooltip) return badge;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="inline-block cursor-default">{badge}</span>
+      </TooltipTrigger>
+      <TooltipContent
+        side="right"
+        className="text-xs max-w-52 bg-popover text-popover-foreground border border-border shadow-md [&_svg]:hidden!"
+      >
+        This feature is currently in beta. Functionality may change as we
+        continue testing and improving.
+      </TooltipContent>
+    </Tooltip>
+  );
+};
 
 const HOME = '/home';
 const DASHBOARD = '/dashboard';
@@ -55,6 +84,7 @@ interface NavItem {
   icon: Icon;
   link?: string;
   href?: string;
+  beta?: boolean;
 }
 
 interface NavSection {
@@ -93,7 +123,7 @@ const ASSETS_SECTION: NavSection = {
     { title: 'Channels', link: ASSET_CHANNELS, icon: Cpu },
     { title: 'Transactions', link: ASSET_TRANSACTIONS, icon: Server },
     { title: 'Tools', link: ASSET_TOOLS, icon: Shield },
-    { title: 'Trading', link: TRADING, icon: ArrowLeftRight },
+    { title: 'Trading', link: TRADING, icon: ArrowLeftRight, beta: true },
   ],
 };
 
@@ -139,7 +169,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         <NavIcon size={15} className="shrink-0" />
         {open && (
           <span className="flex flex-1 items-center justify-between">
-            {item.title}
+            <span className="flex items-center gap-1.5">
+              {item.title}
+              {item.beta && <BetaBadge />}
+            </span>
             {item.href && (
               <ExternalLink size={11} className="shrink-0 opacity-60" />
             )}
@@ -169,7 +202,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
         <Tooltip key={key}>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
           <TooltipContent side="right" className="text-xs">
-            {item.title}
+            <span className="flex items-center gap-1.5">
+              {item.title}
+              {item.beta && <BetaBadge withTooltip={false} />}
+            </span>
           </TooltipContent>
         </Tooltip>
       );
@@ -195,7 +231,10 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
       >
         <NavIcon size={16} />
         <span className="flex flex-1 items-center justify-between">
-          {item.title}
+          <span className="flex items-center gap-1.5">
+            {item.title}
+            {item.beta && <BetaBadge />}
+          </span>
           {item.href && (
             <ExternalLink size={12} className="shrink-0 opacity-60" />
           )}
