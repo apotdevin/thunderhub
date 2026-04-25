@@ -10,13 +10,7 @@ jest.mock('../../security/security.decorators', () => ({
 jest.mock('../../security/security.types', () => ({}));
 
 import { TradeResolver } from './trade.resolver';
-
-type BtcChannel = {
-  id: string;
-  capacity: number;
-  local_balance: number;
-  remote_balance: number;
-};
+import { BtcChannel, TaChannel } from './trade.types';
 
 type RouteHop = {
   public_key: string;
@@ -41,6 +35,31 @@ interface PrivateMethods {
     rate: { coefficient: string; scale: number },
     minTransportableMsat: string
   ): number;
+  findTaChannelsForAsset(
+    id: string,
+    peerPubkey: string,
+    assetId: string | undefined,
+    groupKey: string | undefined
+  ): Promise<
+    Array<{
+      scid: string;
+      partnerScidAlias: string | undefined;
+      capacity: number;
+      localBalance: number;
+      localReserve: number;
+    }>
+  >;
+  rebalanceTaChannel(
+    id: string,
+    peerPubkey: string,
+    taChannelScid: string,
+    taChannelPartnerScidAlias: string | undefined,
+    taChannelCapacity: number,
+    btcChannel: BtcChannel,
+    rebalanceSats: number,
+    currentHeight: number,
+    identityPubkey: string
+  ): Promise<void>;
 }
 
 describe('TradeResolver', () => {
@@ -52,8 +71,13 @@ describe('TradeResolver', () => {
     getChannels: jest.fn(),
     getChannel: jest.fn(),
     getIdentity: jest.fn(),
+    getHeight: jest.fn(),
+    createInvoice: jest.fn(),
+    payViaRoutes: jest.fn(),
   };
-  const mockTapdNodeService = {};
+  const mockTapdNodeService = {
+    getAssetChannelBalances: jest.fn(),
+  };
   const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
 
   let resolver: TradeResolver;
@@ -66,6 +90,17 @@ describe('TradeResolver', () => {
     mockNodeService.getChannel.mockRejectedValue(
       new Error('channel not in graph')
     );
+    mockNodeService.getHeight.mockResolvedValue({
+      current_block_height: 800_000,
+    });
+    mockNodeService.createInvoice.mockResolvedValue({
+      id: 'aa'.repeat(32),
+      payment: 'bb'.repeat(32),
+      request: 'lnbc...',
+      secret: 'cc'.repeat(32),
+    });
+    mockNodeService.payViaRoutes.mockResolvedValue({ is_confirmed: true });
+    mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([]);
     resolver = new TradeResolver(
       mockTapdNodeService as never,
       mockNodeService as never,
@@ -320,6 +355,397 @@ describe('TradeResolver', () => {
         channel: '222x2x0',
         cltv_delta: 100,
       });
+    });
+  });
+
+  // ── findTaChannelForAsset ──
+
+  describe('findTaChannelForAsset', () => {
+    const assetId = 'ff'.repeat(32);
+    const groupKey = 'ee'.repeat(33);
+
+    const makeTaChannel = (overrides: Partial<TaChannel> = {}): TaChannel => ({
+      id: 'ta-scid-1',
+      capacity: 1_000_000,
+      local_balance: 300_000,
+      local_reserve: 1_062,
+      remote_balance: 700_000,
+      transaction_id: 'aabb'.repeat(16),
+      transaction_vout: 0,
+      ...overrides,
+    });
+
+    it('returns the matching TA channel by assetId via channelPoint join', async () => {
+      const taChannel = makeTaChannel();
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [
+          {
+            id: 'btc-1',
+            type: 'anchor',
+            capacity: 2_000_000,
+            local_balance: 1_000_000,
+            remote_balance: 1_000_000,
+          },
+          { ...taChannel, type: undefined },
+        ],
+      });
+      mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([
+        {
+          channelPoint: `${taChannel.transaction_id}:${taChannel.transaction_vout}`,
+          assetId,
+          groupKey: '',
+        },
+      ]);
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        assetId,
+        undefined
+      );
+
+      expect(result).toEqual([
+        {
+          scid: taChannel.id,
+          partnerScidAlias: undefined,
+          capacity: taChannel.capacity,
+          localBalance: taChannel.local_balance,
+          localReserve: taChannel.local_reserve,
+        },
+      ]);
+    });
+
+    it('returns empty array when assetId does not match any TA channel', async () => {
+      const taChannel = makeTaChannel();
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [{ ...taChannel, type: undefined }],
+      });
+      mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([
+        {
+          channelPoint: `${taChannel.transaction_id}:${taChannel.transaction_vout}`,
+          assetId: 'cc'.repeat(32),
+          groupKey: '',
+        },
+      ]);
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        assetId,
+        undefined
+      );
+
+      expect(result).toEqual([]);
+    });
+
+    it('matches by groupKey when assetId is undefined', async () => {
+      const taChannel = makeTaChannel();
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [{ ...taChannel, type: undefined }],
+      });
+      mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([
+        {
+          channelPoint: `${taChannel.transaction_id}:${taChannel.transaction_vout}`,
+          assetId: 'dd'.repeat(32),
+          groupKey,
+        },
+      ]);
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        undefined,
+        groupKey
+      );
+
+      expect(result[0]?.scid).toBe(taChannel.id);
+    });
+
+    it('returns empty array and logs warning when getChannels fails', async () => {
+      mockNodeService.getChannels.mockRejectedValue(new Error('rpc down'));
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        assetId,
+        undefined
+      );
+
+      expect(result).toEqual([]);
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        'Failed to fetch TA channel info with peer',
+        expect.any(Object)
+      );
+    });
+
+    it('returns empty array and logs warning when getAssetChannelBalances fails', async () => {
+      const taChannel = makeTaChannel();
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [{ ...taChannel, type: undefined }],
+      });
+      mockTapdNodeService.getAssetChannelBalances.mockRejectedValue(
+        new Error('tapd down')
+      );
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        assetId,
+        undefined
+      );
+
+      expect(result).toEqual([]);
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        'Failed to fetch asset channel balances with peer',
+        expect.any(Object)
+      );
+    });
+
+    it('matches by groupKey when both assetId and groupKey are provided (groupKey wins)', async () => {
+      const taChannel = makeTaChannel();
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [{ ...taChannel, type: undefined }],
+      });
+      mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([
+        {
+          channelPoint: `${taChannel.transaction_id}:${taChannel.transaction_vout}`,
+          assetId: 'dd'.repeat(32), // different assetId — should be ignored
+          groupKey,
+        },
+      ]);
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        assetId,
+        groupKey
+      );
+
+      expect(result[0]?.scid).toBe(taChannel.id);
+    });
+
+    it('returns empty array immediately when neither assetId nor groupKey is provided', async () => {
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        undefined,
+        undefined
+      );
+
+      expect(result).toEqual([]);
+      expect(mockNodeService.getChannels).not.toHaveBeenCalled();
+    });
+
+    it('returns empty array when all channels are BTC type (no TA channels)', async () => {
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [
+          {
+            id: 'btc-1',
+            type: 'anchor',
+            capacity: 2_000_000,
+            local_balance: 1_000_000,
+            remote_balance: 1_000_000,
+          },
+        ],
+      });
+
+      const result = await priv.findTaChannelsForAsset(
+        userId,
+        peerPubkey,
+        assetId,
+        undefined
+      );
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  // ── rebalanceTaChannel ──
+
+  describe('rebalanceTaChannel', () => {
+    const taChannelScid = '800000x1x0';
+    const taChannelCapacity = 1_000_000;
+    const btcChannel: BtcChannel = {
+      id: 'btc-1',
+      capacity: 2_000_000,
+      local_balance: 500_000,
+      remote_balance: 300_000,
+    };
+    const rebalanceSats = 1_200;
+    const currentHeight = 800_000;
+
+    it('builds correct 2-hop route and calls payViaRoutes', async () => {
+      await priv.rebalanceTaChannel(
+        userId,
+        peerPubkey,
+        taChannelScid,
+        undefined,
+        taChannelCapacity,
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
+      );
+
+      expect(mockNodeService.payViaRoutes).toHaveBeenCalledTimes(1);
+      const call = mockNodeService.payViaRoutes.mock.calls[0];
+      const routes: Array<{
+        hops: Array<{
+          channel: string;
+          public_key: string;
+          fee: number;
+          timeout: number;
+        }>;
+        timeout: number;
+      }> = call[1].routes;
+
+      expect(routes).toHaveLength(1);
+      const [hop1, hop2] = routes[0].hops;
+      expect(hop1.channel).toBe('btc-1');
+      expect(hop1.public_key).toBe(peerPubkey);
+      expect(hop1.fee).toBeGreaterThan(0);
+      expect(hop2.channel).toBe(taChannelScid);
+      expect(hop2.public_key).toBe(myPubkey);
+      expect(hop2.fee).toBe(0);
+      expect(hop1.timeout).toBe(hop2.timeout);
+      expect(routes[0].timeout).toBeGreaterThan(hop1.timeout);
+    });
+
+    it('uses cltv_delta fallback of 40 when both getChannel calls fail', async () => {
+      await priv.rebalanceTaChannel(
+        userId,
+        peerPubkey,
+        taChannelScid,
+        undefined,
+        taChannelCapacity,
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
+      );
+
+      const routes = mockNodeService.payViaRoutes.mock.calls[0][1]
+        .routes as Array<{
+        hops: Array<{ timeout: number }>;
+        timeout: number;
+      }>;
+      const hop2Timeout = routes[0].hops[0].timeout;
+      // hop2Timeout = 800_000 + 24 (DEFAULT_INVOICE_CLTV_DELTA) + 3 = 800_027
+      expect(hop2Timeout).toBe(800_027);
+      // routes[0].timeout = hop2Timeout + max(40, 40) (DEFAULT_CHANNEL_CLTV_DELTA) = 800_067
+      expect(routes[0].timeout).toBe(800_067);
+    });
+
+    it('throws when createInvoice fails', async () => {
+      mockNodeService.createInvoice.mockRejectedValue(new Error('rpc down'));
+
+      await expect(
+        priv.rebalanceTaChannel(
+          userId,
+          peerPubkey,
+          taChannelScid,
+          undefined,
+          taChannelCapacity,
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
+        )
+      ).rejects.toThrow('could not create self-payment invoice');
+    });
+
+    it('throws when payViaRoutes throws', async () => {
+      mockNodeService.payViaRoutes.mockImplementation(() => {
+        throw ['503', 'FAILURE_REASON_INSUFFICIENT_BALANCE', { failures: [] }];
+      });
+
+      await expect(
+        priv.rebalanceTaChannel(
+          userId,
+          peerPubkey,
+          taChannelScid,
+          undefined,
+          taChannelCapacity,
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
+        )
+      ).rejects.toThrow('Circular rebalance payment failed');
+    });
+
+    it('throws when payViaRoutes resolves is_confirmed: false', async () => {
+      mockNodeService.payViaRoutes.mockResolvedValue({ is_confirmed: false });
+
+      await expect(
+        priv.rebalanceTaChannel(
+          userId,
+          peerPubkey,
+          taChannelScid,
+          undefined,
+          taChannelCapacity,
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
+        )
+      ).rejects.toThrow('did not confirm');
+    });
+
+    it('resolves without error on success', async () => {
+      await expect(
+        priv.rebalanceTaChannel(
+          userId,
+          peerPubkey,
+          taChannelScid,
+          undefined,
+          taChannelCapacity,
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
+        )
+      ).resolves.toBeUndefined();
+    });
+
+    it('computes zero fees and correct tokens when peer policy has zero fee', async () => {
+      mockNodeService.getChannel.mockResolvedValue({
+        id: 'btc-1',
+        policies: [
+          {
+            public_key: peerPubkey,
+            base_fee_mtokens: '0',
+            fee_rate: 0,
+            cltv_delta: 40,
+          },
+          {
+            public_key: myPubkey,
+            base_fee_mtokens: '0',
+            fee_rate: 0,
+            cltv_delta: 40,
+          },
+        ],
+      });
+
+      await priv.rebalanceTaChannel(
+        userId,
+        peerPubkey,
+        taChannelScid,
+        undefined,
+        taChannelCapacity,
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
+      );
+
+      const routes = mockNodeService.payViaRoutes.mock.calls[0][1]
+        .routes as Array<{
+        fee: number;
+        tokens: number;
+      }>;
+      expect(routes[0].fee).toBe(0);
+      expect(routes[0].tokens).toBe(rebalanceSats);
     });
   });
 

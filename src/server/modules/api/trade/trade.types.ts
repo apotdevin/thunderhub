@@ -87,3 +87,23 @@ export class ExecuteTradeResult {
   @Field({ nullable: true })
   feeSats?: string;
 }
+
+export type BtcChannel = {
+  id: string;
+  capacity: number;
+  local_balance: number;
+  remote_balance: number;
+};
+
+export type TaChannel = BtcChannel & {
+  local_reserve: number;
+  partner_scid_alias?: string;
+  transaction_id: string;
+  transaction_vout: number;
+};
+
+export type TaChannelPointAndId = {
+  channelPoint: string;
+  assetId: string;
+  groupKey: string;
+};
