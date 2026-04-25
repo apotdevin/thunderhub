@@ -6,11 +6,10 @@ type GridProps = {
   children?: ReactNode;
 };
 
-export const GridWrapper: FC<GridProps & { centerContent?: boolean }> = ({
-  children,
-  centerContent = true,
-}) => (
-  <div className="w-full px-4 py-4 md:pl-4 md:pr-4">
+export const GridWrapper: FC<
+  GridProps & { centerContent?: boolean; noPadding?: boolean }
+> = ({ children, centerContent = true, noPadding = false }) => (
+  <div className={noPadding ? 'w-full' : 'w-full px-4 py-4 md:pl-4 md:pr-4'}>
     <BitcoinPrice />
     <BitcoinFees />
     {centerContent ? (

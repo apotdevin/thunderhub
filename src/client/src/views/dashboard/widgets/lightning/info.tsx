@@ -6,7 +6,7 @@ export const AliasWidget = () => {
 
   return (
     <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
-      <h2 className="m-0">{alias}</h2>
+      <span className="text-sm font-semibold">{alias}</span>
     </div>
   );
 };
@@ -17,18 +17,20 @@ export const BalanceWidget = () => {
   if (!data?.getChannelReport) {
     return (
       <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
-        <h2 className="m-0">-</h2>
+        <span className="text-sm font-semibold text-muted-foreground">-</span>
       </div>
     );
   }
 
   const { local, remote } = data.getChannelReport;
-
   const balance = Math.round(((local || 0) / (remote || 1)) * 100);
 
   return (
-    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
-      <h2 className="m-0">{`${balance}%`}</h2>
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full gap-0.5">
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        Balance
+      </span>
+      <span className="text-sm font-semibold tabular-nums">{balance}%</span>
     </div>
   );
 };

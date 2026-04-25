@@ -58,9 +58,15 @@ describe('displayAssetToSats', () => {
     expect(displayAssetToSats('1', '100000000', 8)).toBe('100000000');
   });
 
-  it('truncates sub-sat remainder via integer division', () => {
+  it('truncates sub-sat remainder', () => {
     // rate = 3 * 10^8 atomic/BTC, 1 display unit
     // 1 * 10^8 * 10^8 / (3 * 10^8) = 10^8 / 3 = 33_333_333.33... → 33_333_333
     expect(displayAssetToSats('1', '300000000', 8)).toBe('33333333');
+  });
+
+  it('handles decimal rate for precision-0 assets', () => {
+    // 500 MOREBUCKS at rate 77514.188596 per BTC (precision 0)
+    // atomic = 500, sats = 500 * 1e8 / 77514.188596 ≈ 645,043
+    expect(displayAssetToSats('500', '77514.188596', 0)).toBe('645043');
   });
 });

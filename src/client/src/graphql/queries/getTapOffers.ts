@@ -21,6 +21,25 @@ export const GET_TAP_OFFERS = gql`
             displayAmount
             fullAmount
           }
+          minOrder {
+            displayAmount
+            fullAmount
+          }
+          maxOrder {
+            displayAmount
+            fullAmount
+          }
+          fees {
+            baseFeeSats
+            feeRatePpm
+          }
+          asset {
+            id
+            symbol
+            precision
+            assetId
+            groupKey
+          }
         }
         totalCount
       }
