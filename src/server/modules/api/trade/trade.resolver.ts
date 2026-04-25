@@ -27,10 +27,6 @@ const DEFAULT_INVOICE_EXPIRY_SEC = 30;
 // How much we overshoot the channel reserve requirement when rebalancing
 const SATS_RESERVE_BUFFER_PCT = 50;
 
-// Minimum local balance a TA channel needs to anchor an outgoing asset HTLC.
-// LND requires the local side to cover the commitment reserve AND have enough
-// to fund the anchor output for the HTLC. In practice this is ~1062 sats
-// (3 × dust_limit of 354 sats). We use a round number slightly above that.
 const DEFAULT_CHANNEL_CLTV_DELTA = 40; // LND default for channel forwarding policies
 // Deliberately small: this is a self-payment, settled within seconds. Must be
 // ≥ FinalCltvRejectDelta (19) so LND accepts the HTLC at the final hop. Must
@@ -664,10 +660,41 @@ export class TradeResolver {
       groupKey
     );
 
+    if (taChannels.length === 0) return;
+
+    // Fetch once — these don't change between iterations.
+    const [[heightResult, heightError], [identity, identityError]] =
+      await Promise.all([
+        toWithError(this.nodeService.getHeight(id)),
+        toWithError(this.nodeService.getIdentity(id)),
+      ]);
+
+    if (heightError || !heightResult?.current_block_height) {
+      this.logger.warn(
+        'ensureTaChannelSatReserve: could not get block height; skipping',
+        { error: heightError }
+      );
+      return;
+    }
+
+    if (identityError || !identity?.public_key) {
+      this.logger.warn(
+        'ensureTaChannelSatReserve: could not get identity; skipping',
+        { error: identityError }
+      );
+      return;
+    }
+
+    // Track consumed BTC balance across iterations so we don't overspend
+    // a channel that was already partially drained by a prior rebalance.
+    const btcBalanceConsumed = new Map<string, number>();
+
     for (const taChannel of taChannels) {
-      // Need enough local sats above the commitment reserve to transport the
-      // asset HTLC. SATS_RESERVE_BUFFER_PCT provides the headroom above this.
-      const minRequiredBalance = taChannel.localReserve + invoiceSats;
+      // Buffer only the reserve portion — invoiceSats is a fixed cost.
+      const bufferedReserve = Math.ceil(
+        taChannel.localReserve * (1 + SATS_RESERVE_BUFFER_PCT / 100)
+      );
+      const minRequiredBalance = bufferedReserve + invoiceSats;
 
       this.logger.info('ensureTaChannelSatReserve: channel balance check', {
         taChannelScid: taChannel.scid,
@@ -680,9 +707,31 @@ export class TradeResolver {
 
       if (taChannel.localBalance >= minRequiredBalance) continue;
 
-      const rebalanceSats =
-        Math.ceil(minRequiredBalance * (1 + SATS_RESERVE_BUFFER_PCT / 100)) -
-        taChannel.localBalance;
+      const rebalanceSats = minRequiredBalance - taChannel.localBalance;
+
+      // Pick the BTC channel with the most remaining local balance.
+      const btcChannel = [...btcChannels].sort((a, b) => {
+        const aRemaining =
+          a.local_balance - (btcBalanceConsumed.get(a.id) ?? 0);
+        const bRemaining =
+          b.local_balance - (btcBalanceConsumed.get(b.id) ?? 0);
+        return bRemaining - aRemaining;
+      })[0];
+
+      const consumed = btcBalanceConsumed.get(btcChannel.id) ?? 0;
+      const availableBalance = btcChannel.local_balance - consumed;
+
+      if (availableBalance < rebalanceSats) {
+        this.logger.warn(
+          'Insufficient remaining BTC balance for rebalance; skipping channel',
+          {
+            taChannelScid: taChannel.scid,
+            rebalanceSats,
+            availableBalance,
+          }
+        );
+        continue;
+      }
 
       this.logger.info(
         'TA channel below reserve; initiating circular rebalance',
@@ -702,8 +751,14 @@ export class TradeResolver {
           taChannel.scid,
           taChannel.partnerScidAlias,
           taChannel.capacity,
-          btcChannels,
-          rebalanceSats
+          btcChannel,
+          rebalanceSats,
+          heightResult.current_block_height,
+          identity.public_key
+        );
+        btcBalanceConsumed.set(
+          btcChannel.id,
+          (btcBalanceConsumed.get(btcChannel.id) ?? 0) + rebalanceSats
         );
       } catch (err: unknown) {
         this.logger.warn(
@@ -844,33 +899,16 @@ export class TradeResolver {
     taChannelScid: string,
     taChannelPartnerScidAlias: string | undefined,
     taChannelCapacity: number,
-    btcChannels: Array<BtcChannel>,
-    rebalanceSats: number
+    btcChannel: BtcChannel,
+    rebalanceSats: number,
+    currentHeight: number,
+    identityPubkey: string
   ): Promise<void> {
-    if (btcChannels.length === 0) {
-      throw new Error('No BTC channels available for circular rebalance');
-    }
-
-    const btcChannel = [...btcChannels].sort(
-      (a, b) => b.local_balance - a.local_balance
-    )[0];
-
-    if (btcChannel.local_balance < rebalanceSats) {
-      throw new Error(
-        `Insufficient BTC local balance for circular rebalance: ` +
-          `need ${rebalanceSats} sats, have ${btcChannel.local_balance} sats`
-      );
-    }
-
-    const [
-      [heightResult, heightError],
-      [identity, identityError],
-      [btcChannelInfo, btcChannelInfoError],
-    ] = await Promise.all([
-      toWithError(this.nodeService.getHeight(accountId)),
-      toWithError(this.nodeService.getIdentity(accountId)),
-      toWithError(this.nodeService.getChannel(accountId, btcChannel.id)),
-    ]);
+    const [[btcChannelInfo, btcChannelInfoError], [taChannelInfo]] =
+      await Promise.all([
+        toWithError(this.nodeService.getChannel(accountId, btcChannel.id)),
+        toWithError(this.nodeService.getChannel(accountId, taChannelScid)),
+      ]);
 
     if (btcChannelInfoError) {
       this.logger.warn(
@@ -879,29 +917,18 @@ export class TradeResolver {
       );
     }
 
-    if (heightError || !heightResult?.current_block_height) {
-      throw new Error('Rebalance failed: could not get current block height');
-    }
-
-    if (identityError || !identity?.public_key) {
-      throw new Error('Rebalance failed: could not get node identity');
-    }
-
     const btcPeerPolicy = btcChannelInfo?.policies?.find(
       (p: { public_key: string }) => p.public_key === peerPubkey
     );
     const btcChannelCltvDelta: number =
       btcPeerPolicy?.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
 
-    const [taChannelInfo] = await toWithError(
-      this.nodeService.getChannel(accountId, taChannelScid)
-    );
     const taOurPolicy = taChannelInfo?.policies?.find(
-      (p: { public_key: string }) => p.public_key === identity.public_key
+      (p: { public_key: string }) => p.public_key === identityPubkey
     );
     const taCltvDelta: number =
       taOurPolicy?.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
-    // Fee the peer charges on the TA channel (their outgoing leg for hop 2).
+    // Fee the peer charges on the TA channel (their outgoing leg).
     const taPeerPolicy = taChannelInfo?.policies?.find(
       (p: { public_key: string }) => p.public_key === peerPubkey
     );
@@ -921,48 +948,47 @@ export class TradeResolver {
       );
     }
 
-    const currentHeight: number = heightResult.current_block_height;
     const invoiceCltvDelta = DEFAULT_INVOICE_CLTV_DELTA;
     const hop2Timeout = currentHeight + invoiceCltvDelta + CLTV_BLOCK_BUFFER;
     const hopCltvDelta = Math.max(taCltvDelta, btcChannelCltvDelta);
     const hop1Timeout = hop2Timeout + hopCltvDelta;
 
     const forwardMtokens = BigInt(rebalanceSats) * BigInt(1000);
-    // Fee the peer earns forwarding on the TA channel (hop 2, their outgoing leg).
-    // Hop 1 (our BTC outgoing) has fee=0 — we don't pay ourselves to send.
-    const hop2FeeMtokens =
+    // Fee the peer earns forwarding on the TA channel (their outgoing leg).
+    // This goes on hop 1 (the intermediary); hop 2 (final destination) is fee=0.
+    const hop1FeeMtokens =
       taBaseFee + (forwardMtokens * taFeeRate) / BigInt(1_000_000);
-    const hop2Fee = Number((hop2FeeMtokens + BigInt(999)) / BigInt(1000));
-    const totalMtokens = forwardMtokens + hop2FeeMtokens;
+    const hop1Fee = Number((hop1FeeMtokens + BigInt(999)) / BigInt(1000));
+    const totalMtokens = forwardMtokens + hop1FeeMtokens;
 
     const rebalanceRoute = {
-      fee: hop2Fee,
-      fee_mtokens: String(hop2FeeMtokens),
+      fee: hop1Fee,
+      fee_mtokens: String(hop1FeeMtokens),
       hops: [
         {
-          // Hop 1: us → peer via BTC channel. Fee=0: we are the sender on our
-          // own channel and don't charge ourselves a forwarding fee.
+          // Hop 1: us → peer via BTC channel. The peer is the intermediary
+          // and charges a forwarding fee (based on TA channel policy, their
+          // outgoing leg).
           channel: btcChannel.id,
           channel_capacity: btcChannel.capacity,
-          fee: 0,
-          fee_mtokens: '0',
+          fee: hop1Fee,
+          fee_mtokens: String(hop1FeeMtokens),
           forward: rebalanceSats,
           forward_mtokens: String(forwardMtokens),
           public_key: peerPubkey,
           timeout: hop2Timeout,
         },
         {
-          // Hop 2: peer → us via TA channel. Fee = peer's TA channel policy:
-          // the peer charges this fee for forwarding on their outgoing leg.
+          // Hop 2: peer → us via TA channel (final destination, fee=0).
           // Use partner_scid_alias (the peer's own local alias) — the real SCID
           // and our own alias_scids give UnknownNextPeer for private TA channels.
           channel: taChannelPartnerScidAlias ?? taChannelScid,
           channel_capacity: taChannelCapacity,
-          fee: hop2Fee,
-          fee_mtokens: String(hop2FeeMtokens),
+          fee: 0,
+          fee_mtokens: '0',
           forward: rebalanceSats,
           forward_mtokens: String(forwardMtokens),
-          public_key: identity.public_key,
+          public_key: identityPubkey,
           timeout: hop2Timeout,
         },
       ],

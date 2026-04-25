@@ -55,8 +55,10 @@ interface PrivateMethods {
     taChannelScid: string,
     taChannelPartnerScidAlias: string | undefined,
     taChannelCapacity: number,
-    btcChannels: BtcChannel[],
-    rebalanceSats: number
+    btcChannel: BtcChannel,
+    rebalanceSats: number,
+    currentHeight: number,
+    identityPubkey: string
   ): Promise<void>;
 }
 
@@ -367,7 +369,6 @@ describe('TradeResolver', () => {
       capacity: 1_000_000,
       local_balance: 300_000,
       local_reserve: 1_062,
-      other_ids: [],
       remote_balance: 700_000,
       transaction_id: 'aabb'.repeat(16),
       transaction_vout: 0,
@@ -564,15 +565,14 @@ describe('TradeResolver', () => {
   describe('rebalanceTaChannel', () => {
     const taChannelScid = '800000x1x0';
     const taChannelCapacity = 1_000_000;
-    const btcChannels: BtcChannel[] = [
-      {
-        id: 'btc-1',
-        capacity: 2_000_000,
-        local_balance: 500_000,
-        remote_balance: 300_000,
-      },
-    ];
+    const btcChannel: BtcChannel = {
+      id: 'btc-1',
+      capacity: 2_000_000,
+      local_balance: 500_000,
+      remote_balance: 300_000,
+    };
     const rebalanceSats = 1_200;
+    const currentHeight = 800_000;
 
     it('builds correct 2-hop route and calls payViaRoutes', async () => {
       await priv.rebalanceTaChannel(
@@ -581,8 +581,10 @@ describe('TradeResolver', () => {
         taChannelScid,
         undefined,
         taChannelCapacity,
-        btcChannels,
-        rebalanceSats
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
       );
 
       expect(mockNodeService.payViaRoutes).toHaveBeenCalledTimes(1);
@@ -601,10 +603,10 @@ describe('TradeResolver', () => {
       const [hop1, hop2] = routes[0].hops;
       expect(hop1.channel).toBe('btc-1');
       expect(hop1.public_key).toBe(peerPubkey);
-      expect(hop1.fee).toBe(0);
+      expect(hop1.fee).toBeGreaterThan(0);
       expect(hop2.channel).toBe(taChannelScid);
       expect(hop2.public_key).toBe(myPubkey);
-      expect(hop2.fee).toBeGreaterThan(0);
+      expect(hop2.fee).toBe(0);
       expect(hop1.timeout).toBe(hop2.timeout);
       expect(routes[0].timeout).toBeGreaterThan(hop1.timeout);
     });
@@ -616,8 +618,10 @@ describe('TradeResolver', () => {
         taChannelScid,
         undefined,
         taChannelCapacity,
-        btcChannels,
-        rebalanceSats
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
       );
 
       const routes = mockNodeService.payViaRoutes.mock.calls[0][1]
@@ -632,63 +636,6 @@ describe('TradeResolver', () => {
       expect(routes[0].timeout).toBe(800_067);
     });
 
-    it('throws when BTC local_balance < rebalanceSats', async () => {
-      const insufficientChannels: BtcChannel[] = [
-        {
-          id: 'btc-1',
-          capacity: 2_000_000,
-          local_balance: 100,
-          remote_balance: 1_000_000,
-        },
-      ];
-
-      await expect(
-        priv.rebalanceTaChannel(
-          userId,
-          peerPubkey,
-          taChannelScid,
-          undefined,
-          taChannelCapacity,
-          insufficientChannels,
-          rebalanceSats
-        )
-      ).rejects.toThrow(
-        'Insufficient BTC local balance for circular rebalance'
-      );
-    });
-
-    it('throws when getHeight fails', async () => {
-      mockNodeService.getHeight.mockRejectedValue(new Error('rpc down'));
-
-      await expect(
-        priv.rebalanceTaChannel(
-          userId,
-          peerPubkey,
-          taChannelScid,
-          undefined,
-          taChannelCapacity,
-          btcChannels,
-          rebalanceSats
-        )
-      ).rejects.toThrow('could not get current block height');
-    });
-
-    it('throws when getIdentity fails', async () => {
-      mockNodeService.getIdentity.mockRejectedValue(new Error('rpc down'));
-
-      await expect(
-        priv.rebalanceTaChannel(
-          userId,
-          peerPubkey,
-          taChannelScid,
-          undefined,
-          taChannelCapacity,
-          btcChannels,
-          rebalanceSats
-        )
-      ).rejects.toThrow('could not get node identity');
-    });
-
     it('throws when createInvoice fails', async () => {
       mockNodeService.createInvoice.mockRejectedValue(new Error('rpc down'));
 
@@ -699,8 +646,10 @@ describe('TradeResolver', () => {
           taChannelScid,
           undefined,
           taChannelCapacity,
-          btcChannels,
-          rebalanceSats
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
         )
       ).rejects.toThrow('could not create self-payment invoice');
     });
@@ -717,8 +666,10 @@ describe('TradeResolver', () => {
           taChannelScid,
           undefined,
           taChannelCapacity,
-          btcChannels,
-          rebalanceSats
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
         )
       ).rejects.toThrow('Circular rebalance payment failed');
     });
@@ -733,8 +684,10 @@ describe('TradeResolver', () => {
           taChannelScid,
           undefined,
           taChannelCapacity,
-          btcChannels,
-          rebalanceSats
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
         )
       ).rejects.toThrow('did not confirm');
     });
@@ -747,8 +700,10 @@ describe('TradeResolver', () => {
           taChannelScid,
           undefined,
           taChannelCapacity,
-          btcChannels,
-          rebalanceSats
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
         )
       ).resolves.toBeUndefined();
     });
@@ -778,8 +733,10 @@ describe('TradeResolver', () => {
         taChannelScid,
         undefined,
         taChannelCapacity,
-        btcChannels,
-        rebalanceSats
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
       );
 
       const routes = mockNodeService.payViaRoutes.mock.calls[0][1]

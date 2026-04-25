@@ -97,7 +97,6 @@ export type BtcChannel = {
 
 export type TaChannel = BtcChannel & {
   local_reserve: number;
-  other_ids: string[];
   partner_scid_alias?: string;
   transaction_id: string;
   transaction_vout: number;
