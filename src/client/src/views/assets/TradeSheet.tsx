@@ -168,11 +168,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     onCompleted: data => {
       const result = data.executeTrade;
       if (result.success) {
-        const satsInfo = result.satsAmount
-          ? ` for ${Number(result.satsAmount).toLocaleString()} sats`
+        const satsInfo = result.sats_amount
+          ? ` for ${Number(result.sats_amount).toLocaleString()} sats`
           : '';
-        const feeLabel = result.feeSats
-          ? ` (fee: ${Number(result.feeSats).toLocaleString()} sats)`
+        const feeLabel = result.fee_sats
+          ? ` (fee: ${Number(result.fee_sats).toLocaleString()} sats)`
           : '';
         toast.success(`Trade executed successfully${satsInfo}${feeLabel}`);
         onOpenChange(false);
@@ -461,11 +461,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     const { data, error } = await fetchQuote({
       variables: {
         input: {
-          tapdAssetId,
-          tapdGroupKey: tapdGroupKey || undefined,
-          assetAmount: assetAtomicAmount,
-          transactionType,
-          peerPubkey: offer.node.pubkey,
+          tapd_asset_id: tapdAssetId,
+          tapd_group_key: tapdGroupKey || undefined,
+          asset_amount: assetAtomicAmount,
+          transaction_type: transactionType,
+          peer_pubkey: offer.node.pubkey,
+          asset_symbol: assetSymbol,
+          asset_precision: assetPrecision,
         },
       },
     });
@@ -474,7 +476,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       return;
     }
     const quote = data?.getTradeQuote;
-    const quotedAmount = quote?.satsAmount;
+    const quotedAmount = quote?.sats_amount;
     if (!quotedAmount || quotedAmount === '0') {
       toast.error(
         'Could not get a valid quote from the peer — please try again'
@@ -482,10 +484,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       return;
     }
     setQuotedSats(quotedAmount);
-    setQuotePaymentRequest(quote?.paymentRequest || null);
-    setQuoteRfqId(quote?.rfqId || null);
-    if (quote?.expiryEpoch) {
-      setQuoteExpiry(Number(quote.expiryEpoch));
+    setQuotePaymentRequest(quote?.payment_request || null);
+    setQuoteRfqId(quote?.rfq_id || null);
+    if (quote?.expiry_epoch) {
+      setQuoteExpiry(Number(quote.expiry_epoch));
     }
     setStep('confirm');
   };
@@ -505,14 +507,16 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     executeTrade({
       variables: {
         input: {
-          tapdAssetId,
-          tapdGroupKey: tapdGroupKey || undefined,
-          assetAmount: atomicTradeAmount.toString(),
-          satsAmount: displaySats,
-          transactionType,
-          peerPubkey: offer.node.pubkey,
-          paymentRequest: quotePaymentRequest || undefined,
-          rfqId: quoteRfqId || undefined,
+          tapd_asset_id: tapdAssetId,
+          tapd_group_key: tapdGroupKey || undefined,
+          asset_amount: atomicTradeAmount.toString(),
+          sats_amount: displaySats,
+          transaction_type: transactionType,
+          peer_pubkey: offer.node.pubkey,
+          asset_symbol: assetSymbol,
+          asset_precision: assetPrecision,
+          payment_request: quotePaymentRequest || undefined,
+          rfq_id: quoteRfqId || undefined,
         },
       },
     });

@@ -14,6 +14,13 @@ import { toWithError } from '../../../utils/async';
 import { TapFederationService } from '../tapd/tapd-federation.service';
 import { AmbossTokenService } from '../amboss/amboss-token.service';
 import { AmbossService } from '../amboss/amboss.service';
+import { GetRecommendedNode } from '../amboss/amboss.gql';
+import {
+  TradeReadinessResult,
+  OfferReadinessInput,
+  OfferReadinessResult,
+  RecommendedNode,
+} from '../trade/trade.types';
 import {
   GetTapOffersInput,
   TapTradeOfferList,
@@ -73,6 +80,15 @@ interface TradeApiOffer {
   node?: { alias?: string; pubkey?: string; sockets?: string[] };
   rate?: { display_amount?: string; full_amount?: string };
   available?: { display_amount?: string; full_amount?: string };
+  min_order?: { display_amount?: string; full_amount?: string };
+  max_order?: { display_amount?: string; full_amount?: string };
+  fees?: { base_fee_sats?: number; fee_rate_ppm?: number };
+  asset?: {
+    id?: string;
+    symbol?: string;
+    precision?: number;
+    taproot_asset_details?: { asset_id?: string; group_key?: string };
+  };
 }
 
 interface TradeApiSupportedAsset {
@@ -453,7 +469,7 @@ export class MagmaQueriesResolver {
       };
     }>(tradeUrl, getOffersQuery, {
       input: {
-        asset_id: input.ambossAssetId,
+        ...(input.ambossAssetId ? { asset_id: input.ambossAssetId } : {}),
         transaction_type: input.transactionType,
         ...(input.sortBy ? { sort_by: input.sortBy } : {}),
         ...(input.sortDir ? { sort_dir: input.sortDir } : {}),
@@ -500,6 +516,25 @@ export class MagmaQueriesResolver {
           displayAmount: o.available?.display_amount,
           fullAmount: o.available?.full_amount,
         },
+        minOrder: {
+          displayAmount: o.min_order?.display_amount || '0',
+          fullAmount: o.min_order?.full_amount || '0',
+        },
+        maxOrder: {
+          displayAmount: o.max_order?.display_amount || '0',
+          fullAmount: o.max_order?.full_amount || '0',
+        },
+        fees: {
+          baseFeeSats: o.fees?.base_fee_sats ?? 0,
+          feeRatePpm: o.fees?.fee_rate_ppm ?? 0,
+        },
+        asset: {
+          id: o.asset?.id || '',
+          symbol: o.asset?.symbol || '',
+          precision: o.asset?.precision ?? 0,
+          assetId: o.asset?.taproot_asset_details?.asset_id,
+          groupKey: o.asset?.taproot_asset_details?.group_key,
+        },
       })),
       totalCount: offers.total_count,
     };
@@ -516,12 +551,17 @@ export class RailsQueryRoot {
   }
 }
 
+const isBtcChannel = (ch: { type?: string }) => !!ch.type;
+
 @Resolver(() => RailsQueries)
 export class RailsQueriesResolver {
   constructor(
+    private nodeService: NodeService,
+    private tapdNodeService: TapdNodeService,
     private fetchService: FetchService,
     private tapFederationService: TapFederationService,
     private ambossService: AmbossService,
+    private ambossTokenService: AmbossTokenService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -570,7 +610,9 @@ export class RailsQueriesResolver {
     if (universeHosts.length) {
       this.tapFederationService
         .syncForAccount(user.id, universeHosts)
-        .catch(() => {});
+        .catch(err => {
+          this.logger.warn('Federation sync failed', { error: err });
+        });
     }
 
     return {
@@ -586,6 +628,365 @@ export class RailsQueriesResolver {
       })),
       totalCount: assets.total_count,
     };
+  }
+
+  @ResolveField(() => TradeReadinessResult)
+  async trade_readiness(
+    @CurrentUser() user: UserId
+  ): Promise<TradeReadinessResult> {
+    try {
+      return await this.getTradeReadiness(user);
+    } catch (err) {
+      this.logger.error('trade_readiness failed', { err });
+      return {
+        node_online: false,
+        has_tapd: false,
+        onchain_balance_sats: '0',
+        pending_onchain_balance_sats: '0',
+        has_channel: false,
+        has_active_channel: false,
+      };
+    }
+  }
+
+  @ResolveField(() => OfferReadinessResult)
+  async offer_readiness(
+    @CurrentUser() user: UserId,
+    @Args('input') input: OfferReadinessInput
+  ): Promise<OfferReadinessResult> {
+    try {
+      return await this.getOfferReadiness(user, input);
+    } catch (err) {
+      this.logger.error('offer_readiness failed', { err });
+      return {
+        is_peer_connected: false,
+        btc_channels: {
+          open_count: 0,
+          pending_count: 0,
+          total_local_sats: '0',
+          total_remote_sats: '0',
+          has_active_channel: false,
+        },
+        asset_channels: {
+          open_count: 0,
+          pending_count: 0,
+          total_local_atomic: '0',
+          total_remote_atomic: '0',
+          has_active_channel: false,
+        },
+        has_pending_order: false,
+      };
+    }
+  }
+
+  private async getTradeReadiness(user: UserId): Promise<TradeReadinessResult> {
+    const { id } = user;
+
+    type ReadinessAuto = {
+      walletInfo: { public_key: string; alias?: string } | null;
+      chainBalance: number;
+      pendingChainBalance: number;
+      tapdInfo: boolean;
+      allChannels: Array<{ type?: string; is_active: boolean }>;
+      pendingChannels: Array<{
+        partner_public_key: string;
+        is_opening: boolean;
+      }>;
+      hasChannel: boolean;
+      hasActiveChannel: boolean;
+      depositAddress: string | undefined;
+      recommendedNode: RecommendedNode | undefined;
+    };
+
+    const result = await auto<ReadinessAuto>({
+      walletInfo: async () => {
+        const [info, err] = await toWithError(
+          this.nodeService.getWalletInfo(id)
+        );
+        return err ? null : info;
+      },
+
+      chainBalance: async () => {
+        const [bal] = await toWithError(this.nodeService.getChainBalance(id));
+        return bal?.chain_balance ?? 0;
+      },
+
+      pendingChainBalance: async () => {
+        const [bal] = await toWithError(
+          this.nodeService.getPendingChainBalance(id)
+        );
+        return bal?.pending_chain_balance ?? 0;
+      },
+
+      tapdInfo: async () => {
+        const [, err] = await toWithError(this.tapdNodeService.getInfo({ id }));
+        return !err;
+      },
+
+      allChannels: async () => {
+        const [result] = await toWithError(this.nodeService.getChannels(id));
+        return result?.channels || [];
+      },
+
+      pendingChannels: async () => {
+        const [r] = await toWithError(this.nodeService.getPendingChannels(id));
+        return r?.pending_channels || [];
+      },
+
+      hasChannel: [
+        'allChannels',
+        'pendingChannels',
+        async ({
+          allChannels,
+          pendingChannels,
+        }: Pick<ReadinessAuto, 'allChannels' | 'pendingChannels'>) => {
+          return (
+            allChannels.length > 0 ||
+            pendingChannels.filter(ch => ch.is_opening).length > 0
+          );
+        },
+      ],
+
+      hasActiveChannel: [
+        'allChannels',
+        async ({ allChannels }: Pick<ReadinessAuto, 'allChannels'>) => {
+          return allChannels.some(ch => ch.is_active);
+        },
+      ],
+
+      depositAddress: [
+        'chainBalance',
+        'pendingChainBalance',
+        'tapdInfo',
+        async ({
+          chainBalance,
+          pendingChainBalance,
+          tapdInfo,
+        }: Pick<
+          ReadinessAuto,
+          'chainBalance' | 'pendingChainBalance' | 'tapdInfo'
+        >) => {
+          if (!tapdInfo) return undefined;
+          if (chainBalance > 0 || pendingChainBalance > 0) return undefined;
+          const [addr, err] = await toWithError(
+            this.nodeService.createChainAddress(id, true, 'p2tr')
+          );
+          if (err) {
+            this.logger.warn('Failed to create deposit address', { err });
+            return undefined;
+          }
+          return addr?.address || undefined;
+        },
+      ],
+
+      recommendedNode: [
+        'hasChannel',
+        async ({ hasChannel }: Pick<ReadinessAuto, 'hasChannel'>) => {
+          if (hasChannel) return undefined;
+          const [spaceUrl, spaceUrlErr] = await toWithError(
+            this.ambossService.resolveSpaceUrl(user)
+          );
+          if (spaceUrlErr || !spaceUrl) return undefined;
+          const [recData] = await toWithError(
+            this.fetchService.graphqlFetchWithProxy<{
+              rails: {
+                get_recommended_node: {
+                  id: string;
+                  pubkey: string;
+                  sockets: string[];
+                };
+              };
+            }>(spaceUrl, GetRecommendedNode)
+          );
+          const node = recData?.data?.rails?.get_recommended_node;
+          if (node?.pubkey && node.sockets?.length) {
+            return { pubkey: node.pubkey, sockets: node.sockets };
+          }
+          return undefined;
+        },
+      ],
+    });
+
+    if (!result.walletInfo) {
+      return {
+        node_online: false,
+        has_tapd: false,
+        onchain_balance_sats: '0',
+        pending_onchain_balance_sats: '0',
+        has_channel: false,
+        has_active_channel: false,
+      };
+    }
+
+    return {
+      node_online: true,
+      public_key: result.walletInfo.public_key,
+      alias: result.walletInfo.alias,
+      has_tapd: result.tapdInfo,
+      onchain_balance_sats: String(result.chainBalance),
+      pending_onchain_balance_sats: String(result.pendingChainBalance),
+      deposit_address: result.depositAddress,
+      has_channel: result.hasChannel,
+      has_active_channel: result.hasActiveChannel,
+      recommended_node: result.recommendedNode,
+    };
+  }
+
+  private async getOfferReadiness(
+    user: UserId,
+    input: OfferReadinessInput
+  ): Promise<OfferReadinessResult> {
+    const { id } = user;
+
+    const [
+      peersResult,
+      peerChannelsResult,
+      pendingResult,
+      assetBalancesResult,
+      ordersResult,
+    ] = await Promise.all([
+      toWithError(this.nodeService.getPeers(id)),
+      toWithError(
+        this.nodeService.getChannels(id, {
+          partner_public_key: input.peer_pubkey,
+        })
+      ),
+      toWithError(this.nodeService.getPendingChannels(id)),
+      input.tapd_asset_id || input.tapd_group_key
+        ? toWithError(
+            this.tapdNodeService.getAssetChannelBalances({
+              id,
+              peerPubkey: input.peer_pubkey,
+            })
+          )
+        : Promise.resolve([[], undefined] as const),
+      this.fetchPendingOrdersForPeer(user, input.peer_pubkey),
+    ]);
+
+    const peers = peersResult[0]?.peers || [];
+    const peerChannels = peerChannelsResult[0]?.channels || [];
+    const pendingChannels = pendingResult[0]?.pending_channels || [];
+    const assetBalances = assetBalancesResult[0] || [];
+    const hasPendingOrder = ordersResult;
+
+    // BTC channels
+    const peerPending = pendingChannels.filter(
+      (ch: { partner_public_key: string; is_opening: boolean }) =>
+        ch.partner_public_key === input.peer_pubkey && ch.is_opening
+    );
+    const btcOpen = peerChannels.filter(isBtcChannel);
+    const btcPending = peerPending.filter(
+      (ch: { asset?: unknown }) => !ch.asset
+    );
+
+    // Asset channels
+    const matchingAssets = (
+      assetBalances as Array<{
+        assetId: string;
+        groupKey?: string;
+        localBalance?: string;
+        remoteBalance?: string;
+      }>
+    ).filter(ab =>
+      input.tapd_group_key
+        ? ab.groupKey === input.tapd_group_key
+        : ab.assetId === input.tapd_asset_id
+    );
+    const assetPending = peerPending.filter(
+      (ch: { asset?: { asset_id: string; group_key?: string } }) => {
+        if (!ch.asset) return false;
+        return input.tapd_group_key
+          ? ch.asset.group_key === input.tapd_group_key
+          : ch.asset.asset_id === input.tapd_asset_id;
+      }
+    );
+
+    return {
+      is_peer_connected: peers.some(
+        (p: { public_key: string }) => p.public_key === input.peer_pubkey
+      ),
+      btc_channels: {
+        open_count: btcOpen.length,
+        pending_count: btcPending.length,
+        total_local_sats: String(
+          btcOpen.reduce(
+            (s: number, ch: { local_balance?: number }) =>
+              s + (ch.local_balance || 0),
+            0
+          )
+        ),
+        total_remote_sats: String(
+          btcOpen.reduce(
+            (s: number, ch: { remote_balance?: number }) =>
+              s + (ch.remote_balance || 0),
+            0
+          )
+        ),
+        has_active_channel: btcOpen.some(
+          (ch: { is_active?: boolean }) => ch.is_active
+        ),
+      },
+      asset_channels: {
+        open_count: matchingAssets.length,
+        pending_count: assetPending.length,
+        total_local_atomic: matchingAssets
+          .reduce((s, ch) => s + BigInt(ch.localBalance || '0'), BigInt(0))
+          .toString(),
+        total_remote_atomic: matchingAssets
+          .reduce((s, ch) => s + BigInt(ch.remoteBalance || '0'), BigInt(0))
+          .toString(),
+        has_active_channel: matchingAssets.length > 0,
+      },
+      has_pending_order: hasPendingOrder,
+    };
+  }
+
+  private async fetchPendingOrdersForPeer(
+    user: UserId,
+    peerPubkey: string
+  ): Promise<boolean> {
+    try {
+      const [ambossAuth, magmaUrl] = await Promise.all([
+        this.ambossTokenService.getOrCreate(user),
+        this.ambossService.resolveMagmaUrl(user),
+      ]);
+
+      const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
+        user: {
+          market: {
+            orders: {
+              purchases: AmbossOrderList;
+              sales: AmbossOrderList;
+            };
+          };
+        };
+      }>(
+        magmaUrl,
+        getOrdersQuery,
+        { page: { offset: 0, limit: 999 } },
+        { authorization: `Bearer ${ambossAuth}` }
+      );
+
+      if (error || !data?.user?.market?.orders) return false;
+
+      const { purchases, sales } = data.user.market.orders;
+      const pendingStatuses = new Set([
+        'WAITING_FOR_CHANNEL_OPEN',
+        'WAITING_FOR_SELLER_APPROVAL',
+        'WAITING_FOR_PAYMENT',
+        'CHANNEL_OPENING',
+      ]);
+
+      const allOrders = [...purchases.list, ...sales.list];
+      return allOrders.some(
+        o =>
+          pendingStatuses.has(o.status) &&
+          (o.source?.pubkey === peerPubkey ||
+            o.destination?.pubkey === peerPubkey)
+      );
+    } catch {
+      return false;
+    }
   }
 }
 

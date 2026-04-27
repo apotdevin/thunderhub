@@ -104,6 +104,15 @@ export type AmbossUser = {
   subscription: AmbossSubscription;
 };
 
+export type AssetChannelSummary = {
+  __typename?: 'AssetChannelSummary';
+  has_active_channel: Scalars['Boolean']['output'];
+  open_count: Scalars['Int']['output'];
+  pending_count: Scalars['Int']['output'];
+  total_local_atomic: Scalars['String']['output'];
+  total_remote_atomic: Scalars['String']['output'];
+};
+
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   message: Scalars['String']['output'];
@@ -248,6 +257,15 @@ export type ChannelRequest = {
   uri?: Maybe<Scalars['String']['output']>;
 };
 
+export type ChannelSummary = {
+  __typename?: 'ChannelSummary';
+  has_active_channel: Scalars['Boolean']['output'];
+  open_count: Scalars['Int']['output'];
+  pending_count: Scalars['Int']['output'];
+  total_local_sats: Scalars['String']['output'];
+  total_remote_sats: Scalars['String']['output'];
+};
+
 export type ClosedChannel = {
   __typename?: 'ClosedChannel';
   capacity: Scalars['Float']['output'];
@@ -372,22 +390,24 @@ export type EditNodeResult = {
 };
 
 export type ExecuteTradeInput = {
-  assetAmount: Scalars['String']['input'];
-  expiryEpoch?: InputMaybe<Scalars['String']['input']>;
-  paymentRequest?: InputMaybe<Scalars['String']['input']>;
-  peerPubkey: Scalars['String']['input'];
-  rfqId?: InputMaybe<Scalars['String']['input']>;
-  satsAmount: Scalars['String']['input'];
-  tapdAssetId: Scalars['String']['input'];
-  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
-  transactionType: TapTransactionType;
+  asset_amount: Scalars['String']['input'];
+  asset_precision?: InputMaybe<Scalars['Float']['input']>;
+  asset_symbol?: InputMaybe<Scalars['String']['input']>;
+  expiry_epoch?: InputMaybe<Scalars['String']['input']>;
+  payment_request?: InputMaybe<Scalars['String']['input']>;
+  peer_pubkey: Scalars['String']['input'];
+  rfq_id?: InputMaybe<Scalars['String']['input']>;
+  sats_amount: Scalars['String']['input'];
+  tapd_asset_id?: InputMaybe<Scalars['String']['input']>;
+  tapd_group_key?: InputMaybe<Scalars['String']['input']>;
+  transaction_type: TapTransactionType;
 };
 
 export type ExecuteTradeResult = {
   __typename?: 'ExecuteTradeResult';
-  feeSats?: Maybe<Scalars['String']['output']>;
-  paymentPreimage?: Maybe<Scalars['String']['output']>;
-  satsAmount?: Maybe<Scalars['String']['output']>;
+  fee_sats?: Maybe<Scalars['String']['output']>;
+  payment_preimage?: Maybe<Scalars['String']['output']>;
+  sats_amount?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
 };
 
@@ -425,13 +445,19 @@ export type GetPaymentsType = {
 };
 
 export type GetTapOffersInput = {
-  ambossAssetId: Scalars['String']['input'];
+  ambossAssetId?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   minAmount?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<TapOfferSortBy>;
   sortDir?: InputMaybe<TapOfferSortDir>;
   transactionType: TapTransactionType;
+};
+
+export type GetTradeInvoicesResult = {
+  __typename?: 'GetTradeInvoicesResult';
+  invoices: Array<TradeInvoice>;
+  next?: Maybe<Scalars['String']['output']>;
 };
 
 export type Hops = {
@@ -878,6 +904,20 @@ export type NodeType = {
   public_key: Scalars['String']['output'];
 };
 
+export type OfferReadinessInput = {
+  peer_pubkey: Scalars['String']['input'];
+  tapd_asset_id?: InputMaybe<Scalars['String']['input']>;
+  tapd_group_key?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OfferReadinessResult = {
+  __typename?: 'OfferReadinessResult';
+  asset_channels: AssetChannelSummary;
+  btc_channels: ChannelSummary;
+  has_pending_order: Scalars['Boolean']['output'];
+  is_peer_connected: Scalars['Boolean']['output'];
+};
+
 export type OnChainBalance = {
   __typename?: 'OnChainBalance';
   closing: Scalars['String']['output'];
@@ -1110,6 +1150,7 @@ export type Query = {
   recoverFunds: Scalars['Boolean']['output'];
   signMessage: Scalars['String']['output'];
   taproot_assets: TaprootAssetsQueries;
+  trade: TradeQueries;
   user: UserQueries;
   verifyBackup: Scalars['Boolean']['output'];
   verifyBackups: Scalars['Boolean']['output'];
@@ -1187,6 +1228,18 @@ export type RailsQueries = {
   __typename?: 'RailsQueries';
   get_tap_supported_assets: TapSupportedAssetList;
   id: Scalars['String']['output'];
+  offer_readiness: OfferReadinessResult;
+  trade_readiness: TradeReadinessResult;
+};
+
+export type RailsQueriesOffer_ReadinessArgs = {
+  input: OfferReadinessInput;
+};
+
+export type RecommendedNode = {
+  __typename?: 'RecommendedNode';
+  pubkey: Scalars['String']['output'];
+  sockets: Array<Scalars['String']['output']>;
 };
 
 export type Route = {
@@ -1455,9 +1508,13 @@ export type TapSyncResult = {
 
 export type TapTradeOffer = {
   __typename?: 'TapTradeOffer';
+  asset: TapTradeOfferAsset;
   available: TapTradeOfferAmount;
+  fees: TapTradeOfferFees;
   id: Scalars['String']['output'];
   magmaOfferId: Scalars['String']['output'];
+  maxOrder: TapTradeOfferAmount;
+  minOrder: TapTradeOfferAmount;
   node: TapTradeOfferNode;
   rate: TapTradeOfferAmount;
 };
@@ -1466,6 +1523,21 @@ export type TapTradeOfferAmount = {
   __typename?: 'TapTradeOfferAmount';
   displayAmount: Scalars['String']['output'];
   fullAmount: Scalars['String']['output'];
+};
+
+export type TapTradeOfferAsset = {
+  __typename?: 'TapTradeOfferAsset';
+  assetId?: Maybe<Scalars['String']['output']>;
+  groupKey?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  precision: Scalars['Int']['output'];
+  symbol: Scalars['String']['output'];
+};
+
+export type TapTradeOfferFees = {
+  __typename?: 'TapTradeOfferFees';
+  baseFeeSats: Scalars['Int']['output'];
+  feeRatePpm: Scalars['Int']['output'];
 };
 
 export type TapTradeOfferList = {
@@ -1647,23 +1719,64 @@ export type TeamMutationsEdit_NodeArgs = {
   input: EditNodeInput;
 };
 
+export type TradeInvoice = {
+  __typename?: 'TradeInvoice';
+  asset_amount: Scalars['String']['output'];
+  asset_id?: Maybe<Scalars['String']['output']>;
+  asset_precision?: Maybe<Scalars['Float']['output']>;
+  asset_symbol?: Maybe<Scalars['String']['output']>;
+  confirmed_at?: Maybe<Scalars['String']['output']>;
+  created_at: Scalars['String']['output'];
+  direction: Scalars['String']['output'];
+  group_key?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  is_canceled?: Maybe<Scalars['Boolean']['output']>;
+  is_confirmed: Scalars['Boolean']['output'];
+  sats: Scalars['String']['output'];
+};
+
+export type TradeQueries = {
+  __typename?: 'TradeQueries';
+  trade_invoices: GetTradeInvoicesResult;
+};
+
+export type TradeQueriesTrade_InvoicesArgs = {
+  token?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type TradeQuoteInput = {
-  assetAmount: Scalars['String']['input'];
+  asset_amount: Scalars['String']['input'];
+  asset_precision?: InputMaybe<Scalars['Float']['input']>;
+  asset_symbol?: InputMaybe<Scalars['String']['input']>;
   expiry?: InputMaybe<Scalars['Float']['input']>;
-  peerPubkey: Scalars['String']['input'];
-  tapdAssetId: Scalars['String']['input'];
-  tapdGroupKey?: InputMaybe<Scalars['String']['input']>;
-  transactionType: TapTransactionType;
+  peer_pubkey: Scalars['String']['input'];
+  tapd_asset_id?: InputMaybe<Scalars['String']['input']>;
+  tapd_group_key?: InputMaybe<Scalars['String']['input']>;
+  transaction_type: TapTransactionType;
 };
 
 export type TradeQuoteResult = {
   __typename?: 'TradeQuoteResult';
-  assetAmount: Scalars['String']['output'];
-  expiryEpoch?: Maybe<Scalars['String']['output']>;
-  paymentRequest?: Maybe<Scalars['String']['output']>;
-  rateFixed?: Maybe<Scalars['String']['output']>;
-  rfqId?: Maybe<Scalars['String']['output']>;
-  satsAmount: Scalars['String']['output'];
+  asset_amount: Scalars['String']['output'];
+  expiry_epoch?: Maybe<Scalars['String']['output']>;
+  payment_request?: Maybe<Scalars['String']['output']>;
+  rate_fixed?: Maybe<Scalars['String']['output']>;
+  rfq_id?: Maybe<Scalars['String']['output']>;
+  sats_amount: Scalars['String']['output'];
+};
+
+export type TradeReadinessResult = {
+  __typename?: 'TradeReadinessResult';
+  alias?: Maybe<Scalars['String']['output']>;
+  deposit_address?: Maybe<Scalars['String']['output']>;
+  has_active_channel: Scalars['Boolean']['output'];
+  has_channel: Scalars['Boolean']['output'];
+  has_tapd: Scalars['Boolean']['output'];
+  node_online: Scalars['Boolean']['output'];
+  onchain_balance_sats: Scalars['String']['output'];
+  pending_onchain_balance_sats: Scalars['String']['output'];
+  public_key?: Maybe<Scalars['String']['output']>;
+  recommended_node?: Maybe<RecommendedNode>;
 };
 
 export type TwofaResult = {

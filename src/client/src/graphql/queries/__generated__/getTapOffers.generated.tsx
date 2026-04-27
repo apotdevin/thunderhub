@@ -35,6 +35,29 @@ export type GetTapOffersQuery = {
           displayAmount: string;
           fullAmount: string;
         };
+        minOrder: {
+          __typename?: 'TapTradeOfferAmount';
+          displayAmount: string;
+          fullAmount: string;
+        };
+        maxOrder: {
+          __typename?: 'TapTradeOfferAmount';
+          displayAmount: string;
+          fullAmount: string;
+        };
+        fees: {
+          __typename?: 'TapTradeOfferFees';
+          baseFeeSats: number;
+          feeRatePpm: number;
+        };
+        asset: {
+          __typename?: 'TapTradeOfferAsset';
+          id: string;
+          symbol: string;
+          precision: number;
+          assetId?: string | null;
+          groupKey?: string | null;
+        };
       }>;
     };
   };
@@ -60,6 +83,25 @@ export const GetTapOffersDocument = gql`
           available {
             displayAmount
             fullAmount
+          }
+          minOrder {
+            displayAmount
+            fullAmount
+          }
+          maxOrder {
+            displayAmount
+            fullAmount
+          }
+          fees {
+            baseFeeSats
+            feeRatePpm
+          }
+          asset {
+            id
+            symbol
+            precision
+            assetId
+            groupKey
           }
         }
         totalCount

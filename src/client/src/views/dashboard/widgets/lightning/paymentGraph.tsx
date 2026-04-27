@@ -40,7 +40,9 @@ export const PaymentsGraph = () => {
 
   const Header = () => (
     <div className="grid" style={{ gridTemplateColumns: '1fr 90px' }}>
-      <h4 className="font-black my-2">Payments</h4>
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground my-1 block">
+        Payments
+      </span>
       <SmallSelectWithValue
         callback={e => setType((e[0] || typeOptions[1]) as any)}
         options={typeOptions}

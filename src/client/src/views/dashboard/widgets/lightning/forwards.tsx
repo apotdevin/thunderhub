@@ -3,7 +3,9 @@ import { ForwardsList } from '../../../forwards';
 export const ForwardListWidget = () => {
   return (
     <div className="w-full h-full">
-      <h4 className="font-black w-full text-center my-2">Forwards</h4>
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground my-1 block text-center">
+        Forwards
+      </span>
       <div
         className="w-full overflow-auto"
         style={{ height: 'calc(100% - 40px)' }}

@@ -71,6 +71,14 @@ type AmbossUser {
   subscription: AmbossSubscription!
 }
 
+type AssetChannelSummary {
+  has_active_channel: Boolean!
+  open_count: Int!
+  pending_count: Int!
+  total_local_atomic: String!
+  total_remote_atomic: String!
+}
+
 type AuthResponse {
   message: String!
   status: String!
@@ -203,6 +211,14 @@ type ChannelRequest {
   uri: String
 }
 
+type ChannelSummary {
+  has_active_channel: Boolean!
+  open_count: Int!
+  pending_count: Int!
+  total_local_sats: String!
+  total_remote_sats: String!
+}
+
 type ClosedChannel {
   capacity: Float!
   channel_age: Float
@@ -317,21 +333,23 @@ type EditNodeResult {
 }
 
 input ExecuteTradeInput {
-  assetAmount: String!
-  expiryEpoch: String
-  paymentRequest: String
-  peerPubkey: String!
-  rfqId: String
-  satsAmount: String!
-  tapdAssetId: String!
-  tapdGroupKey: String
-  transactionType: TapTransactionType!
+  asset_amount: String!
+  asset_precision: Float
+  asset_symbol: String
+  expiry_epoch: String
+  payment_request: String
+  peer_pubkey: String!
+  rfq_id: String
+  sats_amount: String!
+  tapd_asset_id: String
+  tapd_group_key: String
+  transaction_type: TapTransactionType!
 }
 
 type ExecuteTradeResult {
-  feeSats: String
-  paymentPreimage: String
-  satsAmount: String
+  fee_sats: String
+  payment_preimage: String
+  sats_amount: String
   success: Boolean!
 }
 
@@ -365,13 +383,18 @@ type GetPaymentsType {
 }
 
 input GetTapOffersInput {
-  ambossAssetId: String!
+  ambossAssetId: String
   limit: Int
   minAmount: String
   offset: Int
   sortBy: TapOfferSortBy
   sortDir: TapOfferSortDir
   transactionType: TapTransactionType!
+}
+
+type GetTradeInvoicesResult {
+  invoices: [TradeInvoice!]!
+  next: String
 }
 
 type Hops {
@@ -637,6 +660,19 @@ type NodeType {
   public_key: String!
 }
 
+input OfferReadinessInput {
+  peer_pubkey: String!
+  tapd_asset_id: String
+  tapd_group_key: String
+}
+
+type OfferReadinessResult {
+  asset_channels: AssetChannelSummary!
+  btc_channels: ChannelSummary!
+  has_pending_order: Boolean!
+  is_peer_connected: Boolean!
+}
+
 type OnChainBalance {
   closing: String!
   confirmed: String!
@@ -835,6 +871,7 @@ type Query {
   recoverFunds(backup: String!): Boolean!
   signMessage(message: String!): String!
   taproot_assets: TaprootAssetsQueries!
+  trade: TradeQueries!
   user: UserQueries!
   verifyBackup(backup: String!): Boolean!
   verifyBackups(backup: String!): Boolean!
@@ -844,6 +881,13 @@ type Query {
 type RailsQueries {
   get_tap_supported_assets: TapSupportedAssetList!
   id: String!
+  offer_readiness(input: OfferReadinessInput!): OfferReadinessResult!
+  trade_readiness: TradeReadinessResult!
+}
+
+type RecommendedNode {
+  pubkey: String!
+  sockets: [String!]!
 }
 
 type Route {
@@ -1087,9 +1131,13 @@ type TapSyncResult {
 }
 
 type TapTradeOffer {
+  asset: TapTradeOfferAsset!
   available: TapTradeOfferAmount!
+  fees: TapTradeOfferFees!
   id: String!
   magmaOfferId: String!
+  maxOrder: TapTradeOfferAmount!
+  minOrder: TapTradeOfferAmount!
   node: TapTradeOfferNode!
   rate: TapTradeOfferAmount!
 }
@@ -1097,6 +1145,19 @@ type TapTradeOffer {
 type TapTradeOfferAmount {
   displayAmount: String!
   fullAmount: String!
+}
+
+type TapTradeOfferAsset {
+  assetId: String
+  groupKey: String
+  id: String!
+  precision: Int!
+  symbol: String!
+}
+
+type TapTradeOfferFees {
+  baseFeeSats: Int!
+  feeRatePpm: Int!
 }
 
 type TapTradeOfferList {
@@ -1201,22 +1262,56 @@ type TeamMutations {
   edit_node(input: EditNodeInput!): EditNodeResult!
 }
 
+type TradeInvoice {
+  asset_amount: String!
+  asset_id: String
+  asset_precision: Float
+  asset_symbol: String
+  confirmed_at: String
+  created_at: String!
+  direction: String!
+  group_key: String
+  id: String!
+  is_canceled: Boolean
+  is_confirmed: Boolean!
+  sats: String!
+}
+
+type TradeQueries {
+  trade_invoices(token: String): GetTradeInvoicesResult!
+}
+
 input TradeQuoteInput {
-  assetAmount: String!
+  asset_amount: String!
+  asset_precision: Float
+  asset_symbol: String
   expiry: Float
-  peerPubkey: String!
-  tapdAssetId: String!
-  tapdGroupKey: String
-  transactionType: TapTransactionType!
+  peer_pubkey: String!
+  tapd_asset_id: String
+  tapd_group_key: String
+  transaction_type: TapTransactionType!
 }
 
 type TradeQuoteResult {
-  assetAmount: String!
-  expiryEpoch: String
-  paymentRequest: String
-  rateFixed: String
-  rfqId: String
-  satsAmount: String!
+  asset_amount: String!
+  expiry_epoch: String
+  payment_request: String
+  rate_fixed: String
+  rfq_id: String
+  sats_amount: String!
+}
+
+type TradeReadinessResult {
+  alias: String
+  deposit_address: String
+  has_active_channel: Boolean!
+  has_channel: Boolean!
+  has_tapd: Boolean!
+  node_online: Boolean!
+  onchain_balance_sats: String!
+  pending_onchain_balance_sats: String!
+  public_key: String
+  recommended_node: RecommendedNode
 }
 
 type TwofaResult {

@@ -1,8 +1,9 @@
-import { ExternalLink, Info } from 'lucide-react';
+import { ExternalLink, Info, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
-import { TradingOffers } from '../views/assets/TradingOffers';
-import { useGetNodeCapabilitiesQuery } from '../graphql/queries/__generated__/getNodeCapabilities.generated';
+import { TradingGrid } from '../views/assets/TradingGrid';
+import { TradingReadiness } from '../views/assets/TradingReadiness';
+import { useGetTradeReadinessQuery } from '../graphql/queries/__generated__/getTradeReadiness.generated';
 import { LITD_SETUP_DOCS_URL } from '../utils/externalLinks';
 
 const TapdSetupPrompt = () => (
@@ -24,16 +25,63 @@ const TapdSetupPrompt = () => (
   </div>
 );
 
-const TradingPage = () => {
-  const { data, loading } = useGetNodeCapabilitiesQuery();
-  const tapdAvailable =
-    data?.node?.capabilities?.list?.includes('taproot_assets') ?? false;
+const TradingPageContent = () => {
+  const { data, loading, error, refetch } = useGetTradeReadinessQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
-  return (
-    <GridWrapper centerContent={false}>
-      {loading || tapdAvailable ? <TradingOffers /> : <TapdSetupPrompt />}
-    </GridWrapper>
-  );
+  if (loading && !data) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="animate-spin text-muted-foreground" size={24} />
+      </div>
+    );
+  }
+
+  const readiness = data?.rails?.trade_readiness;
+
+  if (error && !readiness) {
+    return (
+      <div className="px-4 py-4">
+        <TapdSetupPrompt />
+      </div>
+    );
+  }
+
+  if (!readiness) {
+    return (
+      <div className="px-4 py-4">
+        <TapdSetupPrompt />
+      </div>
+    );
+  }
+
+  const isReady =
+    readiness.node_online &&
+    readiness.has_tapd &&
+    (Number(readiness.onchain_balance_sats) > 0 ||
+      Number(readiness.pending_onchain_balance_sats) > 0) &&
+    readiness.has_active_channel;
+
+  if (!isReady) {
+    return (
+      <div className="px-4 py-4">
+        <TradingReadiness
+          data={readiness}
+          refetch={refetch}
+          loading={loading}
+        />
+      </div>
+    );
+  }
+
+  return <TradingGrid />;
 };
+
+const TradingPage = () => (
+  <GridWrapper centerContent={false} noPadding>
+    <TradingPageContent />
+  </GridWrapper>
+);
 
 export default TradingPage;

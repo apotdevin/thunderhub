@@ -9,15 +9,17 @@ export const TotalBalance = () => {
   const pending = new Big(onchain.pending).add(lightning.pending).toString();
 
   return (
-    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
-      <div className="text-gray-500 text-sm">Total Balance</div>
-      <h2 className="m-0">
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full gap-0.5">
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        Total Balance
+      </span>
+      <span className="text-lg font-semibold tabular-nums">
         <Price amount={total} />
-      </h2>
+      </span>
       {Number(pending) > 0 ? (
-        <div className="text-gray-500 text-sm">
-          <Price amount={pending} />
-        </div>
+        <span className="text-xs text-muted-foreground tabular-nums">
+          <Price amount={pending} /> pending
+        </span>
       ) : null}
     </div>
   );
@@ -27,15 +29,17 @@ export const ChannelBalance = () => {
   const { lightning } = useNodeBalances();
 
   return (
-    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
-      <div className="text-gray-500 text-sm">Channel Balance</div>
-      <h3 className="m-0">
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full gap-0.5">
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        Channel Balance
+      </span>
+      <span className="text-base font-semibold tabular-nums">
         <Price amount={lightning.confirmed} />
-      </h3>
+      </span>
       {Number(lightning.pending) > 0 ? (
-        <div className="text-gray-500 text-sm">
-          <Price amount={lightning.pending} />
-        </div>
+        <span className="text-xs text-muted-foreground tabular-nums">
+          <Price amount={lightning.pending} /> pending
+        </span>
       ) : null}
     </div>
   );
@@ -45,15 +49,17 @@ export const ChainBalance = () => {
   const { onchain } = useNodeBalances();
 
   return (
-    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full">
-      <div className="text-gray-500 text-sm">Chain Balance</div>
-      <h3 className="m-0">
+    <div className="overflow-auto flex flex-col justify-center items-center w-full h-full gap-0.5">
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        Chain Balance
+      </span>
+      <span className="text-base font-semibold tabular-nums">
         <Price amount={onchain.confirmed} />
-      </h3>
+      </span>
       {Number(onchain.pending) > 0 ? (
-        <div className="text-gray-500 text-sm">
-          <Price amount={onchain.pending} />
-        </div>
+        <span className="text-xs text-muted-foreground tabular-nums">
+          <Price amount={onchain.pending} /> pending
+        </span>
       ) : null}
     </div>
   );

@@ -13,8 +13,8 @@ export const displayToAtomic = (display: string, precision: number): bigint => {
 };
 
 /**
- * Converts display asset units to satoshis using the atomic rate.
- * rate is in atomic-asset-units per BTC (full_amount from trade API).
+ * Converts display asset units to satoshis using the rate.
+ * rate is in asset-units per BTC (full_amount from trade API).
  */
 export const displayAssetToSats = (
   displayAmount: string,
@@ -22,8 +22,10 @@ export const displayAssetToSats = (
   precision: number
 ): string => {
   if (!rate || rate === '0') return '0';
-  const atomic = displayToAtomic(displayAmount, precision);
-  return ((atomic * BigInt(100_000_000)) / BigInt(rate)).toString();
+  const atomic = new Big(displayToAtomic(displayAmount, precision).toString());
+  const sats = atomic.times(1e8).div(new Big(rate));
+  const rounded = sats.round(0, Big.roundDown);
+  return rounded.toString();
 };
 
 /**

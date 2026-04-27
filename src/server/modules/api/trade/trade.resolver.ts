@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -15,6 +15,9 @@ import {
   TradeQuoteResult,
   ExecuteTradeInput,
   ExecuteTradeResult,
+  GetTradeInvoicesResult,
+  TradeInvoice,
+  TradeQueries,
   BtcChannel,
   TaChannel,
   TaChannelPointAndId,
@@ -23,6 +26,32 @@ import {
 const HEX_PUBKEY_RE = /^[0-9a-f]{66}$/;
 const HEX_ASSET_ID_RE = /^[0-9a-f]{64}$/;
 const DEFAULT_INVOICE_EXPIRY_SEC = 30;
+
+export const TRADE_MEMO_PREFIX = 'th:trade:';
+
+/** Builds a tagged invoice description for trade identification. */
+function buildTradeMemo(
+  direction: 'buy_btc' | 'sell_btc',
+  input: {
+    tapd_group_key?: string;
+    tapd_asset_id?: string;
+    asset_amount: string;
+    asset_symbol?: string;
+    asset_precision?: number;
+  }
+): string {
+  return (
+    TRADE_MEMO_PREFIX +
+    JSON.stringify({
+      t: direction,
+      ...(input.tapd_group_key ? { g: input.tapd_group_key } : {}),
+      ...(input.tapd_asset_id ? { a: input.tapd_asset_id } : {}),
+      amt: input.asset_amount,
+      ...(input.asset_symbol ? { s: input.asset_symbol } : {}),
+      ...(input.asset_precision != null ? { p: input.asset_precision } : {}),
+    })
+  );
+}
 
 // How much we overshoot the channel reserve requirement when rebalancing
 const SATS_RESERVE_BUFFER_PCT = 50;
@@ -58,7 +87,7 @@ export class TradeResolver {
   ): Promise<TradeQuoteResult> {
     this.validateIdentifiers(input);
 
-    if (input.transactionType === TapTransactionType.PURCHASE) {
+    if (input.transaction_type === TapTransactionType.PURCHASE) {
       return this.getBuyQuote(id, input);
     }
     return this.getSellQuote(id, input);
@@ -71,14 +100,14 @@ export class TradeResolver {
   ): Promise<ExecuteTradeResult> {
     this.validateIdentifiers(input);
 
-    if (input.expiryEpoch) {
-      const expirySec = Number(input.expiryEpoch);
+    if (input.expiry_epoch) {
+      const expirySec = Number(input.expiry_epoch);
       if (expirySec > 0 && Date.now() / 1000 > expirySec) {
         throw new GraphQLError('Quote has expired — request a new quote');
       }
     }
 
-    if (input.transactionType === TapTransactionType.PURCHASE) {
+    if (input.transaction_type === TapTransactionType.PURCHASE) {
       return this.executePurchase(id, input);
     }
     return this.executeSale(id, input);
@@ -96,17 +125,23 @@ export class TradeResolver {
     const [invoice, error] = await toWithError(
       this.tapdNodeService.addAssetInvoice({
         id,
-        assetId: input.tapdAssetId || undefined,
-        groupKey: input.tapdGroupKey || undefined,
-        assetAmount: input.assetAmount,
-        peerPubkey: input.peerPubkey,
+        assetId: input.tapd_asset_id || undefined,
+        groupKey: input.tapd_group_key || undefined,
+        assetAmount: input.asset_amount,
+        peerPubkey: input.peer_pubkey,
+        memo: buildTradeMemo('sell_btc', input),
         expiry: input.expiry ?? DEFAULT_INVOICE_EXPIRY_SEC,
       })
     );
 
     if (error || !invoice) {
       this.logger.error('Failed to get buy quote', { error });
-      throw new GraphQLError('Failed to get buy quote from peer');
+      const detail = (error as any)?.details || (error as any)?.message;
+      throw new GraphQLError(
+        detail
+          ? `Failed to get buy quote: ${detail}`
+          : 'Failed to get buy quote from peer'
+      );
     }
 
     const quote = invoice.acceptedBuyQuote;
@@ -117,14 +152,14 @@ export class TradeResolver {
     const acceptedAmount = quote?.assetMaxAmount;
     if (
       acceptedAmount &&
-      String(acceptedAmount) !== String(input.assetAmount)
+      String(acceptedAmount) !== String(input.asset_amount)
     ) {
       this.logger.warn('Peer accepted fewer assets than requested', {
-        requested: input.assetAmount,
+        requested: input.asset_amount,
         accepted: acceptedAmount,
       });
       throw new GraphQLError(
-        `Peer can only convert ${acceptedAmount} assets (requested ${input.assetAmount})`
+        `Peer can only convert ${acceptedAmount} assets (requested ${input.asset_amount})`
       );
     }
 
@@ -143,7 +178,7 @@ export class TradeResolver {
     const sats = decoded.tokens != null ? String(decoded.tokens) : undefined;
 
     this.logger.info('Buy quote received', {
-      assetAmount: input.assetAmount,
+      assetAmount: input.asset_amount,
       sats,
       rfqId: quote?.id ? Buffer.from(quote.id).toString('hex') : undefined,
       expiry: quote?.expiry,
@@ -151,11 +186,11 @@ export class TradeResolver {
     });
 
     return {
-      satsAmount: sats || '0',
-      assetAmount: input.assetAmount,
-      rateFixed: rate ? `${rate.coefficient}e-${rate.scale}` : undefined,
-      paymentRequest,
-      expiryEpoch: quote?.expiry,
+      sats_amount: sats || '0',
+      asset_amount: input.asset_amount,
+      rate_fixed: rate ? `${rate.coefficient}e-${rate.scale}` : undefined,
+      payment_request: paymentRequest,
+      expiry_epoch: quote?.expiry,
     };
   }
 
@@ -172,10 +207,10 @@ export class TradeResolver {
     const [quote, error] = await toWithError(
       this.tapdNodeService.getSellQuote({
         id: accountId,
-        assetId: input.tapdAssetId || undefined,
-        groupKey: input.tapdGroupKey || undefined,
+        assetId: input.tapd_asset_id || undefined,
+        groupKey: input.tapd_group_key || undefined,
         paymentMaxAmtMsat,
-        peerPubkey: input.peerPubkey,
+        peerPubkey: input.peer_pubkey,
       })
     );
 
@@ -190,25 +225,25 @@ export class TradeResolver {
     }
 
     const quoteSats = this.deriveSatsFromRate(
-      input.assetAmount,
+      input.asset_amount,
       rate,
       quote.minTransportableMsat
     );
     const rfqIdHex = quote.rfqId.toString('hex');
 
     this.logger.info('Sell quote received', {
-      assetAmount: input.assetAmount,
+      assetAmount: input.asset_amount,
       sats: String(quoteSats),
       rfqId: rfqIdHex,
       expiry: quote.expiry,
     });
 
     return {
-      satsAmount: String(quoteSats),
-      assetAmount: input.assetAmount,
-      rateFixed: `${rate.coefficient}e-${rate.scale}`,
-      rfqId: rfqIdHex,
-      expiryEpoch: quote.expiry,
+      sats_amount: String(quoteSats),
+      asset_amount: input.asset_amount,
+      rate_fixed: `${rate.coefficient}e-${rate.scale}`,
+      rfq_id: rfqIdHex,
+      expiry_epoch: quote.expiry,
     };
   }
 
@@ -216,11 +251,11 @@ export class TradeResolver {
     accountId: string,
     input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
-    const { paymentRequest } = input;
+    const paymentRequest = input.payment_request;
 
     if (!paymentRequest) {
       throw new GraphQLError(
-        'paymentRequest is required - please generate an asset invoice first'
+        'payment_request is required - please generate an asset invoice first'
       );
     }
 
@@ -243,20 +278,20 @@ export class TradeResolver {
 
     this.logger.debug('Decoded invoice route hints', {
       routes: JSON.stringify(decoded.routes),
-      peerPubkey: input.peerPubkey,
+      peerPubkey: input.peer_pubkey,
       cltvDelta: decoded.cltv_delta,
       paymentHash: decoded.id,
     });
 
     const routeHint = this.findVirtualScidHint(
       decoded.routes,
-      input.peerPubkey
+      input.peer_pubkey
     );
 
     if (!routeHint) {
       this.logger.error('No virtual SCID route hint found in invoice', {
         routes: JSON.stringify(decoded.routes),
-        peerPubkey: input.peerPubkey,
+        peerPubkey: input.peer_pubkey,
       });
       throw new GraphQLError(
         'Invoice has no route hint for the trade peer — was it created via addAssetInvoice?'
@@ -270,7 +305,7 @@ export class TradeResolver {
 
     const btcChannels = await this.getBtcChannelsWithPeer(
       accountId,
-      input.peerPubkey
+      input.peer_pubkey
     );
 
     if (btcChannels.length === 0) {
@@ -316,7 +351,7 @@ export class TradeResolver {
     }
 
     const peerPolicy = channelInfo?.policies?.find(
-      (p: { public_key: string }) => p.public_key === input.peerPubkey
+      (p: { public_key: string }) => p.public_key === input.peer_pubkey
     );
 
     const currentHeight: number = heightResult.current_block_height;
@@ -352,7 +387,7 @@ export class TradeResolver {
           fee_mtokens: String(hop1FeeMtokens),
           forward: decoded.tokens,
           forward_mtokens: decoded.mtokens,
-          public_key: input.peerPubkey,
+          public_key: input.peer_pubkey,
           timeout: hop2Timeout,
         },
         {
@@ -374,7 +409,7 @@ export class TradeResolver {
     };
 
     this.logger.info('Executing buy trade via explicit route', {
-      assetAmount: input.assetAmount,
+      assetAmount: input.asset_amount,
       invoicePrefix: paymentRequest.slice(0, 20),
       virtualScid: routeHint.channel,
       btcChannelId: btcChannel.id,
@@ -419,12 +454,12 @@ export class TradeResolver {
 
     return {
       success: true,
-      paymentPreimage: payResult.secret,
-      satsAmount:
+      payment_preimage: payResult.secret,
+      sats_amount:
         payResult.safe_tokens != null
           ? String(payResult.safe_tokens)
           : undefined,
-      feeSats: payResult.fee != null ? String(payResult.fee) : undefined,
+      fee_sats: payResult.fee != null ? String(payResult.fee) : undefined,
     };
   }
 
@@ -432,7 +467,7 @@ export class TradeResolver {
     accountId: string,
     input: ExecuteTradeInput
   ): Promise<ExecuteTradeResult> {
-    const { rfqId } = input;
+    const rfqId = input.rfq_id;
 
     if (!rfqId) {
       throw new GraphQLError(
@@ -462,7 +497,7 @@ export class TradeResolver {
     }
 
     const invoiceSats = this.deriveSatsFromRate(
-      input.assetAmount,
+      input.asset_amount,
       rate,
       quote.minTransportableMsat
     );
@@ -474,7 +509,7 @@ export class TradeResolver {
     // Fetch BTC channels once for both the return-hint and the liquidity check.
     const btcChannels = await this.getBtcChannelsWithPeer(
       accountId,
-      input.peerPubkey
+      input.peer_pubkey
     );
     if (btcChannels.length === 0) {
       throw new GraphQLError(
@@ -494,9 +529,9 @@ export class TradeResolver {
 
     await this.ensureTaChannelSatReserve(
       accountId,
-      input.peerPubkey,
-      input.tapdAssetId || undefined,
-      input.tapdGroupKey || undefined,
+      input.peer_pubkey,
+      input.tapd_asset_id || undefined,
+      input.tapd_group_key || undefined,
       btcChannels,
       invoiceSats
     );
@@ -507,13 +542,17 @@ export class TradeResolver {
     // path — omitting TA channels prevents "same incoming and outgoing channel".
     const btcHopHint = await this.buildBtcReturnHint(
       accountId,
-      input.peerPubkey,
+      input.peer_pubkey,
       btcChannels
     );
 
     const [invoice, invoiceError] = await toWithError(
       this.nodeService.createInvoice(accountId, {
         tokens: invoiceSats,
+        description: buildTradeMemo('buy_btc', input),
+        expires_at: new Date(
+          Date.now() + DEFAULT_INVOICE_EXPIRY_SEC * 1000
+        ).toISOString(),
         routes: btcHopHint ? [btcHopHint] : undefined,
       })
     );
@@ -526,21 +565,21 @@ export class TradeResolver {
     }
 
     this.logger.info('Executing sell trade', {
-      assetAmount: input.assetAmount,
+      assetAmount: input.asset_amount,
       invoiceSats,
-      tapdAssetId: input.tapdAssetId,
-      tapdGroupKey: input.tapdGroupKey,
+      tapdAssetId: input.tapd_asset_id,
+      tapdGroupKey: input.tapd_group_key,
       quote,
     });
 
     const [payResult, payError] = await toWithError(
       this.tapdNodeService.sendAssetPayment({
         id: accountId,
-        assetId: input.tapdAssetId || undefined,
-        groupKey: input.tapdGroupKey || undefined,
-        assetAmount: input.assetAmount,
+        assetId: input.tapd_asset_id || undefined,
+        groupKey: input.tapd_group_key || undefined,
+        assetAmount: input.asset_amount,
         paymentRequest: invoice.request,
-        peerPubkey: input.peerPubkey,
+        peerPubkey: input.peer_pubkey,
         rfqId,
       })
     );
@@ -550,18 +589,22 @@ export class TradeResolver {
       const detail =
         (payError as any)?.details ||
         (payError instanceof Error ? payError.message : undefined);
+      const isInsufficientBalance =
+        detail && /INSUFFICIENT_BALANCE/i.test(detail);
       throw new GraphQLError(
-        detail
-          ? `Failed to execute sell trade: ${detail}`
-          : 'Failed to execute sell trade'
+        isInsufficientBalance
+          ? 'Trade amount too large for available channel capacity. Try a smaller amount.'
+          : detail
+            ? `Failed to execute sell trade: ${detail}`
+            : 'Failed to execute sell trade'
       );
     }
 
     return {
       success: true,
-      paymentPreimage: payResult.paymentPreimage || undefined,
-      satsAmount: String(invoiceSats),
-      feeSats: payResult.feeSat ? String(payResult.feeSat) : undefined,
+      payment_preimage: payResult.paymentPreimage || undefined,
+      sats_amount: String(invoiceSats),
+      fee_sats: payResult.feeSat ? String(payResult.feeSat) : undefined,
     };
   }
 
@@ -1122,16 +1165,74 @@ export class TradeResolver {
    * Rejects malformed pubkeys / asset IDs before they reach tapd.
    */
   private validateIdentifiers(
-    input: Pick<TradeQuoteInput, 'peerPubkey' | 'tapdAssetId' | 'tapdGroupKey'>
+    input: Pick<
+      TradeQuoteInput,
+      'peer_pubkey' | 'tapd_asset_id' | 'tapd_group_key'
+    >
   ): void {
-    if (!HEX_PUBKEY_RE.test(input.peerPubkey)) {
-      throw new GraphQLError('Invalid peerPubkey: expected 66-char hex');
+    if (!HEX_PUBKEY_RE.test(input.peer_pubkey)) {
+      throw new GraphQLError('Invalid peer_pubkey: expected 66-char hex');
     }
-    if (input.tapdAssetId && !HEX_ASSET_ID_RE.test(input.tapdAssetId)) {
-      throw new GraphQLError('Invalid tapdAssetId: expected 64-char hex');
+    if (input.tapd_asset_id && !HEX_ASSET_ID_RE.test(input.tapd_asset_id)) {
+      throw new GraphQLError('Invalid tapd_asset_id: expected 64-char hex');
     }
-    if (input.tapdGroupKey && !HEX_PUBKEY_RE.test(input.tapdGroupKey)) {
-      throw new GraphQLError('Invalid tapdGroupKey: expected 66-char hex');
+    if (input.tapd_group_key && !HEX_PUBKEY_RE.test(input.tapd_group_key)) {
+      throw new GraphQLError('Invalid tapd_group_key: expected 66-char hex');
     }
+  }
+}
+
+// ── Trade Query Namespace ──
+
+@Resolver()
+export class TradeQueryRoot {
+  @Query(() => TradeQueries)
+  trade(): TradeQueries {
+    return {} as any;
+  }
+}
+
+@Resolver(() => TradeQueries)
+export class TradeQueriesResolver {
+  constructor(private nodeService: NodeService) {}
+
+  @ResolveField(() => GetTradeInvoicesResult)
+  async trade_invoices(
+    @CurrentUser() { id }: UserId,
+    @Args('token', { nullable: true }) token?: string
+  ): Promise<GetTradeInvoicesResult> {
+    const { next, invoices } = await this.nodeService.getInvoices(id, {
+      ...(token ? { token } : { limit: 100 }),
+    });
+
+    const tradeInvoices: TradeInvoice[] = [];
+
+    for (const inv of invoices) {
+      if (!inv.description?.startsWith(TRADE_MEMO_PREFIX)) continue;
+
+      try {
+        const json = JSON.parse(
+          inv.description.slice(TRADE_MEMO_PREFIX.length)
+        );
+        tradeInvoices.push({
+          id: inv.id,
+          direction: json.t || 'unknown',
+          group_key: json.g,
+          asset_id: json.a,
+          asset_amount: json.amt || '0',
+          asset_symbol: json.s,
+          asset_precision: json.p != null ? Number(json.p) : undefined,
+          sats: String(inv.tokens ?? inv.received ?? '0'),
+          is_confirmed: inv.is_confirmed,
+          is_canceled: inv.is_canceled,
+          created_at: inv.created_at,
+          confirmed_at: inv.confirmed_at,
+        });
+      } catch {
+        // Skip invoices with malformed trade metadata
+      }
+    }
+
+    return { invoices: tradeInvoices, next };
   }
 }
