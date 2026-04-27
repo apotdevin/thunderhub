@@ -435,20 +435,71 @@ describe('MagmaResolver', () => {
         });
       });
 
-      it('SALE: throws not-implemented error', async () => {
-        await expect(
-          setupResolver.setupTradeCapacity(userId, saleInput)
-        ).rejects.toThrow('Selling not implemented yet');
+      it('SALE: creates Magma order in sats + opens asset outbound channel', async () => {
+        const result = await setupResolver.setupTradeCapacity(
+          userId,
+          saleInput
+        );
+
+        // Magma order size = assetAmount * 1e8 / assetRate = 1000 * 1e8 / 1000000 = 100000 sats
+        expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
+          magmaUrl,
+          expect.anything(),
+          expect.objectContaining({
+            input: expect.objectContaining({ size: '100000' }),
+          }),
+          expect.any(Object)
+        );
+
+        // Invoice paid and channel opening detected
+        expect(mockNodeService.pay).toHaveBeenCalledWith(userId.id, {
+          request: 'lnbc1invoice',
+        });
+        expect(mockNodeService.waitForChannelFromPeer).toHaveBeenCalledWith(
+          userId.id,
+          swapPubkey,
+          120_000
+        );
+
+        // Asset outbound channel opened
+        expect(mockTapdNodeService.fundAssetChannel).toHaveBeenCalledWith({
+          id: userId.id,
+          peerPubkey: swapPubkey,
+          assetAmount: '1000',
+          assetId: 'deadbeef'.repeat(8),
+        });
+
+        // BTC channel NOT opened
+        expect(mockNodeService.openChannel).not.toHaveBeenCalled();
+
+        expect(result).toEqual({
+          success: true,
+          magmaOrderId: 'order-1',
+          magmaOrderStatus: 'WAITING',
+          magmaOrderAmountSats: '1000',
+          magmaOrderFeeSats: '500',
+          outboundChannelTxid: 'asset-txid',
+          outboundChannelOutputIndex: 1,
+        });
       });
 
-      it('SALE with grouped asset: throws not-implemented error', async () => {
-        await expect(
-          setupResolver.setupTradeCapacity(userId, {
-            ...saleInput,
-            tapdAssetId: undefined,
-            tapdGroupKey: 'cafebabe'.repeat(8),
-          })
-        ).rejects.toThrow('Selling not implemented yet');
+      it('SALE with grouped asset: opens asset channel using groupKey', async () => {
+        const result = await setupResolver.setupTradeCapacity(userId, {
+          ...saleInput,
+          tapdAssetId: undefined,
+          tapdGroupKey: 'cafebabe'.repeat(8),
+        });
+
+        expect(mockTapdNodeService.fundAssetChannel).toHaveBeenCalledWith({
+          id: userId.id,
+          peerPubkey: swapPubkey,
+          assetAmount: '1000',
+          groupKey: 'cafebabe'.repeat(8),
+        });
+
+        expect(result.outboundChannelTxid).toBe('asset-txid');
+        expect(result.outboundChannelOutputIndex).toBe(1);
+        expect(result.magmaOrderAmountSats).toBe('1000');
       });
     });
 
@@ -482,13 +533,21 @@ describe('MagmaResolver', () => {
         expect(result.magmaOrderAmountSats).toBeUndefined();
       });
 
-      it('SALE: throws not-implemented error', async () => {
-        await expect(
-          setupResolver.setupTradeCapacity(userId, {
-            ...saleInput,
-            satsAmount: undefined,
-          })
-        ).rejects.toThrow('Selling not implemented yet');
+      it('SALE: always opens asset outbound channel (no satsAmount opt-out)', async () => {
+        const result = await setupResolver.setupTradeCapacity(userId, {
+          ...saleInput,
+          satsAmount: undefined,
+        });
+
+        expect(mockTapdNodeService.fundAssetChannel).toHaveBeenCalledWith({
+          id: userId.id,
+          peerPubkey: swapPubkey,
+          assetAmount: '1000',
+          assetId: 'deadbeef'.repeat(8),
+        });
+        expect(mockNodeService.openChannel).not.toHaveBeenCalled();
+        expect(result.outboundChannelTxid).toBe('asset-txid');
+        expect(result.magmaOrderAmountSats).toBe('1000');
       });
     });
 
