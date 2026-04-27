@@ -514,6 +514,11 @@ export class MagmaResolver {
             };
           }
 
+          // No openAssetChannel flag → outbound asset channel already exists, skip.
+          if (!input.openAssetChannel) {
+            return undefined;
+          }
+
           const [channelResult, error] = await toWithError(
             this.tapdNodeService.fundAssetChannel({
               id: user.id,
