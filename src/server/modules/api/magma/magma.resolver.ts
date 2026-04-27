@@ -125,9 +125,6 @@ export class MagmaResolver {
     const ambossAuth = await this.ambossTokenService.getOrCreate(user);
     const result = await auto<SetupTradeCapacityAuto>({
       validate: async (): Promise<SetupTradeCapacityAuto['validate']> => {
-        if (input.transactionType == TapTransactionType.SALE) {
-          throw new GraphQLError(`Selling not implemented yet`);
-        }
         if (!input.assetAmount || BigInt(input.assetAmount) <= 0) {
           throw new GraphQLError('Asset amount must be greater than zero');
         }
