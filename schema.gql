@@ -938,7 +938,7 @@ input SetupTradeCapacityInput {
   assetAmount: String!
   assetRate: String!
   magmaOfferId: String!
-  openAssetChannel: Boolean
+  openOutboundAssetChannel: Boolean
   satsAmount: String
   swapNodePubkey: String!
   swapNodeSockets: [String!]

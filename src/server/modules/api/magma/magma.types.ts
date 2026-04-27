@@ -387,7 +387,7 @@ export class SetupTradeCapacityInput {
    * with the peer. Unused for PURCHASE.
    */
   @Field({ nullable: true })
-  openAssetChannel?: boolean;
+  openOutboundAssetChannel?: boolean;
 }
 
 @ObjectType()

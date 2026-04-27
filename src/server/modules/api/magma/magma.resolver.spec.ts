@@ -384,7 +384,7 @@ describe('MagmaResolver', () => {
       swapNodePubkey: swapPubkey,
       swapNodeSockets: ['127.0.0.1:9735'],
       tapdAssetId: 'deadbeef'.repeat(8),
-      openAssetChannel: true,
+      openOutboundAssetChannel: true,
     };
 
     // ── Case 1: no channels — full setup ──
@@ -534,10 +534,10 @@ describe('MagmaResolver', () => {
         expect(result.magmaOrderAmountSats).toBeUndefined();
       });
 
-      it('SALE: skips asset channel when openAssetChannel is omitted', async () => {
+      it('SALE: skips asset channel when openOutboundAssetChannel is omitted', async () => {
         const result = await setupResolver.setupTradeCapacity(userId, {
           ...saleInput,
-          openAssetChannel: undefined,
+          openOutboundAssetChannel: undefined,
         });
 
         expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();

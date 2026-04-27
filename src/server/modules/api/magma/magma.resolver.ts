@@ -514,8 +514,8 @@ export class MagmaResolver {
             };
           }
 
-          // No openAssetChannel flag → outbound asset channel already exists, skip.
-          if (!input.openAssetChannel) {
+          // No openOutboundAssetChannel flag → outbound asset channel already exists, skip.
+          if (!input.openOutboundAssetChannel) {
             return undefined;
           }
 

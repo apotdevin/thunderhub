@@ -302,7 +302,9 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
           tapdAssetId: offerAsset.assetId || undefined,
           tapdGroupKey: offerAsset.groupKey || undefined,
           satsAmount: isAssetPurchase ? satsAmount : undefined,
-          openAssetChannel: !isAssetPurchase ? !hasAssetChannel : undefined,
+          openOutboundAssetChannel: !isAssetPurchase
+            ? !hasAssetChannel
+            : undefined,
         },
       },
     });
