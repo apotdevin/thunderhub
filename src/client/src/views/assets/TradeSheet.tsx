@@ -810,8 +810,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Channel setup for sells is not yet supported — reduce the
-                  amount or open channels manually.
+                  Automatic channel creation for selling assets is not yet
+                  supported — reduce the amount or open the channels manually.
                 </p>
               </div>
             )}
