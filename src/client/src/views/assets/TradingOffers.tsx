@@ -1,21 +1,11 @@
-import { FC, Fragment, useEffect, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import {
-  Loader2,
-  Info,
-  ArrowUpDown,
-  Zap,
-  CheckCircle2,
-  Circle,
-  Clock,
-  ChevronRight,
-} from 'lucide-react';
+import { Loader2, Info, ArrowUpDown, Zap, ChevronRight } from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetChannelsWithPeersQuery } from '../../graphql/queries/__generated__/getChannels.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
-import { useGetPendingChannelsQuery } from '../../graphql/queries/__generated__/getPendingChannels.generated';
 import { getErrorContent } from '../../utils/error';
 import { cn } from '../../lib/utils';
 import {
@@ -24,7 +14,10 @@ import {
   TapOfferSortBy,
   TapOfferSortDir,
 } from '../../graphql/types';
-import { TradeSheet, Offer } from './TradeSheet';
+import {
+  useTradingState,
+  useTradingDispatch,
+} from '../../context/TradingContext';
 import {
   Tooltip,
   TooltipContent,
@@ -38,10 +31,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
-type ChannelStatus = {
-  btc: 'none' | 'pending' | 'open';
-  asset: 'none' | 'pending' | 'open';
+const formatRate = (raw: string | null | undefined): string => {
+  if (!raw) return '—';
+  const num = Number(raw);
+  if (isNaN(num)) return raw;
+  return num.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+const formatAmount = (raw: string | null | undefined): string => {
+  if (!raw) return '—';
+  const num = Number(raw);
+  if (isNaN(num)) return raw;
+  return num.toLocaleString();
 };
 
 const SortIcon: FC<{
@@ -58,20 +71,11 @@ const SortIcon: FC<{
 );
 
 export const TradingOffers: FC = () => {
-  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
-  const [selectedAsset, setSelectedAsset] = useState('');
-  const [txType, setTxType] = useState<TapTransactionType>(
-    TapTransactionType.Purchase
-  );
+  const { selectedAsset, txType, selectedOffer } = useTradingState();
+  const dispatch = useTradingDispatch();
+
   const [sortBy, setSortBy] = useState<TapOfferSortBy>(TapOfferSortBy.Rate);
   const [sortDir, setSortDir] = useState<TapOfferSortDir>(TapOfferSortDir.Asc);
-  const [minAmountInput, setMinAmountInput] = useState('');
-  const [minAmount, setMinAmount] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMinAmount(minAmountInput), 300);
-    return () => clearTimeout(timer);
-  }, [minAmountInput]);
 
   const { data: supportedData, loading: assetsLoading } =
     useGetTapSupportedAssetsQuery({
@@ -86,7 +90,6 @@ export const TradingOffers: FC = () => {
     variables: { active: true },
   });
   const { data: allAssetChannelsData } = useGetTapAssetChannelBalancesQuery();
-  const { data: pendingData } = useGetPendingChannelsQuery();
 
   const allSupported =
     supportedData?.rails?.get_tap_supported_assets?.list || [];
@@ -98,7 +101,6 @@ export const TradingOffers: FC = () => {
     balances.filter(b => !b.group_key && b.asset_id).map(b => b.asset_id!)
   );
 
-  // Build asset channel indexes for trading partner detection
   const { assetChannelsByAssetId, assetChannelsByGroupKey } = useMemo(() => {
     const byAssetId = new Map<string, Set<string>>();
     const byGroupKey = new Map<string, Set<string>>();
@@ -163,7 +165,6 @@ export const TradingOffers: FC = () => {
     [assetChannelsByGroupKey]
   );
 
-  // For SALE, show assets the node owns (match by group key or asset ID) OR has asset channels for
   const supportedAssets =
     txType === TapTransactionType.Sale
       ? allSupported.filter(
@@ -175,9 +176,10 @@ export const TradingOffers: FC = () => {
         )
       : allSupported;
 
-  const selectedAssetData = supportedAssets.find(a => a.id === selectedAsset);
+  const selectedAssetData = supportedAssets.find(
+    a => a.id === selectedAsset?.id
+  );
   const selectedSymbol = selectedAssetData?.symbol || '';
-  const selectedPrecision = selectedAssetData?.precision ?? 0;
   const selectedTapdAssetId = selectedAssetData?.assetId || '';
   const selectedTapdGroupKey = selectedAssetData?.groupKey || '';
 
@@ -196,50 +198,6 @@ export const TradingOffers: FC = () => {
     ]
   );
 
-  // Per-pubkey channel status for the selected asset
-  const channelStatusByPubkey = useMemo(() => {
-    const map = new Map<string, ChannelStatus>();
-
-    const ensure = (pk: string) => {
-      if (!map.has(pk)) map.set(pk, { btc: 'none', asset: 'none' });
-      return map.get(pk)!;
-    };
-
-    for (const pk of btcChannelPubkeys) {
-      ensure(pk).btc = 'open';
-    }
-
-    for (const pk of assetPeersForSelectedAsset || []) {
-      ensure(pk).asset = 'open';
-    }
-
-    for (const ch of pendingData?.getPendingChannels || []) {
-      if (!ch.is_opening) continue;
-      const s = ensure(ch.partner_public_key);
-      if (ch.asset) {
-        const match = selectedTapdGroupKey
-          ? ch.asset.group_key === selectedTapdGroupKey
-          : selectedTapdAssetId
-            ? ch.asset.asset_id === selectedTapdAssetId
-            : false;
-        if (match && s.asset === 'none') {
-          s.asset = 'pending';
-        }
-      } else if (s.btc === 'none') {
-        s.btc = 'pending';
-      }
-    }
-
-    return map;
-  }, [
-    btcChannelPubkeys,
-    assetPeersForSelectedAsset,
-    selectedTapdAssetId,
-    selectedTapdGroupKey,
-    pendingData,
-  ]);
-
-  // Find trading partners: peers with both BTC + asset channels for selected asset
   const tradingPartners = useMemo(() => {
     if (!assetPeersForSelectedAsset) return [];
     return Array.from(assetPeersForSelectedAsset)
@@ -257,14 +215,12 @@ export const TradingOffers: FC = () => {
   } = useGetTapOffersQuery({
     variables: {
       input: {
-        ambossAssetId: selectedAsset,
+        ambossAssetId: selectedAsset?.id,
         transactionType: txType,
         sortBy,
         sortDir,
-        ...(minAmount ? { minAmount } : {}),
       },
     },
-    skip: !selectedAsset,
     onError: err => toast.error(getErrorContent(err)),
   });
 
@@ -282,121 +238,70 @@ export const TradingOffers: FC = () => {
     }
   };
 
+  const handleSelectAsset = (assetId: string) => {
+    if (assetId === '__all__') {
+      dispatch({ type: 'selectAsset', asset: null });
+      return;
+    }
+    const asset = supportedAssets.find(a => a.id === assetId);
+    if (asset) {
+      dispatch({
+        type: 'selectAsset',
+        asset: {
+          id: asset.id,
+          symbol: asset.symbol,
+          precision: asset.precision,
+          assetId: asset.assetId,
+          groupKey: asset.groupKey,
+        },
+      });
+    }
+  };
+
   const selectPartner = (pubkey: string, alias: string | null) => {
-    setSelectedOffer({
-      id: `partner-${pubkey}`,
-      magmaOfferId: '',
-      node: { alias, pubkey, sockets: [] },
-      rate: { displayAmount: null, fullAmount: null },
-      available: { displayAmount: null, fullAmount: null },
+    dispatch({
+      type: 'selectOffer',
+      offer: {
+        id: `partner-${pubkey}`,
+        magmaOfferId: '',
+        node: { alias, pubkey, sockets: [] },
+        rate: { displayAmount: null, fullAmount: null },
+        available: { displayAmount: null, fullAmount: null },
+        minOrder: { displayAmount: null, fullAmount: null },
+        maxOrder: { displayAmount: null, fullAmount: null },
+        fees: { baseFeeSats: 0, feeRatePpm: 0 },
+        asset: {
+          id: selectedAsset?.id || '',
+          symbol: selectedSymbol,
+          precision: selectedAsset?.precision ?? 0,
+          assetId: selectedAsset?.assetId,
+          groupKey: selectedAsset?.groupKey,
+        },
+      },
     });
   };
 
+  const hasSelectedAsset = !!selectedAsset;
+
   return (
-    <div className="flex flex-col gap-4">
-      {/* Step guide */}
-      {!selectedOffer && (
-        <div className="flex items-center gap-1.5 text-xs flex-wrap">
-          {(
-            [
-              {
-                label: 'Select asset',
-                done: !!selectedAsset,
-                active: !selectedAsset,
-              },
-              {
-                label: 'Select offer',
-                done: false,
-                active: !!selectedAsset,
-              },
-              { label: 'Trade', done: false, active: false },
-            ] as const
-          ).map((s, i) => (
-            <Fragment key={s.label}>
-              {i > 0 && (
-                <ChevronRight
-                  size={10}
-                  className="text-muted-foreground/30 shrink-0"
-                />
-              )}
-              <span
-                className={cn(
-                  'flex items-center gap-1',
-                  s.done
-                    ? 'text-muted-foreground/50'
-                    : s.active
-                      ? 'text-foreground font-medium'
-                      : 'text-muted-foreground/30'
-                )}
-              >
-                {s.done ? (
-                  <CheckCircle2 size={11} className="text-green-500 shrink-0" />
-                ) : (
-                  <Circle size={11} className="shrink-0" />
-                )}
-                {s.label}
-              </span>
-            </Fragment>
-          ))}
-        </div>
-      )}
-
-      {/* Buy / Sell toggle + Asset selector */}
+    <div className="flex flex-col gap-3">
+      {/* Controls row: Asset selector, Min amount */}
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex h-9 rounded-md overflow-hidden border border-border">
-          {(
-            [TapTransactionType.Purchase, TapTransactionType.Sale] as const
-          ).map(t => (
-            <button
-              key={t}
-              onClick={() => {
-                setTxType(t);
-                if (t === TapTransactionType.Sale && selectedAsset) {
-                  const selected = allSupported.find(
-                    a => a.id === selectedAsset
-                  );
-                  const isOwned =
-                    (selected?.groupKey &&
-                      ownedGroupKeys.has(selected.groupKey)) ||
-                    (!selected?.groupKey &&
-                      selected?.assetId &&
-                      ownedAssetIds.has(selected.assetId));
-                  const hasAssetChannels =
-                    (selected?.assetId &&
-                      assetChannelAssetIds.has(selected.assetId)) ||
-                    (selected?.groupKey &&
-                      assetChannelGroupKeys.has(selected.groupKey));
-                  if (!isOwned && !hasAssetChannels) setSelectedAsset('');
-                }
-              }}
-              className={cn(
-                'px-4 py-1.5 text-sm font-medium transition-colors',
-                txType === t
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-background text-muted-foreground hover:text-foreground'
-              )}
-            >
-              {t === TapTransactionType.Purchase ? 'Buy' : 'Sell'}
-            </button>
-          ))}
-        </div>
-
         {assetsLoading ? (
           <Loader2 className="animate-spin text-muted-foreground" size={16} />
-        ) : supportedAssets.length === 0 &&
-          txType === TapTransactionType.Sale ? (
-          <span className="text-sm text-muted-foreground">
-            No supported assets to sell
-          </span>
         ) : (
-          <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-            <SelectTrigger className="w-40 rounded-md h-9! px-4 text-sm font-medium">
-              <SelectValue placeholder="Select asset" />
+          <Select
+            value={selectedAsset?.id || '__all__'}
+            onValueChange={handleSelectAsset}
+          >
+            <SelectTrigger className="w-36 rounded-md h-8! px-3 text-sm font-medium">
+              <SelectValue />
             </SelectTrigger>
             <SelectContent
               position="popper"
               className="rounded-md w-(--radix-select-trigger-width)"
             >
+              <SelectItem value="__all__">All assets</SelectItem>
               {supportedAssets.map(a => (
                 <SelectItem key={a.id} value={a.id}>
                   {a.symbol || a.id.slice(0, 8)}
@@ -408,10 +313,10 @@ export const TradingOffers: FC = () => {
       </div>
 
       {/* Trading partners */}
-      {selectedAsset && tradingPartners.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium flex items-center gap-1.5">
-            <Zap size={14} className="text-green-500" />
+      {hasSelectedAsset && tradingPartners.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+            <Zap size={12} className="text-green-500" />
             Trading partners
           </span>
           <div className="flex flex-col gap-1">
@@ -419,7 +324,12 @@ export const TradingOffers: FC = () => {
               <button
                 key={p.pubkey}
                 onClick={() => selectPartner(p.pubkey, p.alias)}
-                className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-3 py-2 text-sm hover:bg-muted/40 transition-colors text-left"
+                className={cn(
+                  'flex items-center justify-between rounded-md border px-3 py-1.5 text-sm transition-colors text-left',
+                  selectedOffer?.node.pubkey === p.pubkey
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border bg-muted/20 hover:bg-muted/40'
+                )}
               >
                 <span className="font-mono text-xs">
                   {p.alias || p.pubkey.slice(0, 16)}
@@ -443,43 +353,15 @@ export const TradingOffers: FC = () => {
         </div>
       )}
 
-      {/* Minimum amount filter */}
-      {selectedAsset && (
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <input
-              type="text"
-              placeholder="Minimum trade amount"
-              value={minAmountInput}
-              onChange={e => setMinAmountInput(e.target.value)}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm pr-20"
-            />
-            {selectedSymbol && (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                {selectedSymbol}
-              </span>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* No asset selected */}
-      {!selectedAsset && (
-        <div className="flex items-center justify-center p-8 text-muted-foreground">
-          <Info className="mr-2" size={16} />
-          Select an asset to see available offers
-        </div>
-      )}
-
       {/* Loading */}
-      {selectedAsset && loading && (
+      {loading && (
         <div className="flex justify-center py-8">
           <Loader2 className="animate-spin text-muted-foreground" size={20} />
         </div>
       )}
 
       {/* Error */}
-      {selectedAsset && error && (
+      {error && (
         <div className="flex items-center justify-center p-8 text-muted-foreground">
           <Info className="mr-2" size={16} />
           Unable to load offers
@@ -487,36 +369,33 @@ export const TradingOffers: FC = () => {
       )}
 
       {/* Empty */}
-      {selectedAsset &&
-        !loading &&
+      {!loading &&
         !error &&
         offers.length === 0 &&
         tradingPartners.length === 0 && (
           <div className="flex items-center justify-center p-8 text-muted-foreground">
             <Info className="mr-2" size={16} />
-            No offers found for this asset. Try adjusting filters or check back
-            later.
+            No offers found. Try adjusting filters or check back later.
           </div>
         )}
 
       {/* Offers table */}
       {offers.length > 0 && (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground">
-                <th className="text-left py-3 px-3 font-medium">
-                  Routing Node
-                </th>
-                <th
-                  className="text-left py-3 px-3 font-medium cursor-pointer select-none"
+        <div className="rounded-md border border-border">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Node</TableHead>
+                {!hasSelectedAsset && <TableHead>Asset</TableHead>}
+                <TableHead
+                  className="text-right cursor-pointer select-none"
                   onClick={() => toggleSort(TapOfferSortBy.Rate)}
                 >
-                  {selectedSymbol ? `BTC/${selectedSymbol}` : 'Rate'}
+                  {selectedSymbol ? `${selectedSymbol}/BTC` : 'Rate'}
                   <SortIcon field={TapOfferSortBy.Rate} activeSortBy={sortBy} />
-                </th>
-                <th
-                  className="text-left py-3 px-3 font-medium cursor-pointer select-none"
+                </TableHead>
+                <TableHead
+                  className="text-right cursor-pointer select-none"
                   onClick={() => toggleSort(TapOfferSortBy.Available)}
                 >
                   Available
@@ -524,109 +403,71 @@ export const TradingOffers: FC = () => {
                     field={TapOfferSortBy.Available}
                     activeSortBy={sortBy}
                   />
-                </th>
-                <th className="text-left py-3 px-3 font-medium">Channels</th>
-                <th className="py-3 px-3 w-8" />
-              </tr>
-            </thead>
-            <tbody>
+                </TableHead>
+                <TableHead className="text-right">Min / Max</TableHead>
+                <TableHead className="w-6" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {offers.map(offer => {
-                const status = offer.node.pubkey
-                  ? channelStatusByPubkey.get(offer.node.pubkey)
-                  : undefined;
+                const symbol = selectedSymbol || offer.asset?.symbol || '';
                 return (
-                  <tr
+                  <TableRow
                     key={offer.id}
-                    className="border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer"
-                    onClick={() => setSelectedOffer(offer)}
+                    className={cn(
+                      'cursor-pointer',
+                      selectedOffer?.id === offer.id && 'bg-primary/5'
+                    )}
+                    onClick={() => dispatch({ type: 'selectOffer', offer })}
                   >
-                    <td className="py-3 px-3 font-mono text-xs">
+                    <TableCell className="font-mono">
                       {offer.node.alias || offer.node.pubkey?.slice(0, 16)}
-                    </td>
-                    <td className="py-3 px-3">
-                      {offer.rate.displayAmount || offer.rate.fullAmount}
-                    </td>
-                    <td className="py-3 px-3">
-                      {Number(
+                    </TableCell>
+                    {!hasSelectedAsset && (
+                      <TableCell>{offer.asset?.symbol || '—'}</TableCell>
+                    )}
+                    <TableCell className="text-right tabular-nums">
+                      {formatRate(
+                        offer.rate.displayAmount || offer.rate.fullAmount
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {formatAmount(
                         offer.available.displayAmount ||
-                          offer.available.fullAmount ||
-                          0
-                      ).toLocaleString()}
-                      {selectedSymbol && (
+                          offer.available.fullAmount
+                      )}
+                      {symbol && (
                         <span className="text-muted-foreground ml-1">
-                          {selectedSymbol}
+                          {symbol}
                         </span>
                       )}
-                    </td>
-                    <td className="py-3 px-3">
-                      {status ? (
-                        <div className="flex items-center gap-1.5 text-[10px]">
-                          <span
-                            className={
-                              status.btc === 'open'
-                                ? 'text-green-500'
-                                : status.btc === 'pending'
-                                  ? 'text-yellow-500'
-                                  : 'text-muted-foreground/40'
-                            }
-                          >
-                            BTC
-                          </span>
-                          <span
-                            className={
-                              status.asset === 'open'
-                                ? 'text-green-500'
-                                : status.asset === 'pending'
-                                  ? 'text-yellow-500'
-                                  : 'text-muted-foreground/40'
-                            }
-                          >
-                            {selectedSymbol || 'Asset'}
-                          </span>
-                          {(status.btc === 'pending' ||
-                            status.asset === 'pending') && (
-                            <Clock size={10} className="text-yellow-500" />
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-[10px] text-muted-foreground/40">
-                          none
-                        </span>
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums text-muted-foreground">
+                      {formatAmount(
+                        offer.minOrder.displayAmount ||
+                          offer.minOrder.fullAmount
                       )}
-                    </td>
-                    <td className="py-3 px-3 text-muted-foreground/50">
+                      {' – '}
+                      {formatAmount(
+                        offer.maxOrder.displayAmount ||
+                          offer.maxOrder.fullAmount
+                      )}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground/40">
                       <ChevronRight size={14} />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           {totalCount > offers.length && (
-            <div className="text-xs text-muted-foreground text-center py-2">
-              Showing {offers.length} of {totalCount} offers
+            <div className="text-xs text-muted-foreground text-center py-1.5 border-t border-border/40">
+              Showing {offers.length} of {totalCount}
             </div>
           )}
         </div>
       )}
-
-      <div className="text-xs text-muted-foreground text-center pt-2">
-        Trading powered by Amboss
-      </div>
-
-      <TradeSheet
-        offer={selectedOffer}
-        ambossAssetId={selectedAsset}
-        tapdAssetId={selectedAssetData?.assetId || ''}
-        tapdGroupKey={selectedAssetData?.groupKey || ''}
-        assetSymbol={selectedSymbol}
-        assetPrecision={selectedPrecision}
-        transactionType={txType}
-        open={!!selectedOffer}
-        onOpenChange={open => {
-          if (!open) setSelectedOffer(null);
-        }}
-      />
     </div>
   );
 };

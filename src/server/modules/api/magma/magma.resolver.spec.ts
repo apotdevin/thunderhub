@@ -81,6 +81,16 @@ describe('MagmaResolver', () => {
                     display_amount: '500',
                     full_amount: '500000000',
                   },
+                  min_order: {
+                    display_amount: '10',
+                    full_amount: '10000000',
+                  },
+                  max_order: {
+                    display_amount: '1000',
+                    full_amount: '1000000000',
+                  },
+                  fees: { base_fee_sats: 1000, fee_rate_ppm: 500 },
+                  asset: { id: 'asset123', symbol: 'TST' },
                 },
               ],
               total_count: 1,
@@ -105,6 +115,16 @@ describe('MagmaResolver', () => {
         node: { alias: 'alice', pubkey: 'pub1', sockets: [] },
         rate: { displayAmount: '0.001', fullAmount: '100000' },
         available: { displayAmount: '500', fullAmount: '500000000' },
+        minOrder: { displayAmount: '10', fullAmount: '10000000' },
+        maxOrder: { displayAmount: '1000', fullAmount: '1000000000' },
+        fees: { baseFeeSats: 1000, feeRatePpm: 500 },
+        asset: {
+          id: 'asset123',
+          symbol: 'TST',
+          precision: 0,
+          assetId: undefined,
+          groupKey: undefined,
+        },
       });
     });
 
@@ -158,9 +178,12 @@ describe('MagmaResolver', () => {
 
     beforeEach(() => {
       railsResolver = new RailsQueriesResolver(
+        mockNodeService as never,
+        {} as never,
         mockFetchService as never,
         mockTapFederationService as never,
         mockAmbossService as never,
+        {} as never,
         mockLogger as never
       );
     });

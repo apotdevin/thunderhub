@@ -20,6 +20,27 @@ export const getOffersQuery = gql`
             display_amount
             full_amount
           }
+          min_order {
+            display_amount
+            full_amount
+          }
+          max_order {
+            display_amount
+            full_amount
+          }
+          fees {
+            base_fee_sats
+            fee_rate_ppm
+          }
+          asset {
+            id
+            symbol
+            precision
+            taproot_asset_details {
+              asset_id
+              group_key
+            }
+          }
         }
         total_count
       }

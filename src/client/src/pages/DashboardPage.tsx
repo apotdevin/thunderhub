@@ -1,11 +1,11 @@
-import { SimpleWrapper } from '../components/gridWrapper/GridWrapper';
+import { GridWrapper } from '../components/gridWrapper/GridWrapper';
 import DashboardView from '../views/dashboard';
 
 const DashboardPage = () => {
   return (
-    <SimpleWrapper>
+    <GridWrapper centerContent={false} noPadding>
       <DashboardView />
-    </SimpleWrapper>
+    </GridWrapper>
   );
 };
 

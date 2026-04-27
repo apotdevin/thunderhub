@@ -12,9 +12,9 @@ export type ExecuteTradeMutation = {
   executeTrade: {
     __typename?: 'ExecuteTradeResult';
     success: boolean;
-    paymentPreimage?: string | null;
-    satsAmount?: string | null;
-    feeSats?: string | null;
+    payment_preimage?: string | null;
+    sats_amount?: string | null;
+    fee_sats?: string | null;
   };
 };
 
@@ -22,9 +22,9 @@ export const ExecuteTradeDocument = gql`
   mutation ExecuteTrade($input: ExecuteTradeInput!) {
     executeTrade(input: $input) {
       success
-      paymentPreimage
-      satsAmount
-      feeSats
+      payment_preimage
+      sats_amount
+      fee_sats
     }
   }
 `;

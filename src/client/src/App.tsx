@@ -25,6 +25,7 @@ import { useGetNodeInfoQuery } from './graphql/queries/__generated__/getNodeInfo
 import { useGetAccountQuery } from './graphql/queries/__generated__/getAccount.generated';
 import { Navigation } from './layouts/navigation/Navigation';
 import { RightSidebar } from './layouts/sidebar/RightSidebar';
+import { TradingProvider } from './context/TradingContext';
 import { NodeSlugProvider } from './hooks/useNodeSlug';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -179,22 +180,27 @@ const Wrapper: FC<{ children?: ReactNode }> = ({ children }) => {
       <div className="pb-30">
         {!isRoot && <Header />}
         <Listener isRoot={isRoot} />
-        <div className="flex">
-          {!isRoot && authenticated && <Navigation />}
-          <div className="flex-1 min-w-0 overflow-hidden bg-muted/20 dark:bg-transparent">
-            {checking ? (
-              <LoadingCard noCard={true} loadingHeight={'80vh'} />
-            ) : isRoot || authenticated ? (
-              children
-            ) : (
-              <NotAuthenticated />
-            )}
+        <TradingProvider>
+          <div className="flex">
+            {!isRoot && authenticated && <Navigation />}
+            <div className="flex-1 min-w-0 overflow-hidden bg-muted/20 dark:bg-transparent">
+              {checking ? (
+                <LoadingCard noCard={true} loadingHeight={'80vh'} />
+              ) : isRoot || authenticated ? (
+                children
+              ) : (
+                <NotAuthenticated />
+              )}
+            </div>
+            {!isRoot && authenticated && <RightSidebar />}
           </div>
-          {!isRoot && authenticated && <RightSidebar />}
-        </div>
+        </TradingProvider>
       </div>
       <Footer />
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{ style: { wordBreak: 'break-word' } }}
+      />
     </div>
   );
 };

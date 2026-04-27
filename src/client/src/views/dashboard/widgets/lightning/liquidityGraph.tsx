@@ -10,7 +10,9 @@ export const LiquidityGraph = () => {
   if (loading) {
     return (
       <div className="w-full h-full">
-        <h4 className="font-black my-2">Liquidity</h4>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground my-1 block">
+          Liquidity
+        </span>
         <div className="w-full h-full flex justify-center items-center">
           <LoadingCard noCard={true} />
         </div>
@@ -21,7 +23,9 @@ export const LiquidityGraph = () => {
   if (!data?.getChannelReport) {
     return (
       <div className="w-full h-full">
-        <h4 className="font-black my-2">Liquidity</h4>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground my-1 block">
+          Liquidity
+        </span>
         <div className="w-full h-full flex justify-center items-center">
           Unable to get liquidity data.
         </div>

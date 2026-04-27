@@ -7,7 +7,6 @@ import { PendingChannels } from '../views/channels/pendingChannels/PendingChanne
 import { ClosedChannels } from '../views/channels/closedChannels/ClosedChannels';
 import { ChannelTable } from '../views/channels/channels/ChannelTable';
 import { Card, CardContent } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '../components/ui/toggle-group';
 import {
@@ -89,13 +88,7 @@ const ChannelView = () => {
           >
             {tabs.map(tab => (
               <ToggleGroupItem key={tab.value} value={tab.value}>
-                {tab.label}
-                <Badge
-                  variant={activeTab === tab.value ? 'default' : 'secondary'}
-                  className="min-w-5 justify-center"
-                >
-                  {counts[tab.value]}
-                </Badge>
+                {tab.label} ({counts[tab.value]})
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

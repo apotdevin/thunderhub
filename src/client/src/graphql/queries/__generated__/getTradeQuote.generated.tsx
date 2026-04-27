@@ -11,24 +11,24 @@ export type GetTradeQuoteQuery = {
   __typename?: 'Query';
   getTradeQuote: {
     __typename?: 'TradeQuoteResult';
-    satsAmount: string;
-    assetAmount: string;
-    rateFixed?: string | null;
-    paymentRequest?: string | null;
-    rfqId?: string | null;
-    expiryEpoch?: string | null;
+    sats_amount: string;
+    asset_amount: string;
+    rate_fixed?: string | null;
+    payment_request?: string | null;
+    rfq_id?: string | null;
+    expiry_epoch?: string | null;
   };
 };
 
 export const GetTradeQuoteDocument = gql`
   query GetTradeQuote($input: TradeQuoteInput!) {
     getTradeQuote(input: $input) {
-      satsAmount
-      assetAmount
-      rateFixed
-      paymentRequest
-      rfqId
-      expiryEpoch
+      sats_amount
+      asset_amount
+      rate_fixed
+      payment_request
+      rfq_id
+      expiry_epoch
     }
   }
 `;

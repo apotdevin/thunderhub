@@ -6,7 +6,7 @@ import {
 import { defaultGrid } from '../../utils/gridConstants';
 import { useLocalStorage } from '../../hooks/UseLocalStorage';
 import { LoadingCard } from '../../components/loading/LoadingCard';
-import { Card } from '@/components/ui/card';
+
 import { Link } from '../../components/link/Link';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
@@ -65,21 +65,20 @@ const Dashboard = () => {
             layouts={layouts}
             rowHeight={28}
             width={width}
-            margin={defaultGrid.margin}
+            margin={[8, 8]}
             breakpoints={defaultGrid.breakpoints}
             cols={defaultGrid.columns}
             dragConfig={{ bounded: true }}
             onLayoutChange={handleChange}
           >
             {widgets.map(w => (
-              <Card
-                className="flex justify-center items-center rounded p-2"
-                style={{ borderTop: `2px solid #${w.color}` }}
+              <div
+                className="flex justify-center items-center overflow-hidden rounded-lg bg-background text-card-foreground ring-1 ring-foreground/10 p-2"
                 key={w.id}
                 data-grid={w.default}
               >
                 <w.component />
-              </Card>
+              </div>
             ))}
           </ResponsiveGridLayout>
         </div>

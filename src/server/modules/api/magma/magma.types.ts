@@ -6,6 +6,10 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
+import {
+  OfferReadinessResult,
+  TradeReadinessResult,
+} from '../trade/trade.types';
 
 // ─── Pending Orders ─────────────────────────────────────────────
 
@@ -168,8 +172,8 @@ registerEnumType(TapOfferSortDir, { name: 'TapOfferSortDir' });
 
 @InputType()
 export class GetTapOffersInput {
-  @Field()
-  ambossAssetId: string;
+  @Field({ nullable: true })
+  ambossAssetId?: string;
 
   @Field(() => TapTransactionType)
   transactionType: TapTransactionType;
@@ -212,6 +216,33 @@ export class TapTradeOfferAmount {
 }
 
 @ObjectType()
+export class TapTradeOfferFees {
+  @Field(() => Int)
+  baseFeeSats: number;
+
+  @Field(() => Int)
+  feeRatePpm: number;
+}
+
+@ObjectType()
+export class TapTradeOfferAsset {
+  @Field()
+  id: string;
+
+  @Field()
+  symbol: string;
+
+  @Field(() => Int)
+  precision: number;
+
+  @Field({ nullable: true })
+  assetId?: string;
+
+  @Field({ nullable: true })
+  groupKey?: string;
+}
+
+@ObjectType()
 export class TapTradeOffer {
   @Field()
   id: string;
@@ -227,6 +258,18 @@ export class TapTradeOffer {
 
   @Field(() => TapTradeOfferAmount)
   available: TapTradeOfferAmount;
+
+  @Field(() => TapTradeOfferAmount)
+  minOrder: TapTradeOfferAmount;
+
+  @Field(() => TapTradeOfferAmount)
+  maxOrder: TapTradeOfferAmount;
+
+  @Field(() => TapTradeOfferFees)
+  fees: TapTradeOfferFees;
+
+  @Field(() => TapTradeOfferAsset)
+  asset: TapTradeOfferAsset;
 }
 
 @ObjectType()
@@ -424,4 +467,8 @@ export class RailsQueries {
   id: string;
   @Field(() => TapSupportedAssetList)
   get_tap_supported_assets: TapSupportedAssetList;
+  @Field(() => TradeReadinessResult)
+  trade_readiness: TradeReadinessResult;
+  @Field(() => OfferReadinessResult)
+  offer_readiness: OfferReadinessResult;
 }

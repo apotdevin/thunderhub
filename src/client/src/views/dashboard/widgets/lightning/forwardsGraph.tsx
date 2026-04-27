@@ -33,7 +33,9 @@ export const ForwardsGraph = () => {
 
   const Header = () => (
     <div className="grid" style={{ gridTemplateColumns: '1fr 60px 90px' }}>
-      <h4 className="font-black my-2">Forwards</h4>
+      <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground my-1 block">
+        Forwards
+      </span>
       <SmallSelectWithValue
         callback={e => setDays((e[0] || options[1]) as any)}
         options={options}
