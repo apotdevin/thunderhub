@@ -562,7 +562,7 @@ type Mutation {
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
-  setupTradePartner(input: SetupTradePartnerInput!): SetupTradePartnerResult!
+  setupTradeCapacity(input: SetupTradeCapacityInput!): SetupTradeCapacityResult!
   taproot_assets: TaprootAssetsMutations!
   team: TeamMutations!
   toggleConfig(field: ConfigFields!): Boolean!
@@ -671,6 +671,8 @@ type OfferReadinessResult {
   btc_channels: ChannelSummary!
   has_pending_order: Boolean!
   is_peer_connected: Boolean!
+  onchain_asset_balance: String!
+  onchain_balance_sats: String!
 }
 
 type OnChainBalance {
@@ -914,7 +916,7 @@ type SessionInfo {
   type: String
 }
 
-input SetupTradePartnerInput {
+input SetupTradeCapacityInput {
   ambossAssetId: String!
   assetAmount: String!
   assetRate: String!
@@ -928,7 +930,7 @@ input SetupTradePartnerInput {
   transactionType: TapTransactionType!
 }
 
-type SetupTradePartnerResult {
+type SetupTradeCapacityResult {
   magmaOrderAmountAsset: String
   magmaOrderAmountSats: String
   magmaOrderFeeSats: String
@@ -936,6 +938,8 @@ type SetupTradePartnerResult {
   magmaOrderStatus: String
   outboundChannelOutputIndex: Int
   outboundChannelTxid: String
+  skippedMagmaOrder: Boolean
+  skippedOutboundChannel: Boolean
   success: Boolean!
 }
 
