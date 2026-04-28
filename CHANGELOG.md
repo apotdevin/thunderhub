@@ -2,6 +2,136 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/apotdevin/thunderhub/compare/v0.15.5...v0.16.0) (2026-04-28)
+
+
+### Features
+
+* add BTC liquidity safeguard to asset trade flow ([#705](https://github.com/apotdevin/thunderhub/issues/705)) ([71454ca](https://github.com/apotdevin/thunderhub/commit/71454ca2680349acd45d20cc374be564a89d611a))
+* add db nodes and switch in ui ([62ab375](https://github.com/apotdevin/thunderhub/commit/62ab3752907187201e957524f1abe188a7d12ff8))
+* add precision parameter to asset minting ([#706](https://github.com/apotdevin/thunderhub/issues/706)) ([5553d9b](https://github.com/apotdevin/thunderhub/commit/5553d9b0b6f9950b8ad0e102b2cca56547834301))
+* add tapd daemon info to advanced assets view ([#711](https://github.com/apotdevin/thunderhub/issues/711)) ([4063775](https://github.com/apotdevin/thunderhub/commit/4063775d2104eec360b403d7cec9a9ce2c6baabf))
+* add taproot asset invoice creation ([#671](https://github.com/apotdevin/thunderhub/issues/671)) ([50302b8](https://github.com/apotdevin/thunderhub/commit/50302b82f458570ba31b3a26913c12446ff63038))
+* add taproot assets page with list, send, receive ([#664](https://github.com/apotdevin/thunderhub/issues/664)) ([00f248a](https://github.com/apotdevin/thunderhub/commit/00f248a2eac4031eb6ed489f17db46576af63dc4))
+* add trading offers section for taproot assets ([#667](https://github.com/apotdevin/thunderhub/issues/667)) ([72431bd](https://github.com/apotdevin/thunderhub/commit/72431bd1e2a633ab9bffc68656a26b30d794240e))
+* add transfers, mint, burn, channels, universe management ([#665](https://github.com/apotdevin/thunderhub/issues/665)) ([581b301](https://github.com/apotdevin/thunderhub/commit/581b3014a57fb21cf0ab8012eb09d40f64838b5f))
+* always create private channels for asset magma orders ([#714](https://github.com/apotdevin/thunderhub/issues/714)) ([72e3dc3](https://github.com/apotdevin/thunderhub/commit/72e3dc34f8516a1a8e491d84d86bcf28aabead63))
+* bake super macaroon option ([5a6f067](https://github.com/apotdevin/thunderhub/commit/5a6f0675faaa2c56db9accd3cc9c3cba8b35c222))
+* db initial setup ([1117879](https://github.com/apotdevin/thunderhub/commit/11178793b9003d1983991cb2205469ec2d3a13b8))
+* display asset channel balances in channels tab ([#712](https://github.com/apotdevin/thunderhub/issues/712)) ([d611aaa](https://github.com/apotdevin/thunderhub/commit/d611aaa0be45014b409953cc68d4db982d0a6736))
+* execute swaps ([0822483](https://github.com/apotdevin/thunderhub/commit/08224832827119f97cf7ba06dd6e5979cd276480))
+* execute swaps ([#698](https://github.com/apotdevin/thunderhub/issues/698)) ([c3f7f91](https://github.com/apotdevin/thunderhub/commit/c3f7f918799c2daa5c486d013ea3950bbaea9d15))
+* Filter Magma Orders by node [AMB-2522] ([#734](https://github.com/apotdevin/thunderhub/issues/734)) ([d0db288](https://github.com/apotdevin/thunderhub/commit/d0db288f86ddc5e8f46899956070086e0afb3a7b))
+* guided steps ([#736](https://github.com/apotdevin/thunderhub/issues/736)) ([2864186](https://github.com/apotdevin/thunderhub/commit/286418631821dc25f79715c7b6b431f813761026))
+* in-app payment for Magma orders ([#720](https://github.com/apotdevin/thunderhub/issues/720)) ([0bdcf33](https://github.com/apotdevin/thunderhub/commit/0bdcf331a2e304ead78322ce2ab06def6c6efc9c))
+* node tables ([129d094](https://github.com/apotdevin/thunderhub/commit/129d094156fe457cea5c441b4a83795b16252db9))
+* pending channels in trade preview and offer list ([#707](https://github.com/apotdevin/thunderhub/issues/707)) ([60c8455](https://github.com/apotdevin/thunderhub/commit/60c84554fcfab70a886f974885d9f50a6f9a407e))
+* portfolio distribution card in assets tab (AMB-2390) ([#687](https://github.com/apotdevin/thunderhub/issues/687)) ([9fcdbea](https://github.com/apotdevin/thunderhub/commit/9fcdbea76604b004fa714dfc071c7e823b29ffbc))
+* setup trading partner (trade magma) [AMB-2421] ([#697](https://github.com/apotdevin/thunderhub/issues/697)) ([09bf1be](https://github.com/apotdevin/thunderhub/commit/09bf1be58196f4863e9d68e6466e1fb75a367047))
+* show Amboss Listed badge on supported assets (AMB-2409) ([#695](https://github.com/apotdevin/thunderhub/issues/695)) ([5743c74](https://github.com/apotdevin/thunderhub/commit/5743c741273b82605eb5b6eb35acd5f63f35da14))
+* show pending Magma orders on Channels page ([#700](https://github.com/apotdevin/thunderhub/issues/700)) ([7537d6d](https://github.com/apotdevin/thunderhub/commit/7537d6dc4ba2b6d8daff238b24fbf0e59fc5ccbd))
+* trader should sync to universe before buying channel [AMB-2447] ([#694](https://github.com/apotdevin/thunderhub/issues/694)) ([5a0497c](https://github.com/apotdevin/thunderhub/commit/5a0497c6968e6af172d16b3b618b5f372fec8b78))
+
+
+### Bug Fixes
+
+* allow Boltz WebSocket in Content-Security-Policy ([#676](https://github.com/apotdevin/thunderhub/issues/676)) ([67551f9](https://github.com/apotdevin/thunderhub/commit/67551f93bd7c55aca78148519ae9aeca3d0fd385))
+* console errors ([3bcdfe9](https://github.com/apotdevin/thunderhub/commit/3bcdfe978d68ed33d2a338b107fa37a7a7d09fff))
+* correct asset/BTC rate ticker order in trading UI ([#726](https://github.com/apotdevin/thunderhub/issues/726)) ([9d5585d](https://github.com/apotdevin/thunderhub/commit/9d5585d098595ad7dfb8e1ae0b758fe56286513f))
+* derive pending channel count from getPendingChannels query ([#725](https://github.com/apotdevin/thunderhub/issues/725)) ([ce93af4](https://github.com/apotdevin/thunderhub/commit/ce93af472ad66b4d5b0bc6fd30501473509901d8))
+* docker build drizzle ([#713](https://github.com/apotdevin/thunderhub/issues/713)) ([807c947](https://github.com/apotdevin/thunderhub/commit/807c94711a8f4c8a23f0ea90e3e06ca3840f3388))
+* don't prefill the trading form input ([#719](https://github.com/apotdevin/thunderhub/issues/719)) ([492d94d](https://github.com/apotdevin/thunderhub/commit/492d94da5031067f790c7c3729f6951f04082d43))
+* error message extraction ([a1abe69](https://github.com/apotdevin/thunderhub/commit/a1abe698fac7f84666637eb1553eeef8951b2f1f))
+* group key check ([de35c86](https://github.com/apotdevin/thunderhub/commit/de35c86203b7796f0c54f8e6b6f8d7e67bdbadc3))
+* handle decimal amounts in trade input ([#708](https://github.com/apotdevin/thunderhub/issues/708)) ([dab23b6](https://github.com/apotdevin/thunderhub/commit/dab23b6f2530716124f897eeb7f7bf5c7f8028d5))
+* lnurl decoding in the browser ([2a9f61f](https://github.com/apotdevin/thunderhub/commit/2a9f61f5ed1ec766b449744883676310c6340269))
+* login and asset amount ([56b0bc0](https://github.com/apotdevin/thunderhub/commit/56b0bc0380cd2b35b5c1bf55790a043f9e40ab67))
+* magma condition ([5083a00](https://github.com/apotdevin/thunderhub/commit/5083a00de5ec7d9fdfc5593c867e0e1ab06d3863))
+* move is_private into options for CreateManualOrderInput ([#723](https://github.com/apotdevin/thunderhub/issues/723)) ([6757237](https://github.com/apotdevin/thunderhub/commit/6757237d29330b9b661849d491b84708a332af59))
+* patch tapd-api to make TLS cert optional ([#678](https://github.com/apotdevin/thunderhub/issues/678)) ([57d36ea](https://github.com/apotdevin/thunderhub/commit/57d36eaa28817eb74f09dc762a340cbea5bb7e6d))
+* query ids for caching ([2cb5d9f](https://github.com/apotdevin/thunderhub/commit/2cb5d9fd15ef4d21f9e0a79512bf4b5e29ade9f0))
+* respect word boundaries in toast messages ([#731](https://github.com/apotdevin/thunderhub/issues/731)) ([1686d27](https://github.com/apotdevin/thunderhub/commit/1686d27ec61fde279cfec88a2290b6f959bebe72))
+* route trade payments through virtual SCID via payViaRoutes ([#710](https://github.com/apotdevin/thunderhub/issues/710)) ([2601319](https://github.com/apotdevin/thunderhub/commit/260131960771aec3ddc652515ac48dd3fa5c5060))
+* schema fields ([94ab39c](https://github.com/apotdevin/thunderhub/commit/94ab39c0610f80d8ab325bfaa4082efef7ea7f0e))
+* super macaroon bake ([17c0534](https://github.com/apotdevin/thunderhub/commit/17c0534118fb124902f3f57b3a5c126753a38921))
+* tests ([cd6124b](https://github.com/apotdevin/thunderhub/commit/cd6124ba3e223227e7fa1b1f2511e0258a44e64a))
+* trade url based on network ([38fa240](https://github.com/apotdevin/thunderhub/commit/38fa24061d774422f4210b82d0f07bd81cb01dd7))
+* use asset precision for display ([8b63236](https://github.com/apotdevin/thunderhub/commit/8b63236ebd6983689493dd2ae10d6ad2fe53758e))
+* use consistent asset id for trading offer selection ([#691](https://github.com/apotdevin/thunderhub/issues/691)) ([fa8e4fc](https://github.com/apotdevin/thunderhub/commit/fa8e4fcd9d187ca368b48da42ab2fa7edb567999))
+* use explicit BTC route hint for asset-sale self-pay invoice ([#704](https://github.com/apotdevin/thunderhub/issues/704)) ([0430fee](https://github.com/apotdevin/thunderhub/commit/0430fee0e67beac6652abf56fabc0959a55fa564))
+
+
+### Improvements
+
+* add CODEOWNERS for release PR approval ([4f5e319](https://github.com/apotdevin/thunderhub/commit/4f5e3197b7beddd79a4e3f5596f638dadfd0023b))
+* add sqlite config in docker compose ([#688](https://github.com/apotdevin/thunderhub/issues/688)) ([264fe0c](https://github.com/apotdevin/thunderhub/commit/264fe0c8795674c79df5207482f8d244343fc653))
+* add ta setup guides ([d7d5132](https://github.com/apotdevin/thunderhub/commit/d7d51325fa2e5df2ea198a92c832a73790c05bfc))
+* add TH instructions in Trading view [AMB-2415] ([#686](https://github.com/apotdevin/thunderhub/issues/686)) ([178c12d](https://github.com/apotdevin/thunderhub/commit/178c12dc48e6a91df03f99df5b0c05c2920a9a6f))
+* address comments ([5911b60](https://github.com/apotdevin/thunderhub/commit/5911b60294056dbe657dd906d0ac58ae9a7c0c27))
+* address comments ([f679451](https://github.com/apotdevin/thunderhub/commit/f679451a0f106320f97c2e27224af9485cbb89b1))
+* amount type change ([509e66b](https://github.com/apotdevin/thunderhub/commit/509e66b51ea912b4d5c04e81865c800d26217d23))
+* asset list toggles ([b7bf500](https://github.com/apotdevin/thunderhub/commit/b7bf500b69b1be56b0d48790a12ef88feb9c12b7))
+* asset transactions changes ([2393f5c](https://github.com/apotdevin/thunderhub/commit/2393f5c4601b792f3a13cbf5501b8b3746877cf9))
+* balance checks ([d813c21](https://github.com/apotdevin/thunderhub/commit/d813c215090e7727947ea93905ba8dc79cdda96a))
+* bump lightning version ([f94d881](https://github.com/apotdevin/thunderhub/commit/f94d881f0ede04cb4ee1919038addd1b24d017f6))
+* button prettier ([#701](https://github.com/apotdevin/thunderhub/issues/701)) ([28f2883](https://github.com/apotdevin/thunderhub/commit/28f2883838c71541155ea164268f3676b247f648))
+* change lightning package ref ([e0b5f3d](https://github.com/apotdevin/thunderhub/commit/e0b5f3dd461ed5749d0d93cfc9ed3150642ed23f))
+* change to mira theme ([93b8ee7](https://github.com/apotdevin/thunderhub/commit/93b8ee70e0655b50de253a0d0df0eedc4e5aaa45))
+* changes ([82d230a](https://github.com/apotdevin/thunderhub/commit/82d230aff92eb5fbc4e48f6935dba74444a1bb31))
+* **ci:** bump all GitHub Actions versions (AMB-2436) ([#683](https://github.com/apotdevin/thunderhub/issues/683)) ([211aa23](https://github.com/apotdevin/thunderhub/commit/211aa23bc09d75aa058cca844ee65a15d3b1e3a7))
+* circular rebalance for TA channel sat reserve ([#732](https://github.com/apotdevin/thunderhub/issues/732)) ([4e41c32](https://github.com/apotdevin/thunderhub/commit/4e41c32dbead5601b512b370348fccd9921579ab))
+* cleanup ([6d193c5](https://github.com/apotdevin/thunderhub/commit/6d193c59cd5b5d8f5b2be9274021a41323b569ae))
+* cleanup query schema ([b4d6707](https://github.com/apotdevin/thunderhub/commit/b4d6707120a766246740376ba61cdaf5794286d1))
+* cleanup stats view ([8e31941](https://github.com/apotdevin/thunderhub/commit/8e319411356be496b31bfa70f02d95b0223b7b79))
+* connect db to login ([dbc0f22](https://github.com/apotdevin/thunderhub/commit/dbc0f223c1325bbc0e5e4540d859cd90edda3aa4))
+* copy text cleanup ([8760a1c](https://github.com/apotdevin/thunderhub/commit/8760a1ca62c95df51fd1b3d18922293ba2ac88c9))
+* docker changes ([#679](https://github.com/apotdevin/thunderhub/issues/679)) ([4a4bf86](https://github.com/apotdevin/thunderhub/commit/4a4bf864ac99e5dab874a12ccb80b5653f1109d7))
+* dont push user to buy a new channel when its down [AMB-2495] ([#709](https://github.com/apotdevin/thunderhub/issues/709)) ([1cf7fc4](https://github.com/apotdevin/thunderhub/commit/1cf7fc4e9be899ec44c53eed3d436c7f4a498835))
+* edit and delete db nodes ([c30eb47](https://github.com/apotdevin/thunderhub/commit/c30eb47a7544c42d00aee1655ac635265ff83d06))
+* fix all `suggestCanonicalClasses` ([#722](https://github.com/apotdevin/thunderhub/issues/722)) ([ad84d48](https://github.com/apotdevin/thunderhub/commit/ad84d48b81c066238b55290b52765e8cd711b522))
+* fix config fetching [AMB-2446] ([#689](https://github.com/apotdevin/thunderhub/issues/689)) ([65488cc](https://github.com/apotdevin/thunderhub/commit/65488cc56bea6b62158472f16290b878ccb8443a))
+* fix prefill for trading channel input ([#715](https://github.com/apotdevin/thunderhub/issues/715)) ([cf4d044](https://github.com/apotdevin/thunderhub/commit/cf4d044603e2aedd39904c46766a8a42e6cdc485))
+* generate types ([f3b8c5f](https://github.com/apotdevin/thunderhub/commit/f3b8c5f54bdc4662e6ec53fe8991e31c41776f77))
+* handle db jwt auth ([87f4fe5](https://github.com/apotdevin/thunderhub/commit/87f4fe59fa217bb26210f05fb15821fa1585972b))
+* improve amboss auth handling ([9893142](https://github.com/apotdevin/thunderhub/commit/9893142aa888239672918f345429a7fc46c9e1ba))
+* improve error handling ([e24842f](https://github.com/apotdevin/thunderhub/commit/e24842f64fe213233a6b3d787fa51cf9f965ae7d))
+* initial user and team tables ([c63ea0d](https://github.com/apotdevin/thunderhub/commit/c63ea0d76ffe956c4706d79b58bd24541ec6ac80))
+* initial user setup ([90dfdae](https://github.com/apotdevin/thunderhub/commit/90dfdae4e30dc9337ccfcc332a3015b8a21f58e7))
+* login improvements ([1dd5a98](https://github.com/apotdevin/thunderhub/commit/1dd5a98833339d86e65d48fe01334fdd5a488891))
+* organize taproot asset views ([efb1e97](https://github.com/apotdevin/thunderhub/commit/efb1e9786afb34f7595b0a931cb8534df74cb8bb))
+* portfolio widget ([ca3f379](https://github.com/apotdevin/thunderhub/commit/ca3f3793a73ba278ac9ed1a2013f325f7a1b9103))
+* redirect to docs site for litd setup ([#685](https://github.com/apotdevin/thunderhub/issues/685)) ([2e84cd9](https://github.com/apotdevin/thunderhub/commit/2e84cd9463dfc7943c1d3387877feebd0911a4da))
+* show access ids ([6a3de69](https://github.com/apotdevin/thunderhub/commit/6a3de692a052c52374393c2293465b0700f418ba))
+* small changes ([5180bd4](https://github.com/apotdevin/thunderhub/commit/5180bd481c73e77db5224ffc2bc4183213e9e554))
+* string number inputs and proof courier input ([1011040](https://github.com/apotdevin/thunderhub/commit/10110403fe72bb20f607413eb93d57df5d272348))
+* switch buy/sell ([c9c08a0](https://github.com/apotdevin/thunderhub/commit/c9c08a006998c7bb097b600a68bc6fe4f4a781b9))
+* ta send and receive dialog ([460cce9](https://github.com/apotdevin/thunderhub/commit/460cce916c5b85f90f938986b5abf1837489a0cd))
+* **ui:** add a beta tag in Taproot Assets stuff ([#733](https://github.com/apotdevin/thunderhub/issues/733)) ([7a3cb0a](https://github.com/apotdevin/thunderhub/commit/7a3cb0a3d3c76f4220cf0d05bbe053503ee014a5))
+* unify precision number display ([4bd4a52](https://github.com/apotdevin/thunderhub/commit/4bd4a52be3d7f56fe2313a4a2892a2f471be867c))
+* update package lock ([e4b190e](https://github.com/apotdevin/thunderhub/commit/e4b190e6906e21a62258351653ae5847c57ce1f2))
+* use url slug ([51f09e2](https://github.com/apotdevin/thunderhub/commit/51f09e2e235d57eaad262d890e2a61abf3bcac43))
+
+
+### Refactoring
+
+* organize ta queries and mutations ([0db206b](https://github.com/apotdevin/thunderhub/commit/0db206bec0647efbc7eacf910d72f91b516cb532))
+
+
+### Docs
+
+* add GraphQL codegen step to CLAUDE.md ([#677](https://github.com/apotdevin/thunderhub/issues/677)) ([f3ee54b](https://github.com/apotdevin/thunderhub/commit/f3ee54b34d0b479324d3e871edbc7c384179a647))
+
+
+### Styling
+
+* small border change ([595465b](https://github.com/apotdevin/thunderhub/commit/595465be002a023543e06dd3511a733507964384))
+* small node switch badge color change ([615a386](https://github.com/apotdevin/thunderhub/commit/615a3861f5f9249e28a3fe21696f056614288f8f))
+
+
+### CI
+
+* move to release-please ([be3c39b](https://github.com/apotdevin/thunderhub/commit/be3c39bbd42d7498bab56ad52ee31b41783c9083))
+
 ### [0.15.5](https://github.com/apotdevin/thunderhub/compare/v0.15.4...v0.15.5) (2026-03-24)
 
 
