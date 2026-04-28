@@ -73,6 +73,7 @@ describe('TradeResolver', () => {
     getIdentity: jest.fn(),
     getHeight: jest.fn(),
     createInvoice: jest.fn(),
+    decodePaymentRequest: jest.fn(),
     payViaRoutes: jest.fn(),
   };
   const mockTapdNodeService = {
@@ -98,6 +99,22 @@ describe('TradeResolver', () => {
       payment: 'bb'.repeat(32),
       request: 'lnbc...',
       secret: 'cc'.repeat(32),
+    });
+    // Default decoded invoice: a single TA-channel route hint via the peer
+    // with the default channel cltv_delta and a typical forwarding fee.
+    // Tests that need different cltv/fees override this per-test.
+    mockNodeService.decodePaymentRequest.mockResolvedValue({
+      routes: [
+        [
+          {
+            public_key: peerPubkey,
+            channel: '800000x1x0',
+            cltv_delta: 40,
+            base_fee_mtokens: '1000',
+            fee_rate: 2500,
+          },
+        ],
+      ],
     });
     mockNodeService.payViaRoutes.mockResolvedValue({ is_confirmed: true });
     mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([]);
@@ -611,7 +628,20 @@ describe('TradeResolver', () => {
       expect(routes[0].timeout).toBeGreaterThan(hop1.timeout);
     });
 
-    it('uses cltv_delta fallback of 40 when both getChannel calls fail', async () => {
+    it('uses cltv_delta fallback of 40 when route hint has no cltv_delta', async () => {
+      mockNodeService.decodePaymentRequest.mockResolvedValue({
+        routes: [
+          [
+            {
+              public_key: peerPubkey,
+              channel: taChannelScid,
+              base_fee_mtokens: '0',
+              fee_rate: 0,
+            },
+          ],
+        ],
+      });
+
       await priv.rebalanceTaChannel(
         userId,
         peerPubkey,
@@ -632,8 +662,110 @@ describe('TradeResolver', () => {
       const hop2Timeout = routes[0].hops[0].timeout;
       // hop2Timeout = 800_000 + 24 (DEFAULT_INVOICE_CLTV_DELTA) + 3 = 800_027
       expect(hop2Timeout).toBe(800_027);
-      // routes[0].timeout = hop2Timeout + max(40, 40) (DEFAULT_CHANNEL_CLTV_DELTA) = 800_067
+      // routes[0].timeout = hop2Timeout + 40 (DEFAULT_CHANNEL_CLTV_DELTA) = 800_067
       expect(routes[0].timeout).toBe(800_067);
+    });
+
+    it('uses cltv_delta from the TA channel route hint', async () => {
+      mockNodeService.decodePaymentRequest.mockResolvedValue({
+        routes: [
+          [
+            {
+              public_key: peerPubkey,
+              channel: taChannelScid,
+              cltv_delta: 144,
+              base_fee_mtokens: '0',
+              fee_rate: 0,
+            },
+          ],
+        ],
+      });
+
+      await priv.rebalanceTaChannel(
+        userId,
+        peerPubkey,
+        taChannelScid,
+        undefined,
+        taChannelCapacity,
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
+      );
+
+      const routes = mockNodeService.payViaRoutes.mock.calls[0][1]
+        .routes as Array<{
+        hops: Array<{ timeout: number }>;
+        timeout: number;
+      }>;
+      const hop2Timeout = routes[0].hops[0].timeout;
+      expect(hop2Timeout).toBe(800_027);
+      expect(routes[0].timeout).toBe(800_027 + 144);
+    });
+
+    it('throws when no TA route hint is found in the invoice', async () => {
+      mockNodeService.decodePaymentRequest.mockResolvedValue({ routes: [] });
+
+      await expect(
+        priv.rebalanceTaChannel(
+          userId,
+          peerPubkey,
+          taChannelScid,
+          undefined,
+          taChannelCapacity,
+          btcChannel,
+          rebalanceSats,
+          currentHeight,
+          myPubkey
+        )
+      ).rejects.toThrow('no TA channel route hint');
+    });
+
+    it('selects the route hint matching taChannelPartnerScidAlias', async () => {
+      const alias = '16000000x0x1';
+      mockNodeService.decodePaymentRequest.mockResolvedValue({
+        routes: [
+          [
+            {
+              public_key: peerPubkey,
+              channel: 'btc-private-1',
+              cltv_delta: 80,
+              base_fee_mtokens: '0',
+              fee_rate: 0,
+            },
+          ],
+          [
+            {
+              public_key: peerPubkey,
+              channel: alias,
+              cltv_delta: 144,
+              base_fee_mtokens: '0',
+              fee_rate: 0,
+            },
+          ],
+        ],
+      });
+
+      await priv.rebalanceTaChannel(
+        userId,
+        peerPubkey,
+        taChannelScid,
+        alias,
+        taChannelCapacity,
+        btcChannel,
+        rebalanceSats,
+        currentHeight,
+        myPubkey
+      );
+
+      const routes = mockNodeService.payViaRoutes.mock.calls[0][1]
+        .routes as Array<{
+        hops: Array<{ channel: string; timeout: number }>;
+        timeout: number;
+      }>;
+      const [, hop2] = routes[0].hops;
+      expect(hop2.channel).toBe(alias);
+      expect(routes[0].timeout).toBe(800_027 + 144);
     });
 
     it('throws when createInvoice fails', async () => {
@@ -708,22 +840,18 @@ describe('TradeResolver', () => {
       ).resolves.toBeUndefined();
     });
 
-    it('computes zero fees and correct tokens when peer policy has zero fee', async () => {
-      mockNodeService.getChannel.mockResolvedValue({
-        id: 'btc-1',
-        policies: [
-          {
-            public_key: peerPubkey,
-            base_fee_mtokens: '0',
-            fee_rate: 0,
-            cltv_delta: 40,
-          },
-          {
-            public_key: myPubkey,
-            base_fee_mtokens: '0',
-            fee_rate: 0,
-            cltv_delta: 40,
-          },
+    it('computes zero fees and correct tokens when route hint has zero fees', async () => {
+      mockNodeService.decodePaymentRequest.mockResolvedValue({
+        routes: [
+          [
+            {
+              public_key: peerPubkey,
+              channel: taChannelScid,
+              cltv_delta: 40,
+              base_fee_mtokens: '0',
+              fee_rate: 0,
+            },
+          ],
         ],
       });
 
