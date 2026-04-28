@@ -89,11 +89,9 @@ export const TradingHistory: FC = () => {
       </thead>
       <tbody>
         {invoices.map(inv => {
-          // buy_btc = "Buy BTC" (send asset, receive BTC)
-          // sell_btc = "Sell BTC" (send BTC, receive asset)
-          // Legacy: buy = sell_btc, sell = buy_btc
-          const isBuyBtc =
-            inv.direction === 'buy_btc' || inv.direction === 'sell';
+          // buy = send BTC, receive asset → "Buy {asset}"
+          // sell = send asset, receive BTC → "Sell {asset}"
+          const isBuyAsset = inv.direction === 'buy';
           const isPending = !inv.is_confirmed && !inv.is_canceled;
           const date = inv.confirmed_at || inv.created_at;
           const precision =
@@ -111,18 +109,20 @@ export const TradingHistory: FC = () => {
                     'font-medium whitespace-nowrap',
                     inv.is_canceled
                       ? 'text-muted-foreground/40 line-through'
-                      : isBuyBtc
+                      : isBuyAsset
                         ? 'text-green-500'
                         : 'text-red-500'
                   )}
                 >
-                  {isBuyBtc ? 'Buy BTC' : 'Sell BTC'}
+                  {isBuyAsset
+                    ? `Buy ${symbol || 'Asset'}`
+                    : `Sell ${symbol || 'Asset'}`}
                 </span>
               </td>
               <td className="py-1.5 whitespace-nowrap text-muted-foreground">
-                {isBuyBtc
-                  ? `${symbol || 'Asset'} → BTC`
-                  : `BTC → ${symbol || 'Asset'}`}
+                {isBuyAsset
+                  ? `BTC → ${symbol || 'Asset'}`
+                  : `${symbol || 'Asset'} → BTC`}
               </td>
               <td className="py-1.5 text-right tabular-nums">
                 {formatAssetAmount(inv.asset_amount, precision)}

@@ -31,7 +31,7 @@ export const TRADE_MEMO_PREFIX = 'th:trade:';
 
 /** Builds a tagged invoice description for trade identification. */
 function buildTradeMemo(
-  direction: 'buy_btc' | 'sell_btc',
+  direction: 'buy' | 'sell',
   input: {
     tapd_group_key?: string;
     tapd_asset_id?: string;
@@ -129,7 +129,7 @@ export class TradeResolver {
         groupKey: input.tapd_group_key || undefined,
         assetAmount: input.asset_amount,
         peerPubkey: input.peer_pubkey,
-        memo: buildTradeMemo('sell_btc', input),
+        memo: buildTradeMemo('buy', input),
         expiry: input.expiry ?? DEFAULT_INVOICE_EXPIRY_SEC,
       })
     );
@@ -549,7 +549,7 @@ export class TradeResolver {
     const [invoice, invoiceError] = await toWithError(
       this.nodeService.createInvoice(accountId, {
         tokens: invoiceSats,
-        description: buildTradeMemo('buy_btc', input),
+        description: buildTradeMemo('sell', input),
         expires_at: new Date(
           Date.now() + DEFAULT_INVOICE_EXPIRY_SEC * 1000
         ).toISOString(),

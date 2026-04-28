@@ -200,13 +200,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
       ? new Big(atomic).div(new Big(10).pow(precision)).toFixed(precision)
       : atomic;
 
-  // Sell BTC (PURCHASE): send BTC, receive asset
+  // Buy asset (PURCHASE): send BTC, receive asset
   // Limited by: outbound BTC (localSats) AND inbound asset (remoteAtomic)
   const maxSellSats = channelsReady ? localSats : 0;
   const maxSellAssetAtomic = channelsReady ? remoteAtomic : '0';
   const maxSellAsset = atomicToDisplayStr(maxSellAssetAtomic);
 
-  // Buy BTC (SALE): send asset, receive BTC
+  // Sell asset (SALE): send asset, receive BTC
   // Limited by: outbound asset (localAtomic) AND inbound BTC (remoteSats)
   const maxBuyAsset = channelsReady ? atomicToDisplayStr(localAtomic) : '0';
   const maxBuySats = channelsReady ? remoteSats : 0;
@@ -311,11 +311,16 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   const displaySats = quotedSats || (hasRate ? satsAmount : null);
   const satsLabel = displaySats ? `${formatNumber(displaySats)} sats` : '—';
 
+  const exceedsCapacity =
+    !!isValid &&
+    channelsReady &&
+    Number(amount) > Number(isAssetPurchase ? maxSellAsset : maxBuyAsset);
+
   const content = (
     <>
-      {/* Buy / Sell BTC toggle */}
+      {/* Buy / Sell asset toggle */}
       <div className="flex h-9 rounded-md overflow-hidden border border-border">
-        {([TapTransactionType.Sale, TapTransactionType.Purchase] as const).map(
+        {([TapTransactionType.Purchase, TapTransactionType.Sale] as const).map(
           t => (
             <button
               key={t}
@@ -323,13 +328,15 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
               className={cn(
                 'flex-1 text-sm font-medium transition-colors',
                 txType === t
-                  ? t === TapTransactionType.Sale
+                  ? t === TapTransactionType.Purchase
                     ? 'bg-green-600 text-white'
                     : 'bg-red-600 text-white'
                   : 'bg-background text-muted-foreground hover:text-foreground'
               )}
             >
-              {t === TapTransactionType.Sale ? 'Buy BTC' : 'Sell BTC'}
+              {t === TapTransactionType.Purchase
+                ? `Buy ${symbol || 'Asset'}`
+                : `Sell ${symbol || 'Asset'}`}
             </button>
           )
         )}
@@ -622,6 +629,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                 &asymp; {satsLabel}
               </div>
             )}
+            {exceedsCapacity && (
+              <p className="text-[11px] text-yellow-500">
+                Exceeds max capacity of{' '}
+                {formatNumber(isAssetPurchase ? maxSellAsset : maxBuyAsset)}{' '}
+                {symbol}
+              </p>
+            )}
           </div>
 
           {/* Quote summary */}
@@ -691,8 +705,8 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
               <div className="border-t border-border/40" />
               <div className="flex flex-col gap-2">
                 {(() => {
-                  // PURCHASE (Sell BTC): Magma buys inbound asset, user opens BTC outbound
-                  // SALE (Buy BTC): Magma buys inbound BTC, user opens asset outbound
+                  // PURCHASE (Buy asset): Magma buys inbound asset, user opens BTC outbound
+                  // SALE (Sell asset): Magma buys inbound BTC, user opens asset outbound
                   //
                   // Magma card: check if inbound capacity is sufficient.
                   //   PURCHASE inbound = remote asset
@@ -811,7 +825,9 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                   className="w-full"
                   size="sm"
                   onClick={handleExecuteTrade}
-                  disabled={loading || quoteExpired || !isValid}
+                  disabled={
+                    loading || quoteExpired || !isValid || exceedsCapacity
+                  }
                 >
                   {tradeLoading ? (
                     <>
@@ -829,7 +845,9 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                   className="w-full"
                   size="sm"
                   onClick={handleGetQuote}
-                  disabled={quoteLoading || !isValid || !hasCapacity}
+                  disabled={
+                    quoteLoading || !isValid || !hasCapacity || exceedsCapacity
+                  }
                 >
                   {quoteLoading ? (
                     <>
