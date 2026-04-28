@@ -671,27 +671,16 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                     </span>
                   </div>
                   {quotedSats && Number(amount) > 0 && (
-                    <div className="flex flex-col gap-1 border-t border-border/40 pt-1.5">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-muted-foreground">Rate</span>
-                        <span className="ml-auto font-medium tabular-nums">
-                          {formatNumber(
-                            Math.round(Number(quotedSats) / Number(amount))
-                          )}{' '}
-                          sats/{symbol}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-muted-foreground" />
-                        <span className="ml-auto text-muted-foreground tabular-nums">
-                          {formatNumber(
-                            new Big(Number(amount))
-                              .div(new Big(Number(quotedSats)).div(1e8))
-                              .toFixed(2)
-                          )}{' '}
-                          {symbol}/BTC
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-1.5 border-t border-border/40 pt-1.5">
+                      <span className="text-muted-foreground">Rate</span>
+                      <span className="ml-auto font-medium tabular-nums">
+                        {formatNumber(
+                          new Big(Number(amount))
+                            .div(new Big(Number(quotedSats)).div(1e8))
+                            .toFixed(2)
+                        )}{' '}
+                        {symbol}/BTC
+                      </span>
                     </div>
                   )}
                 </div>

@@ -1,6 +1,13 @@
 import { FC, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Loader2, Info, ArrowUpDown, Zap, ChevronRight } from 'lucide-react';
+import {
+  Loader2,
+  Info,
+  ArrowUpDown,
+  Zap,
+  ChevronRight,
+  ExternalLink,
+} from 'lucide-react';
 import { useGetTapOffersQuery } from '../../graphql/queries/__generated__/getTapOffers.generated';
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
@@ -24,13 +31,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -77,10 +77,9 @@ export const TradingOffers: FC = () => {
   const [sortBy, setSortBy] = useState<TapOfferSortBy>(TapOfferSortBy.Rate);
   const [sortDir, setSortDir] = useState<TapOfferSortDir>(TapOfferSortDir.Asc);
 
-  const { data: supportedData, loading: assetsLoading } =
-    useGetTapSupportedAssetsQuery({
-      onError: err => toast.error(getErrorContent(err)),
-    });
+  const { data: supportedData } = useGetTapSupportedAssetsQuery({
+    onError: err => toast.error(getErrorContent(err)),
+  });
 
   const { data: balancesData } = useGetTapBalancesQuery({
     variables: { group_by: TapBalanceGroupBy.GroupKey },
@@ -183,20 +182,47 @@ export const TradingOffers: FC = () => {
   const selectedTapdAssetId = selectedAssetData?.assetId || '';
   const selectedTapdGroupKey = selectedAssetData?.groupKey || '';
 
-  const assetPeersForSelectedAsset = useMemo(
-    () =>
-      selectedTapdGroupKey
-        ? assetChannelsByGroupKey.get(selectedTapdGroupKey)
-        : selectedTapdAssetId
-          ? assetChannelsByAssetId.get(selectedTapdAssetId)
-          : undefined,
-    [
-      selectedTapdGroupKey,
-      selectedTapdAssetId,
-      assetChannelsByGroupKey,
-      assetChannelsByAssetId,
-    ]
-  );
+  const assetPeersForSelectedAsset = useMemo(() => {
+    if (selectedTapdGroupKey)
+      return assetChannelsByGroupKey.get(selectedTapdGroupKey);
+    if (selectedTapdAssetId)
+      return assetChannelsByAssetId.get(selectedTapdAssetId);
+    // No asset selected — merge all asset channel peers
+    const all = new Set<string>();
+    for (const peers of assetChannelsByGroupKey.values()) {
+      for (const p of peers) all.add(p);
+    }
+    for (const peers of assetChannelsByAssetId.values()) {
+      for (const p of peers) all.add(p);
+    }
+    return all.size > 0 ? all : undefined;
+  }, [
+    selectedTapdGroupKey,
+    selectedTapdAssetId,
+    assetChannelsByGroupKey,
+    assetChannelsByAssetId,
+  ]);
+
+  // Map pubkey -> asset symbols they can trade (used when no asset is selected)
+  const peerAssetSymbols = useMemo(() => {
+    const map = new Map<string, string[]>();
+    const assetChannels =
+      allAssetChannelsData?.taproot_assets?.get_asset_channel_balances || [];
+    for (const ac of assetChannels) {
+      const key = ac.group_key || ac.asset_id;
+      const supported = allSupported.find(
+        a => a.groupKey === key || a.assetId === key
+      );
+      const symbol = supported?.symbol || ac.asset_name || key.slice(0, 8);
+      const existing = map.get(ac.partner_public_key);
+      if (existing) {
+        if (!existing.includes(symbol)) existing.push(symbol);
+      } else {
+        map.set(ac.partner_public_key, [symbol]);
+      }
+    }
+    return map;
+  }, [allAssetChannelsData, allSupported]);
 
   const tradingPartners = useMemo(() => {
     if (!assetPeersForSelectedAsset) return [];
@@ -205,8 +231,14 @@ export const TradingOffers: FC = () => {
       .map(pubkey => ({
         pubkey,
         alias: aliasMap.get(pubkey) || null,
+        assets: peerAssetSymbols.get(pubkey) || [],
       }));
-  }, [assetPeersForSelectedAsset, btcChannelPubkeys, aliasMap]);
+  }, [
+    assetPeersForSelectedAsset,
+    btcChannelPubkeys,
+    aliasMap,
+    peerAssetSymbols,
+  ]);
 
   const {
     data: offersData,
@@ -238,26 +270,6 @@ export const TradingOffers: FC = () => {
     }
   };
 
-  const handleSelectAsset = (assetId: string) => {
-    if (assetId === '__all__') {
-      dispatch({ type: 'selectAsset', asset: null });
-      return;
-    }
-    const asset = supportedAssets.find(a => a.id === assetId);
-    if (asset) {
-      dispatch({
-        type: 'selectAsset',
-        asset: {
-          id: asset.id,
-          symbol: asset.symbol,
-          precision: asset.precision,
-          assetId: asset.assetId,
-          groupKey: asset.groupKey,
-        },
-      });
-    }
-  };
-
   const selectPartner = (pubkey: string, alias: string | null) => {
     dispatch({
       type: 'selectOffer',
@@ -285,35 +297,8 @@ export const TradingOffers: FC = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Controls row: Asset selector, Min amount */}
-      <div className="flex items-center gap-3 flex-wrap">
-        {assetsLoading ? (
-          <Loader2 className="animate-spin text-muted-foreground" size={16} />
-        ) : (
-          <Select
-            value={selectedAsset?.id || '__all__'}
-            onValueChange={handleSelectAsset}
-          >
-            <SelectTrigger className="w-36 rounded-md h-8! px-3 text-sm font-medium">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent
-              position="popper"
-              className="rounded-md w-(--radix-select-trigger-width)"
-            >
-              <SelectItem value="__all__">All assets</SelectItem>
-              {supportedAssets.map(a => (
-                <SelectItem key={a.id} value={a.id}>
-                  {a.symbol || a.id.slice(0, 8)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-      </div>
-
       {/* Trading partners */}
-      {hasSelectedAsset && tradingPartners.length > 0 && (
+      {tradingPartners.length > 0 && (
         <div className="flex flex-col gap-1.5">
           <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
             <Zap size={12} className="text-green-500" />
@@ -338,7 +323,9 @@ export const TradingOffers: FC = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="text-xs text-green-500 cursor-default">
-                        Ready to trade
+                        {!hasSelectedAsset && p.assets.length > 0
+                          ? p.assets.join(', ')
+                          : 'Ready to trade'}
                       </span>
                     </TooltipTrigger>
                     <TooltipContent side="left">
@@ -468,6 +455,19 @@ export const TradingOffers: FC = () => {
           )}
         </div>
       )}
+      {/* Liquidity provider CTA */}
+      <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground pt-1">
+        <span>Want to provide liquidity?</span>
+        <a
+          href="https://amboss.tech/rails"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-primary hover:underline"
+        >
+          Join Amboss Rails
+          <ExternalLink size={10} />
+        </a>
+      </div>
     </div>
   );
 };

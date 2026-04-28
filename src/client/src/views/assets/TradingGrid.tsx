@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import {
   ResponsiveGridLayout,
   ResponsiveLayouts,
@@ -13,10 +13,14 @@ import { TradingOffers } from './TradingOffers';
 import { TradingOrderForm } from './TradingOrderForm';
 import { TradingPeerInfo } from './TradingPeerInfo';
 import { TradingHistory } from './TradingHistory';
+import { TradingPortfolio } from './TradingPortfolio';
+import { TradingDistribution } from './TradingDistribution';
+import { TradingAssetSelector } from './TradingAssetSelector';
 
 type TradingWidget = {
   id: string;
   title?: string;
+  headerRight?: ReactNode;
   component: FC;
   default: {
     x: number;
@@ -35,6 +39,7 @@ const widgets: TradingWidget[] = [
   {
     id: 'offers',
     title: 'Offers',
+    headerRight: <TradingAssetSelector />,
     component: TradingOffers,
     default: { x: 0, y: 0, w: 16, h: 9, minW: 8, minH: 8 },
   },
@@ -45,16 +50,28 @@ const widgets: TradingWidget[] = [
     default: { x: 16, y: 0, w: 8, h: 20, minW: 6, maxW: 8, minH: 12 },
   },
   {
+    id: 'portfolio',
+    title: 'Portfolio',
+    component: TradingPortfolio,
+    default: { x: 0, y: 13, w: 5, h: 7, minW: 4, minH: 4 },
+  },
+  {
+    id: 'distribution',
+    title: 'Distribution',
+    component: TradingDistribution,
+    default: { x: 0, y: 9, w: 16, h: 3, minW: 8, minH: 3 },
+  },
+  {
     id: 'peer-info',
     title: 'Peer Info',
     component: TradingPeerInfo,
-    default: { x: 0, y: 9, w: 5, h: 5, minW: 4, minH: 4 },
+    default: { x: 0, y: 21, w: 5, h: 4, minW: 4, minH: 4 },
   },
   {
     id: 'trade-history',
     title: 'Trade History',
     component: TradingHistory,
-    default: { x: 5, y: 9, w: 11, h: 11, minW: 6, minH: 4 },
+    default: { x: 5, y: 13, w: 11, h: 11, minW: 6, minH: 4 },
   },
   {
     id: 'reset',
@@ -124,10 +141,18 @@ export const TradingGrid: FC = () => {
                   key={w.id}
                   data-grid={w.default}
                 >
-                  <div className="drag-handle px-3 py-1 border-b border-border/60 shrink-0 cursor-grab active:cursor-grabbing select-none">
+                  <div className="drag-handle flex items-center justify-between px-3 py-1 border-b border-border/60 shrink-0 cursor-grab active:cursor-grabbing select-none">
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
                       {w.title}
                     </span>
+                    {w.headerRight && (
+                      <div
+                        className="cursor-default"
+                        onMouseDown={e => e.stopPropagation()}
+                      >
+                        {w.headerRight}
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 min-h-0 overflow-auto p-3">
                     <w.component />

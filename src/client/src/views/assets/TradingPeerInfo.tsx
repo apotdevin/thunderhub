@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useTradingState } from '../../context/TradingContext';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ExternalLink } from 'lucide-react';
 
 /**
  * Placeholder peer info widget — shows selected offer details.
@@ -31,9 +31,15 @@ export const TradingPeerInfo: FC = () => {
       {selectedOffer.node.pubkey && (
         <div className="flex justify-between">
           <span className="text-muted-foreground">Pubkey</span>
-          <span className="font-mono truncate ml-2 max-w-[200px]">
+          <a
+            href={`https://amboss.space/node/${selectedOffer.node.pubkey}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono truncate ml-2 max-w-[200px] inline-flex items-center gap-1 text-primary hover:underline"
+          >
             {selectedOffer.node.pubkey}
-          </span>
+            <ExternalLink size={10} className="shrink-0" />
+          </a>
         </div>
       )}
       {selectedOffer.asset?.symbol && (
@@ -48,14 +54,6 @@ export const TradingPeerInfo: FC = () => {
           <span className="tabular-nums">
             {Number(selectedOffer.available.displayAmount).toLocaleString()}{' '}
             {selectedOffer.asset?.symbol}
-          </span>
-        </div>
-      )}
-      {selectedOffer.magmaOfferId && (
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Offer ID</span>
-          <span className="font-mono truncate ml-2 max-w-[200px]">
-            {selectedOffer.magmaOfferId}
           </span>
         </div>
       )}
