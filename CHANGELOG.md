@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.1](https://github.com/apotdevin/thunderhub/compare/v0.16.0...v0.16.1) (2026-04-28)
+
+
+### Bug Fixes
+
+* read TA channel cltv/fee from invoice route hint in rebalance ([#738](https://github.com/apotdevin/thunderhub/issues/738)) ([f5f3b9f](https://github.com/apotdevin/thunderhub/commit/f5f3b9f5a34b49dd461c2b94141a0d13df45238d))
+
 ## [0.16.0](https://github.com/apotdevin/thunderhub/compare/v0.15.5...v0.16.0) (2026-04-28)
 
 
