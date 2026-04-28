@@ -947,41 +947,16 @@ export class TradeResolver {
     currentHeight: number,
     identityPubkey: string
   ): Promise<void> {
-    const [[btcChannelInfo, btcChannelInfoError], [taChannelInfo]] =
-      await Promise.all([
-        toWithError(this.nodeService.getChannel(accountId, btcChannel.id)),
-        toWithError(this.nodeService.getChannel(accountId, taChannelScid)),
-      ]);
-
-    if (btcChannelInfoError) {
-      this.logger.warn(
-        'rebalanceTaChannel: could not fetch BTC channel info; using fee defaults',
-        { error: btcChannelInfoError, channelId: btcChannel.id }
-      );
-    }
-
-    const btcPeerPolicy = btcChannelInfo?.policies?.find(
-      (p: { public_key: string }) => p.public_key === peerPubkey
-    );
-    const btcChannelCltvDelta: number =
-      btcPeerPolicy?.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
-
-    const taOurPolicy = taChannelInfo?.policies?.find(
-      (p: { public_key: string }) => p.public_key === identityPubkey
-    );
-    const taCltvDelta: number =
-      taOurPolicy?.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
-    // Fee the peer charges on the TA channel (their outgoing leg).
-    const taPeerPolicy = taChannelInfo?.policies?.find(
-      (p: { public_key: string }) => p.public_key === peerPubkey
-    );
-    const taBaseFee = BigInt(taPeerPolicy?.base_fee_mtokens ?? '1000');
-    const taFeeRate = BigInt(taPeerPolicy?.fee_rate ?? 2500);
-
+    // Create the self-payment invoice with private-channel route hints so
+    // LND embeds the TA channel's SCID alias and the peer's gossiped policy
+    // on it (cltv_delta, fees). The alias is a tapd virtual SCID — looking
+    // it up via getChannel doesn't return the same gossip entry the peer
+    // actually enforces, so the route hint is the reliable source.
     const [invoice, invoiceError] = await toWithError(
       this.nodeService.createInvoice(accountId, {
         tokens: rebalanceSats,
         cltv_delta: DEFAULT_INVOICE_CLTV_DELTA,
+        is_including_private_channels: true,
       })
     );
 
@@ -991,9 +966,34 @@ export class TradeResolver {
       );
     }
 
+    const [decoded, decodeError] = await toWithError(
+      this.nodeService.decodePaymentRequest(accountId, invoice.request)
+    );
+    if (decodeError || !decoded) {
+      throw new Error(
+        'Rebalance failed: could not decode self-payment invoice'
+      );
+    }
+
+    const taRouteHint = this.findVirtualScidHint(
+      decoded.routes,
+      peerPubkey,
+      taChannelPartnerScidAlias
+    );
+    if (!taRouteHint) {
+      throw new Error(
+        'Rebalance failed: no TA channel route hint in self-payment invoice'
+      );
+    }
+
+    const taCltvDelta: number =
+      taRouteHint.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
+    const taBaseFee = BigInt(taRouteHint.base_fee_mtokens ?? '0');
+    const taFeeRate = BigInt(taRouteHint.fee_rate ?? 0);
+
     const invoiceCltvDelta = DEFAULT_INVOICE_CLTV_DELTA;
     const hop2Timeout = currentHeight + invoiceCltvDelta + CLTV_BLOCK_BUFFER;
-    const hopCltvDelta = Math.max(taCltvDelta, btcChannelCltvDelta);
+    const hopCltvDelta = taCltvDelta;
     const hop1Timeout = hop2Timeout + hopCltvDelta;
 
     const forwardMtokens = BigInt(rebalanceSats) * BigInt(1000);
@@ -1023,9 +1023,10 @@ export class TradeResolver {
         },
         {
           // Hop 2: peer → us via TA channel (final destination, fee=0).
-          // Use partner_scid_alias (the peer's own local alias) — the real SCID
-          // and our own alias_scids give UnknownNextPeer for private TA channels.
-          channel: taChannelPartnerScidAlias ?? taChannelScid,
+          // Use the alias the peer published in the invoice route hint — the
+          // canonical SCID and our own alias_scids give UnknownNextPeer for
+          // private TA channels.
+          channel: taRouteHint.channel,
           channel_capacity: taChannelCapacity,
           fee: 0,
           fee_mtokens: '0',
@@ -1136,26 +1137,42 @@ export class TradeResolver {
    */
   private findVirtualScidHint(
     routes: Array<
-      Array<{ public_key: string; channel?: string; cltv_delta?: number }>
+      Array<{
+        public_key: string;
+        channel?: string;
+        cltv_delta?: number;
+        base_fee_mtokens?: string;
+        fee_rate?: number;
+      }>
     >,
-    peerPubkey: string
-  ): { channel: string; cltv_delta?: number } | undefined {
+    peerPubkey: string,
+    expectedChannel?: string
+  ):
+    | {
+        channel: string;
+        cltv_delta?: number;
+        base_fee_mtokens?: string;
+        fee_rate?: number;
+      }
+    | undefined {
     for (const route of routes) {
       const peerIdx = route.findIndex(hop => hop.public_key === peerPubkey);
       if (peerIdx === -1) continue;
 
-      if (route[peerIdx].channel) {
-        return {
-          channel: route[peerIdx].channel as string,
-          cltv_delta: route[peerIdx].cltv_delta,
-        };
-      }
+      const candidate = route[peerIdx].channel
+        ? route[peerIdx]
+        : // lightning package convention: channel on the next entry (destination)
+          route[peerIdx + 1];
 
-      // lightning package convention: channel on the next entry (destination)
-      const nextHop = route[peerIdx + 1];
-      if (nextHop?.channel) {
-        return { channel: nextHop.channel, cltv_delta: nextHop.cltv_delta };
-      }
+      if (!candidate?.channel) continue;
+      if (expectedChannel && candidate.channel !== expectedChannel) continue;
+
+      return {
+        channel: candidate.channel,
+        cltv_delta: candidate.cltv_delta,
+        base_fee_mtokens: candidate.base_fee_mtokens,
+        fee_rate: candidate.fee_rate,
+      };
     }
     return undefined;
   }
