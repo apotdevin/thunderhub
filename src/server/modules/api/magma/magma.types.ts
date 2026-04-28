@@ -380,6 +380,14 @@ export class SetupTradeCapacityInput {
    */
   @Field({ nullable: true })
   satsAmount?: string;
+
+  /**
+   * Pass `true` to open an outbound asset channel for a SALE. Omit (or pass
+   * `false`) to skip — e.g. when the node already has sufficient asset outbound
+   * with the peer. Unused for PURCHASE.
+   */
+  @Field({ nullable: true })
+  openAssetChannel?: boolean;
 }
 
 @ObjectType()

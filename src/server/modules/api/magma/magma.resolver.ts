@@ -125,9 +125,6 @@ export class MagmaResolver {
     const ambossAuth = await this.ambossTokenService.getOrCreate(user);
     const result = await auto<SetupTradeCapacityAuto>({
       validate: async (): Promise<SetupTradeCapacityAuto['validate']> => {
-        if (input.transactionType == TapTransactionType.SALE) {
-          throw new GraphQLError(`Selling not implemented yet`);
-        }
         if (!input.assetAmount || BigInt(input.assetAmount) <= 0) {
           throw new GraphQLError('Asset amount must be greater than zero');
         }
@@ -515,6 +512,11 @@ export class MagmaResolver {
               txid: channelResult.transaction_id,
               outputIndex: Number(channelResult.transaction_vout),
             };
+          }
+
+          // No openAssetChannel flag → outbound asset channel already exists, skip.
+          if (!input.openAssetChannel) {
+            return undefined;
           }
 
           const [channelResult, error] = await toWithError(
