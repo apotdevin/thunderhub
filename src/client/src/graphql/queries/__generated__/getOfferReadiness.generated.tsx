@@ -16,6 +16,8 @@ export type GetOfferReadinessQuery = {
       __typename?: 'OfferReadinessResult';
       is_peer_connected: boolean;
       has_pending_order: boolean;
+      onchain_balance_sats: string;
+      onchain_asset_balance: string;
       btc_channels: {
         __typename?: 'ChannelSummary';
         open_count: number;
@@ -43,6 +45,8 @@ export const GetOfferReadinessDocument = gql`
       offer_readiness(input: $input) {
         is_peer_connected
         has_pending_order
+        onchain_balance_sats
+        onchain_asset_balance
         btc_channels {
           open_count
           pending_count

@@ -21,7 +21,7 @@ import {
 import { TapTransactionType } from '../../graphql/types';
 import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
-import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generated__/setupTradePartner.generated';
+import { useSetupTradeCapacityMutation } from '../../graphql/mutations/__generated__/setupTradeCapacity.generated';
 import { GET_OFFER_READINESS } from '../../graphql/queries/getOfferReadiness';
 import { getErrorContent } from '../../utils/error';
 import { formatNumber } from '../../utils/helpers';
@@ -107,12 +107,18 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
     },
   });
 
-  const [setupPartner, { loading: setupLoading }] =
-    useSetupTradePartnerMutation({
+  const [setupCapacity, { loading: setupLoading }] =
+    useSetupTradeCapacityMutation({
       onCompleted: data => {
-        const result = data.setupTradePartner;
+        const result = data.setupTradeCapacity;
         if (result.success) {
-          toast.success('Trade channels set up successfully');
+          const msg =
+            result.skippedMagmaOrder && result.skippedOutboundChannel
+              ? 'Capacity already sufficient'
+              : result.skippedMagmaOrder || result.skippedOutboundChannel
+                ? 'Trade capacity increased successfully'
+                : 'Trade channels set up successfully';
+          toast.success(msg);
           setAmount('');
           clearQuote();
         }
@@ -179,6 +185,8 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   const hasAssetChannel = (assetCh?.open_count ?? 0) > 0;
   const hasAssetPending = (assetCh?.pending_count ?? 0) > 0;
   const hasPendingOrder = readiness?.has_pending_order ?? false;
+  const onchainSats = Number(readiness?.onchain_balance_sats ?? '0');
+  const onchainAsset = BigInt(readiness?.onchain_asset_balance ?? '0');
   const channelsReady = hasBtcChannel && hasAssetChannel;
 
   // Trading capacity based on channel balances
@@ -212,6 +220,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   // For direct trading partners (no magma offer), we assume channels exist
   const canDirectTrade =
     (!isMagmaOffer && !!selectedOffer?.node.pubkey) || channelsReady;
+
+  // Check if on-chain balances are sufficient for the setup
+  const hasOnchainForSetup = isValid
+    ? isAssetPurchase
+      ? onchainSats >= Number(satsAmount)
+      : onchainAsset >= atomicAmount && onchainSats > 0
+    : true;
 
   const handleGetQuote = async () => {
     if (!isValid || !selectedOffer?.node.pubkey || !offerAsset) return;
@@ -274,7 +289,7 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   const handleSetupPartner = () => {
     if (!selectedOffer?.node.pubkey || !offerAsset || !isValid) return;
 
-    setupPartner({
+    setupCapacity({
       variables: {
         input: {
           magmaOfferId: selectedOffer.magmaOfferId,
@@ -407,7 +422,12 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                     </span>
                     {hasBtcChannel && btcCh && (
                       <span className="ml-auto text-muted-foreground tabular-nums">
-                        {formatNumber(btcCh.total_local_sats)} sats
+                        {formatNumber(
+                          isAssetPurchase
+                            ? btcCh.total_local_sats
+                            : btcCh.total_remote_sats
+                        )}{' '}
+                        sats
                       </span>
                     )}
                     {!hasBtcChannel &&
@@ -449,7 +469,12 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                     </span>
                     {hasAssetChannel && assetCh && (
                       <span className="ml-auto text-muted-foreground tabular-nums">
-                        {formatNumber(atomicToDisplayStr(localAtomic))} {symbol}
+                        {formatNumber(
+                          atomicToDisplayStr(
+                            isAssetPurchase ? remoteAtomic : localAtomic
+                          )
+                        )}{' '}
+                        {symbol}
                       </span>
                     )}
                     {!hasAssetChannel &&
@@ -469,12 +494,20 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                     !hasPendingOrder &&
                     !setupLoading && (
                       <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                        Setup will open{' '}
+                        {hasBtcChannel || hasAssetChannel
+                          ? 'Will add'
+                          : 'Setup will open'}{' '}
                         {!hasBtcChannel && !hasAssetChannel
-                          ? 'a BTC and an asset channel'
-                          : !hasBtcChannel
-                            ? 'a BTC channel'
-                            : 'an asset channel'}
+                          ? isAssetPurchase
+                            ? `a BTC channel and purchase a ${symbol} channel`
+                            : `a ${symbol} channel and purchase a BTC channel`
+                          : isAssetPurchase
+                            ? !hasBtcChannel
+                              ? 'a BTC channel'
+                              : `a ${symbol} channel`
+                            : !hasAssetChannel
+                              ? `a ${symbol} channel`
+                              : 'a BTC channel'}
                       </p>
                     )}
                 </>
@@ -657,43 +690,115 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
             <>
               <div className="border-t border-border/40" />
               <div className="flex flex-col gap-2">
-                {!hasAssetChannel && (
-                  <div className="rounded-md bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
-                    Channel of{' '}
-                    <span className="text-foreground font-medium tabular-nums">
-                      {formatNumber(amount)} {symbol}
-                    </span>{' '}
-                    will be purchased
-                    {selectedOffer?.fees &&
+                {(() => {
+                  // PURCHASE (Sell BTC): Magma buys inbound asset, user opens BTC outbound
+                  // SALE (Buy BTC): Magma buys inbound BTC, user opens asset outbound
+                  //
+                  // Magma card: check if inbound capacity is sufficient.
+                  //   PURCHASE inbound = remote asset
+                  //   SALE inbound = remote BTC sats
+                  const magmaNeeded = isAssetPurchase
+                    ? atomicAmount > BigInt(remoteAtomic)
+                    : Number(satsAmount) > remoteSats;
+
+                  if (!magmaNeeded) return null;
+
+                  const hasFees =
+                    selectedOffer?.fees &&
                     (selectedOffer.fees.baseFeeSats > 0 ||
-                      selectedOffer.fees.feeRatePpm > 0) ? (
-                      <>
-                        {' '}
-                        for{' '}
+                      selectedOffer.fees.feeRatePpm > 0);
+                  const feeEstimate = hasFees
+                    ? Math.ceil(
+                        selectedOffer.fees.baseFeeSats +
+                          (selectedOffer.fees.feeRatePpm * Number(satsAmount)) /
+                            1_000_000
+                      )
+                    : 0;
+
+                  let sizeLabel: string;
+                  if (isAssetPurchase) {
+                    const existing = BigInt(remoteAtomic);
+                    const deficit = atomicAmount - existing;
+                    const displayAmt =
+                      existing > 0
+                        ? atomicToDisplayStr(deficit.toString())
+                        : amount;
+                    const prefix =
+                      existing > 0 ? 'Additional channel' : 'Channel';
+                    sizeLabel = `${prefix} of ${formatNumber(displayAmt)} ${symbol}`;
+                  } else {
+                    const deficitSats = Number(satsAmount) - remoteSats;
+                    const prefix =
+                      remoteSats > 0 ? 'Additional BTC channel' : 'BTC channel';
+                    sizeLabel = `${prefix} of ${formatNumber(String(Math.ceil(deficitSats)))} sats`;
+                  }
+
+                  return (
+                    <div className="rounded-md bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
+                      {sizeLabel} will be purchased via Magma
+                      {hasFees ? (
+                        <>
+                          {' '}
+                          for &asymp;{' '}
+                          <span className="text-foreground font-medium tabular-nums">
+                            {formatNumber(feeEstimate)} sats
+                          </span>
+                        </>
+                      ) : null}
+                    </div>
+                  );
+                })()}
+                {(() => {
+                  // Outbound card: user opens the channel themselves.
+                  //   PURCHASE: BTC outbound (check localSats)
+                  //   SALE: asset outbound (check localAtomic)
+                  if (isAssetPurchase) {
+                    if (hasBtcChannel && localSats >= Number(satsAmount))
+                      return null;
+                    const needed = Number(satsAmount);
+                    const insufficient = onchainSats < needed;
+                    return (
+                      <div className="rounded-md bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
+                        BTC channel of{' '}
                         <span className="text-foreground font-medium tabular-nums">
+                          {formatNumber(satsAmount)} sats
+                        </span>{' '}
+                        will be opened to this trade partner
+                        {insufficient && (
+                          <p className="text-destructive mt-1">
+                            Insufficient on-chain balance (
+                            {formatNumber(String(onchainSats))} sats available)
+                          </p>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  // SALE: asset outbound — needs on-chain assets + sats
+                  if (hasAssetChannel && BigInt(localAtomic) >= atomicAmount)
+                    return null;
+                  const insufficient =
+                    onchainAsset < atomicAmount || onchainSats === 0;
+                  return (
+                    <div className="rounded-md bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
+                      {symbol} channel of{' '}
+                      <span className="text-foreground font-medium tabular-nums">
+                        {formatNumber(amount)} {symbol}
+                      </span>{' '}
+                      will be opened to this trade partner
+                      {insufficient && (
+                        <p className="text-destructive mt-1">
+                          Insufficient on-chain balance (
                           {formatNumber(
-                            Math.ceil(
-                              selectedOffer.fees.baseFeeSats +
-                                (selectedOffer.fees.feeRatePpm *
-                                  Number(satsAmount)) /
-                                  1_000_000
-                            )
+                            atomicToDisplayStr(onchainAsset.toString())
                           )}{' '}
-                          sats
-                        </span>
-                      </>
-                    ) : null}
-                  </div>
-                )}
-                {!hasBtcChannel && (
-                  <div className="rounded-md bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
-                    BTC channel of{' '}
-                    <span className="text-foreground font-medium tabular-nums">
-                      {formatNumber(satsAmount)} sats
-                    </span>{' '}
-                    will be opened to this trade partner
-                  </div>
-                )}
+                          {symbol}, {formatNumber(String(onchainSats))} sats
+                          available)
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             </>
           )}
@@ -742,20 +847,25 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                   className="w-full"
                   size="sm"
                   onClick={handleSetupPartner}
-                  disabled={loading || !isValid}
+                  disabled={loading || !isValid || !hasOnchainForSetup}
                 >
                   {setupLoading ? (
                     <>
                       <Loader2 size={14} className="mr-1.5 animate-spin" />
-                      Setting up...
+                      {channelsReady || hasBtcChannel || hasAssetChannel
+                        ? 'Increasing capacity...'
+                        : 'Setting up...'}
                     </>
+                  ) : channelsReady || hasBtcChannel || hasAssetChannel ? (
+                    'Increase Trade Capacity'
                   ) : (
-                    'Setup Trade Partner'
+                    'Setup Trade Channels'
                   )}
                 </Button>
                 <p className="text-[10px] text-muted-foreground/50 text-center mt-1.5">
-                  This only opens channels. You can trade once setup is
-                  complete.
+                  {channelsReady || hasBtcChannel || hasAssetChannel
+                    ? 'This will add capacity. You can trade once channels confirm.'
+                    : 'This only opens channels. You can trade once setup is complete.'}
                 </p>
               </>
             ) : (

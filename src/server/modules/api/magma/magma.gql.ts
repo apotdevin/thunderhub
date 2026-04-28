@@ -86,11 +86,11 @@ export const cancelMagmaOrderMutation = gql`
 `;
 
 export const getOrdersQuery = gql`
-  query GetOrders($page: PageInput) {
+  query GetOrders($page: PageInput, $input: OrderInput) {
     user {
       market {
         orders {
-          purchases(page: $page) {
+          purchases(page: $page, input: $input) {
             total
             list {
               id
@@ -122,7 +122,7 @@ export const getOrdersQuery = gql`
               channel_id
             }
           }
-          sales(page: $page) {
+          sales(page: $page, input: $input) {
             total
             list {
               id

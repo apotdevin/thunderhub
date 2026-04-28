@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const SETUP_TRADE_PARTNER = gql`
-  mutation SetupTradePartner($input: SetupTradePartnerInput!) {
-    setupTradePartner(input: $input) {
+export const SETUP_TRADE_CAPACITY = gql`
+  mutation SetupTradeCapacity($input: SetupTradeCapacityInput!) {
+    setupTradeCapacity(input: $input) {
       success
       magmaOrderId
       magmaOrderStatus
@@ -11,6 +11,8 @@ export const SETUP_TRADE_PARTNER = gql`
       magmaOrderFeeSats
       outboundChannelTxid
       outboundChannelOutputIndex
+      skippedMagmaOrder
+      skippedOutboundChannel
     }
   }
 `;

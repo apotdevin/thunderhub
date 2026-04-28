@@ -7,6 +7,8 @@ export const GET_OFFER_READINESS = gql`
       offer_readiness(input: $input) {
         is_peer_connected
         has_pending_order
+        onchain_balance_sats
+        onchain_asset_balance
         btc_channels {
           open_count
           pending_count

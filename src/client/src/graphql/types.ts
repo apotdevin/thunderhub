@@ -655,7 +655,7 @@ export type Mutation = {
   removePeer: Scalars['Boolean']['output'];
   removeTwofaSecret: Scalars['Boolean']['output'];
   sendToAddress: ChainAddressSend;
-  setupTradePartner: SetupTradePartnerResult;
+  setupTradeCapacity: SetupTradeCapacityResult;
   taproot_assets: TaprootAssetsMutations;
   team: TeamMutations;
   toggleConfig: Scalars['Boolean']['output'];
@@ -780,8 +780,8 @@ export type MutationSendToAddressArgs = {
   tokens?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type MutationSetupTradePartnerArgs = {
-  input: SetupTradePartnerInput;
+export type MutationSetupTradeCapacityArgs = {
+  input: SetupTradeCapacityInput;
 };
 
 export type MutationToggleConfigArgs = {
@@ -916,6 +916,8 @@ export type OfferReadinessResult = {
   btc_channels: ChannelSummary;
   has_pending_order: Scalars['Boolean']['output'];
   is_peer_connected: Scalars['Boolean']['output'];
+  onchain_balance_sats: Scalars['String']['output'];
+  onchain_asset_balance: Scalars['String']['output'];
 };
 
 export type OnChainBalance = {
@@ -1269,7 +1271,7 @@ export type SessionInfo = {
   type?: Maybe<Scalars['String']['output']>;
 };
 
-export type SetupTradePartnerInput = {
+export type SetupTradeCapacityInput = {
   ambossAssetId: Scalars['String']['input'];
   assetAmount: Scalars['String']['input'];
   assetRate: Scalars['String']['input'];
@@ -1282,8 +1284,8 @@ export type SetupTradePartnerInput = {
   transactionType: TapTransactionType;
 };
 
-export type SetupTradePartnerResult = {
-  __typename?: 'SetupTradePartnerResult';
+export type SetupTradeCapacityResult = {
+  __typename?: 'SetupTradeCapacityResult';
   magmaOrderAmountAsset?: Maybe<Scalars['String']['output']>;
   magmaOrderAmountSats?: Maybe<Scalars['String']['output']>;
   magmaOrderFeeSats?: Maybe<Scalars['String']['output']>;
@@ -1291,6 +1293,8 @@ export type SetupTradePartnerResult = {
   magmaOrderStatus?: Maybe<Scalars['String']['output']>;
   outboundChannelOutputIndex?: Maybe<Scalars['Int']['output']>;
   outboundChannelTxid?: Maybe<Scalars['String']['output']>;
+  skippedMagmaOrder?: Maybe<Scalars['Boolean']['output']>;
+  skippedOutboundChannel?: Maybe<Scalars['Boolean']['output']>;
   success: Scalars['Boolean']['output'];
 };
 

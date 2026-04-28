@@ -326,10 +326,10 @@ export class TapSupportedAssetList {
   totalCount: number;
 }
 
-// ─── Trade Partner Setup ───────────────────────────────────────
+// ─── Trade Capacity Setup ──────────────────────────────────────
 
 @InputType()
-export class SetupTradePartnerInput {
+export class SetupTradeCapacityInput {
   @Field()
   magmaOfferId: string;
 
@@ -383,7 +383,7 @@ export class SetupTradePartnerInput {
 }
 
 @ObjectType()
-export class SetupTradePartnerResult {
+export class SetupTradeCapacityResult {
   @Field()
   success: boolean;
 
@@ -407,20 +407,44 @@ export class SetupTradePartnerResult {
 
   @Field(() => Int, { nullable: true })
   outboundChannelOutputIndex?: number;
+
+  /** True when the Magma order was skipped because inbound capacity already covers the request. */
+  @Field({ nullable: true })
+  skippedMagmaOrder?: boolean;
+
+  /** True when the outbound channel open was skipped because outbound capacity already exists. */
+  @Field({ nullable: true })
+  skippedOutboundChannel?: boolean;
 }
 
-export type SetupTradePartnerAuto = {
+export type ChannelStateInfo = {
+  /** Total local sats in BTC-only channels with the peer. */
+  btcLocalSats: number;
+  /** Total remote sats in BTC-only channels with the peer. */
+  btcRemoteSats: number;
+  /** Number of pending BTC channels opening with the peer. */
+  btcPendingCount: number;
+  /** Total remote (inbound) atomic asset units with the peer. */
+  assetRemoteAtomic: bigint;
+  /** Number of pending asset channels opening with the peer. */
+  assetPendingCount: number;
+};
+
+export type SetupTradeCapacityAuto = {
   validate: void;
   nodeInfo: { publicKey: string };
   peer: void;
-  magmaOrder: {
-    id: string;
-    status: string;
-    invoice: string;
-    amountSats?: string;
-    amountAsset?: string;
-    feeSats?: number;
-  };
+  channelState: ChannelStateInfo;
+  magmaOrder:
+    | {
+        id: string;
+        status: string;
+        invoice: string;
+        amountSats?: string;
+        amountAsset?: string;
+        feeSats?: number;
+      }
+    | undefined;
   payMagma: void;
   outboundChannel: { txid: string; outputIndex: number } | undefined;
 };

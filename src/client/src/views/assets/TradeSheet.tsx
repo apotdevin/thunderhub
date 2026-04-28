@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { TapTransactionType } from '../../graphql/types';
-import { useSetupTradePartnerMutation } from '../../graphql/mutations/__generated__/setupTradePartner.generated';
+import { useSetupTradeCapacityMutation } from '../../graphql/mutations/__generated__/setupTradeCapacity.generated';
 import { useOpenChannelMutation } from '../../graphql/mutations/__generated__/openChannel.generated';
 import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
 import { useGetPeerChannelsQuery } from '../../graphql/queries/__generated__/getPeerChannels.generated';
@@ -137,10 +137,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     }
   );
 
-  const [setupPartner, { loading: setupLoading }] =
-    useSetupTradePartnerMutation({
+  const [setupCapacity, { loading: setupLoading }] =
+    useSetupTradeCapacityMutation({
       onCompleted: data => {
-        const result = data.setupTradePartner;
+        const result = data.setupTradeCapacity;
         if (result.success) {
           const amountLabel = result.magmaOrderAmountAsset
             ? `${atomicToDisplay(result.magmaOrderAmountAsset, assetPrecision)} ${assetSymbol}`
@@ -150,11 +150,13 @@ export const TradeSheet: FC<TradeSheetProps> = ({
           const feeLabel = result.magmaOrderFeeSats
             ? ` (fee: ${Number(result.magmaOrderFeeSats).toLocaleString()} sats)`
             : '';
-          toast.success(
-            amountLabel
-              ? `Trade channels set up — ${amountLabel}${feeLabel}`
-              : 'Trade partner channels set up successfully'
-          );
+          const verb =
+            result.skippedMagmaOrder && result.skippedOutboundChannel
+              ? 'No changes needed — capacity already sufficient'
+              : amountLabel
+                ? `Trade capacity ${result.skippedMagmaOrder || result.skippedOutboundChannel ? 'increased' : 'set up'} — ${amountLabel}${feeLabel}`
+                : 'Trade capacity set up successfully';
+          toast.success(verb);
           onOpenChange(false);
           setAmount('');
           setStep('input');
@@ -402,6 +404,10 @@ export const TradeSheet: FC<TradeSheetProps> = ({
     : totalBtcRemote > 0 || hasPendingInbound;
   const allChannelsExist = outboundExists && inboundExists;
 
+  // True when at least one channel side already exists — copy should say
+  // "increase capacity" rather than "set up".
+  const isIncreaseCapacity = outboundExists || inboundExists;
+
   // Only suppress the input when channels are still pending. If all channels
   // are open but balance is insufficient, the user can still adjust the amount.
   const hasPendingChannels = pendingPeerChannels.length > 0;
@@ -436,7 +442,7 @@ export const TradeSheet: FC<TradeSheetProps> = ({
       (hasOutbound ||
         (hasPendingOutbound && pendingOutboundSats >= Number(satsAmount)));
 
-    setupPartner({
+    setupCapacity({
       variables: {
         input: {
           magmaOfferId: offer.magmaOfferId,
@@ -544,12 +550,16 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 ? `Trade with ${nodeLabel}`
                 : needsOnlyOutboundBtc
                   ? `Open outbound BTC channel to ${nodeLabel}`
-                  : `Set up trading channels with ${nodeLabel}`
+                  : isIncreaseCapacity
+                    ? `Increase trade capacity with ${nodeLabel}`
+                    : `Set up trading channels with ${nodeLabel}`
               : readyToTrade
                 ? 'Review trade before executing'
                 : needsOnlyOutboundBtc
                   ? 'Review BTC channel before opening'
-                  : 'Review channel setup before proceeding'}
+                  : isIncreaseCapacity
+                    ? 'Review capacity increase before proceeding'
+                    : 'Review channel setup before proceeding'}
           </SheetDescription>
         </SheetHeader>
 
@@ -873,7 +883,11 @@ export const TradeSheet: FC<TradeSheetProps> = ({
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium">Channels to open</span>
+                <span className="text-sm font-medium">
+                  {isIncreaseCapacity
+                    ? 'Additional capacity'
+                    : 'Channels to open'}
+                </span>
                 <div className="flex flex-col gap-2">
                   {!skipOutboundCard && (
                     <div className="rounded-md border border-border bg-muted/20 p-3">
@@ -934,6 +948,8 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                 'Review Channel'
               ) : !offer.magmaOfferId ? (
                 'No offer available for setup'
+              ) : isIncreaseCapacity ? (
+                'Review Capacity Increase'
               ) : (
                 'Review Setup'
               )}
@@ -991,14 +1007,20 @@ export const TradeSheet: FC<TradeSheetProps> = ({
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {needsOnlyOutboundBtc ? 'Opening...' : 'Setting up...'}
+                      {needsOnlyOutboundBtc
+                        ? 'Opening...'
+                        : isIncreaseCapacity
+                          ? 'Increasing capacity...'
+                          : 'Setting up...'}
                     </>
                   ) : waitingForChannels ? (
                     'Channels opening...'
                   ) : needsOnlyOutboundBtc ? (
                     'Open Channel'
+                  ) : isIncreaseCapacity ? (
+                    'Increase Capacity'
                   ) : (
-                    'Confirm'
+                    'Confirm Setup'
                   )}
                 </Button>
               )}

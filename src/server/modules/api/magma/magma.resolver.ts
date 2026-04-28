@@ -26,9 +26,9 @@ import {
   TapTradeOfferList,
   TapSupportedAssetList,
   TapTransactionType,
-  SetupTradePartnerInput,
-  SetupTradePartnerResult,
-  SetupTradePartnerAuto,
+  SetupTradeCapacityInput,
+  SetupTradeCapacityResult,
+  SetupTradeCapacityAuto,
   MagmaPendingOrders,
   MagmaOrder,
   AmbossOrderRaw,
@@ -115,16 +115,16 @@ export class MagmaResolver {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
-  // ── Trade Partner Setup ──
+  // ── Trade Capacity Setup ──
 
-  @Mutation(() => SetupTradePartnerResult)
-  async setupTradePartner(
+  @Mutation(() => SetupTradeCapacityResult)
+  async setupTradeCapacity(
     @CurrentUser() user: UserId,
-    @Args('input') input: SetupTradePartnerInput
-  ): Promise<SetupTradePartnerResult> {
+    @Args('input') input: SetupTradeCapacityInput
+  ): Promise<SetupTradeCapacityResult> {
     const ambossAuth = await this.ambossTokenService.getOrCreate(user);
-    const result = await auto<SetupTradePartnerAuto>({
-      validate: async (): Promise<SetupTradePartnerAuto['validate']> => {
+    const result = await auto<SetupTradeCapacityAuto>({
+      validate: async (): Promise<SetupTradeCapacityAuto['validate']> => {
         if (input.transactionType == TapTransactionType.SALE) {
           throw new GraphQLError(`Selling not implemented yet`);
         }
@@ -147,7 +147,7 @@ export class MagmaResolver {
         }
       },
 
-      nodeInfo: async (): Promise<SetupTradePartnerAuto['nodeInfo']> => {
+      nodeInfo: async (): Promise<SetupTradeCapacityAuto['nodeInfo']> => {
         const [info, error] = await toWithError(
           this.nodeService.getWalletInfo(user.id)
         );
@@ -160,7 +160,7 @@ export class MagmaResolver {
 
       peer: [
         'validate',
-        async (): Promise<SetupTradePartnerAuto['peer']> => {
+        async (): Promise<SetupTradeCapacityAuto['peer']> => {
           let sockets = input.swapNodeSockets || [];
 
           if (!sockets.length) {
@@ -198,19 +198,128 @@ export class MagmaResolver {
         },
       ],
 
+      // Query existing channel state with the peer to decide what to skip.
+      channelState: [
+        'validate',
+        async (): Promise<SetupTradeCapacityAuto['channelState']> => {
+          const [channelsResult, pendingResult, assetBalancesResult] =
+            await Promise.all([
+              toWithError(
+                this.nodeService.getChannels(user.id, {
+                  partner_public_key: input.swapNodePubkey,
+                })
+              ),
+              toWithError(this.nodeService.getPendingChannels(user.id)),
+              input.tapdAssetId || input.tapdGroupKey
+                ? toWithError(
+                    this.tapdNodeService.getAssetChannelBalances({
+                      id: user.id,
+                      peerPubkey: input.swapNodePubkey,
+                    })
+                  )
+                : Promise.resolve([[], undefined] as const),
+            ]);
+
+          const peerChannels = channelsResult[0]?.channels || [];
+          const pendingChannels = pendingResult[0]?.pending_channels || [];
+          const assetBalances = (assetBalancesResult[0] || []) as Array<{
+            assetId: string;
+            groupKey?: string;
+            localBalance?: string;
+            remoteBalance?: string;
+          }>;
+
+          const btcOpen = peerChannels.filter(
+            (ch: { type?: string }) => !!ch.type
+          );
+          const peerPending = pendingChannels.filter(
+            (ch: { partner_public_key: string; is_opening: boolean }) =>
+              ch.partner_public_key === input.swapNodePubkey && ch.is_opening
+          );
+          const btcPending = peerPending.filter(
+            (ch: { asset?: unknown }) => !ch.asset
+          );
+
+          const matchingAssets = assetBalances.filter(ab =>
+            input.tapdGroupKey
+              ? ab.groupKey === input.tapdGroupKey
+              : ab.assetId === input.tapdAssetId
+          );
+          const assetPending = peerPending.filter(
+            (ch: { asset?: { asset_id: string; group_key?: string } }) => {
+              if (!ch.asset) return false;
+              return input.tapdGroupKey
+                ? ch.asset.group_key === input.tapdGroupKey
+                : ch.asset.asset_id === input.tapdAssetId;
+            }
+          );
+
+          return {
+            btcLocalSats: btcOpen.reduce(
+              (s: number, ch: { local_balance?: number }) =>
+                s + (ch.local_balance || 0),
+              0
+            ),
+            btcRemoteSats: btcOpen.reduce(
+              (s: number, ch: { remote_balance?: number }) =>
+                s + (ch.remote_balance || 0),
+              0
+            ),
+            btcPendingCount: btcPending.length,
+            assetRemoteAtomic: matchingAssets.reduce(
+              (s, ch) => s + BigInt(ch.remoteBalance || '0'),
+              BigInt(0)
+            ),
+            assetPendingCount: assetPending.length,
+          };
+        },
+      ],
+
       magmaOrder: [
         'nodeInfo',
         'peer',
+        'channelState',
         async ({
           nodeInfo,
-        }: Pick<SetupTradePartnerAuto, 'nodeInfo'>): Promise<
-          SetupTradePartnerAuto['magmaOrder']
+          channelState,
+        }: Pick<SetupTradeCapacityAuto, 'nodeInfo' | 'channelState'>): Promise<
+          SetupTradeCapacityAuto['magmaOrder']
         > => {
+          const isAssetPurchase =
+            input.transactionType === TapTransactionType.PURCHASE;
+
+          // For PURCHASE: inbound = asset channels. Skip if remote asset
+          // capacity already covers the requested amount.
+          if (isAssetPurchase) {
+            const needed = BigInt(input.assetAmount);
+            if (
+              channelState.assetRemoteAtomic >= needed ||
+              channelState.assetPendingCount > 0
+            ) {
+              this.logger.info(
+                'Skipping Magma order — inbound asset capacity sufficient or pending',
+                {
+                  needed: needed.toString(),
+                  existing: channelState.assetRemoteAtomic.toString(),
+                  pending: channelState.assetPendingCount,
+                }
+              );
+              return undefined;
+            }
+          }
+
           const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
+
+          // Order the deficit: requested minus existing inbound.
+          const deficit = isAssetPurchase
+            ? (
+                BigInt(input.assetAmount) - channelState.assetRemoteAtomic
+              ).toString()
+            : input.assetAmount;
 
           const magmaSize = computeMagmaOrderSize(
             input.transactionType,
-            input.assetAmount,
+            deficit,
             input.assetRate
           );
 
@@ -291,9 +400,12 @@ export class MagmaResolver {
         'magmaOrder',
         async ({
           magmaOrder,
-        }: Pick<SetupTradePartnerAuto, 'magmaOrder'>): Promise<
-          SetupTradePartnerAuto['payMagma']
+        }: Pick<SetupTradeCapacityAuto, 'magmaOrder'>): Promise<
+          SetupTradeCapacityAuto['payMagma']
         > => {
+          // Skip if no Magma order was created (inbound already sufficient).
+          if (!magmaOrder) return;
+
           this.logger.info('Paying Magma invoice', {
             orderId: magmaOrder.id,
           });
@@ -353,19 +465,41 @@ export class MagmaResolver {
         },
       ],
 
+      // Runs in parallel with payMagma — no dependency on inbound channel.
       outboundChannel: [
         'peer',
-        'payMagma',
-        async (): Promise<SetupTradePartnerAuto['outboundChannel']> => {
+        'channelState',
+        async ({
+          channelState,
+        }: Pick<SetupTradeCapacityAuto, 'channelState'>): Promise<
+          SetupTradeCapacityAuto['outboundChannel']
+        > => {
           if (input.transactionType === TapTransactionType.PURCHASE) {
-            // No sats provided → outbound BTC channel already exists, skip.
+            // Skip if existing BTC outbound covers the needed sats or a
+            // pending BTC channel is already opening.
             if (!input.satsAmount) {
+              return undefined;
+            }
+
+            const neededSats = Number(input.satsAmount);
+            if (
+              channelState.btcLocalSats >= neededSats ||
+              channelState.btcPendingCount > 0
+            ) {
+              this.logger.info(
+                'Skipping outbound BTC channel — sufficient capacity or pending',
+                {
+                  needed: neededSats,
+                  existing: channelState.btcLocalSats,
+                  pending: channelState.btcPendingCount,
+                }
+              );
               return undefined;
             }
 
             const [channelResult, error] = await toWithError(
               this.nodeService.openChannel(user.id, {
-                local_tokens: Number(input.satsAmount),
+                local_tokens: neededSats,
                 partner_public_key: input.swapNodePubkey,
               })
             );
@@ -411,16 +545,19 @@ export class MagmaResolver {
 
     return {
       success: true,
-      magmaOrderId: result.magmaOrder.id,
-      magmaOrderStatus: result.magmaOrder.status,
-      magmaOrderAmountSats: result.magmaOrder.amountSats,
-      magmaOrderAmountAsset: result.magmaOrder.amountAsset,
+      magmaOrderId: result.magmaOrder?.id,
+      magmaOrderStatus: result.magmaOrder?.status,
+      magmaOrderAmountSats: result.magmaOrder?.amountSats,
+      magmaOrderAmountAsset: result.magmaOrder?.amountAsset,
       magmaOrderFeeSats:
-        result.magmaOrder.feeSats != null
+        result.magmaOrder?.feeSats != null
           ? String(result.magmaOrder.feeSats)
           : undefined,
       outboundChannelTxid: result.outboundChannel?.txid,
       outboundChannelOutputIndex: result.outboundChannel?.outputIndex,
+      skippedMagmaOrder: !result.magmaOrder || undefined,
+      skippedOutboundChannel:
+        (!!input.satsAmount && !result.outboundChannel) || undefined,
     };
   }
 }
@@ -675,6 +812,8 @@ export class RailsQueriesResolver {
           has_active_channel: false,
         },
         has_pending_order: false,
+        onchain_balance_sats: '0',
+        onchain_asset_balance: '0',
       };
     }
   }
@@ -844,6 +983,8 @@ export class RailsQueriesResolver {
       pendingResult,
       assetBalancesResult,
       ordersResult,
+      chainBalanceResult,
+      onchainAssetResult,
     ] = await Promise.all([
       toWithError(this.nodeService.getPeers(id)),
       toWithError(
@@ -861,6 +1002,13 @@ export class RailsQueriesResolver {
           )
         : Promise.resolve([[], undefined] as const),
       this.fetchPendingOrdersForPeer(user, input.peer_pubkey),
+      toWithError(this.nodeService.getChainBalance(id)),
+      toWithError(
+        this.tapdNodeService.listBalances({
+          id,
+          groupBy: input.tapd_group_key ? 'groupKey' : 'assetId',
+        })
+      ),
     ]);
 
     const peers = peersResult[0]?.peers || [];
@@ -868,6 +1016,30 @@ export class RailsQueriesResolver {
     const pendingChannels = pendingResult[0]?.pending_channels || [];
     const assetBalances = assetBalancesResult[0] || [];
     const hasPendingOrder = ordersResult;
+    const chainBalance = chainBalanceResult[0]?.chain_balance ?? 0;
+
+    // On-chain asset balance for the specific asset
+    let onchainAssetBalance = BigInt(0);
+    const balancesData = onchainAssetResult[0];
+    if (balancesData) {
+      if (input.tapd_group_key) {
+        const entry = (
+          balancesData.assetGroupBalances as Record<
+            string,
+            { balance: bigint | string }
+          >
+        )?.[input.tapd_group_key];
+        if (entry) onchainAssetBalance = BigInt(entry.balance);
+      } else if (input.tapd_asset_id) {
+        const entry = (
+          balancesData.assetBalances as Record<
+            string,
+            { balance: bigint | string }
+          >
+        )?.[input.tapd_asset_id];
+        if (entry) onchainAssetBalance = BigInt(entry.balance);
+      }
+    }
 
     // BTC channels
     const peerPending = pendingChannels.filter(
@@ -938,6 +1110,8 @@ export class RailsQueriesResolver {
         has_active_channel: matchingAssets.length > 0,
       },
       has_pending_order: hasPendingOrder,
+      onchain_balance_sats: String(chainBalance),
+      onchain_asset_balance: onchainAssetBalance.toString(),
     };
   }
 
@@ -951,6 +1125,13 @@ export class RailsQueriesResolver {
         this.ambossService.resolveMagmaUrl(user),
       ]);
 
+      const pendingStatuses = [
+        'WAITING_FOR_CHANNEL_OPEN',
+        'WAITING_FOR_SELLER_APPROVAL',
+        'WAITING_FOR_PAYMENT',
+        'CHANNEL_OPENING',
+      ];
+
       const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
         user: {
           market: {
@@ -963,27 +1144,20 @@ export class RailsQueriesResolver {
       }>(
         magmaUrl,
         getOrdersQuery,
-        { page: { offset: 0, limit: 999 } },
+        {
+          page: { offset: 0, limit: 1 },
+          input: {
+            peer_pubkey: peerPubkey,
+            status: pendingStatuses,
+          },
+        },
         { authorization: `Bearer ${ambossAuth}` }
       );
 
       if (error || !data?.user?.market?.orders) return false;
 
       const { purchases, sales } = data.user.market.orders;
-      const pendingStatuses = new Set([
-        'WAITING_FOR_CHANNEL_OPEN',
-        'WAITING_FOR_SELLER_APPROVAL',
-        'WAITING_FOR_PAYMENT',
-        'CHANNEL_OPENING',
-      ]);
-
-      const allOrders = [...purchases.list, ...sales.list];
-      return allOrders.some(
-        o =>
-          pendingStatuses.has(o.status) &&
-          (o.source?.pubkey === peerPubkey ||
-            o.destination?.pubkey === peerPubkey)
-      );
+      return purchases.total > 0 || sales.total > 0;
     } catch {
       return false;
     }

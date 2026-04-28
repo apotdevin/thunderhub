@@ -283,4 +283,10 @@ export class OfferReadinessResult {
 
   @Field()
   has_pending_order: boolean;
+
+  @Field()
+  onchain_balance_sats: string;
+
+  @Field()
+  onchain_asset_balance: string;
 }
