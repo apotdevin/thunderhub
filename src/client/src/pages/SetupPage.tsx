@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { appendBasePath } from '../utils/basePath';
 import { TopSection } from '../views/homepage/Top';
 import { useCreateInitialUserMutation } from '../graphql/mutations/__generated__/createInitialUser.generated';
@@ -21,7 +21,7 @@ type SetupFormValues = {
 
 const SetupPage = () => {
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
@@ -75,18 +75,25 @@ const SetupPage = () => {
                   >
                     Email
                   </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="admin@example.com"
-                    autoComplete="email"
-                    {...register('email', {
+                  <Controller
+                    name="email"
+                    control={control}
+                    rules={{
                       required: 'Email is required',
                       pattern: {
                         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                         message: 'Please enter a valid email address',
                       },
-                    })}
+                    }}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id="email"
+                        type="email"
+                        placeholder="admin@example.com"
+                        autoComplete="email"
+                      />
+                    )}
                   />
                   {errors.email && (
                     <p className="text-xs text-destructive">
@@ -101,18 +108,25 @@ const SetupPage = () => {
                   >
                     Password
                   </label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Minimum 8 characters"
-                    autoComplete="new-password"
-                    {...register('password', {
+                  <Controller
+                    name="password"
+                    control={control}
+                    rules={{
                       required: 'Password is required',
                       minLength: {
                         value: 8,
                         message: 'Password must be at least 8 characters',
                       },
-                    })}
+                    }}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id="password"
+                        type="password"
+                        placeholder="Minimum 8 characters"
+                        autoComplete="new-password"
+                      />
+                    )}
                   />
                   {errors.password && (
                     <p className="text-xs text-destructive">
@@ -127,14 +141,21 @@ const SetupPage = () => {
                   >
                     Confirm Password
                   </label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Repeat your password"
-                    autoComplete="new-password"
-                    {...register('confirmPassword', {
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    rules={{
                       required: 'Please confirm your password',
-                    })}
+                    }}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="Repeat your password"
+                        autoComplete="new-password"
+                      />
+                    )}
                   />
                   {errors.confirmPassword && (
                     <p className="text-xs text-destructive">
