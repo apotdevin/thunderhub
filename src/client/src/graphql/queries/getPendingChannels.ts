@@ -27,6 +27,8 @@ export const GET_PENDING_CHANNELS = gql`
       }
       asset {
         asset_id
+        asset_name
+        asset_precision
         group_key
         local_balance
         remote_balance

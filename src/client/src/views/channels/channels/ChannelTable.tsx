@@ -52,13 +52,12 @@ import { useAccount } from '../../../hooks/UseAccount';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
+import { Asset, REMOTE_COLOR } from '../types';
 
 const getBar = (top: number, bottom: number) => {
   const percent = (top / bottom) * 100;
   return Math.min(percent, 100);
 };
-
-const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
 // ── NoteCell ──────────────────────────────────────────────────────────────────
 
@@ -239,15 +238,7 @@ export const ChannelTable = ({
     const channelData = assetOnly
       ? allChannels.filter(c => c.asset)
       : allChannels;
-    const map = new Map<
-      string,
-      {
-        asset_id: string;
-        asset_name: string;
-        group_key?: string;
-        asset_precision: number;
-      }
-    >();
+    const map = new Map<string, Asset>();
     for (const c of channelData) {
       if (c.asset) {
         const key = c.asset.group_key || c.asset.asset_id;
