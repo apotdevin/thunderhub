@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.2](https://github.com/apotdevin/thunderhub/compare/v0.16.1...v0.16.2) (2026-04-29)
+
+
+### Improvements
+
+* fix setup page login input ([#741](https://github.com/apotdevin/thunderhub/issues/741)) ([0953114](https://github.com/apotdevin/thunderhub/commit/095311402f8a780c17a0f6f92cc539bb256fd71a))
+
 ## [0.16.1](https://github.com/apotdevin/thunderhub/compare/v0.16.0...v0.16.1) (2026-04-28)
 
 
