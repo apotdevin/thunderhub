@@ -937,6 +937,7 @@ input SetupTradeCapacityInput {
   ambossAssetId: String!
   assetAmount: String!
   assetRate: String!
+  feeRateSatPerVbyte: Int
   magmaOfferId: String!
   openOutboundAssetChannel: Boolean
   satsAmount: String

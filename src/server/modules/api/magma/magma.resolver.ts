@@ -524,6 +524,7 @@ export class MagmaResolver {
               id: user.id,
               peerPubkey: input.swapNodePubkey,
               assetAmount: input.assetAmount,
+              feeRateSatPerVbyte: input.feeRateSatPerVbyte ?? 1,
               ...(input.tapdGroupKey
                 ? { groupKey: input.tapdGroupKey }
                 : { assetId: input.tapdAssetId }),

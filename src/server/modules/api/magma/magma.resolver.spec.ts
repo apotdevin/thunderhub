@@ -467,6 +467,7 @@ describe('MagmaResolver', () => {
           id: userId.id,
           peerPubkey: swapPubkey,
           assetAmount: '1000',
+          feeRateSatPerVbyte: 1,
           assetId: 'deadbeef'.repeat(8),
         });
 
@@ -495,6 +496,7 @@ describe('MagmaResolver', () => {
           id: userId.id,
           peerPubkey: swapPubkey,
           assetAmount: '1000',
+          feeRateSatPerVbyte: 1,
           groupKey: 'cafebabe'.repeat(8),
         });
 

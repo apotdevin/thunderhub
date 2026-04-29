@@ -388,6 +388,14 @@ export class SetupTradeCapacityInput {
    */
   @Field({ nullable: true })
   openOutboundAssetChannel?: boolean;
+
+  /**
+   * On-chain fee rate in sats/vbyte for the outbound asset channel open (SALE
+   * only). tapd requires this to be set explicitly; defaults to 1 sat/vbyte
+   * if omitted. Unused for PURCHASE.
+   */
+  @Field(() => Int, { nullable: true })
+  feeRateSatPerVbyte?: number;
 }
 
 @ObjectType()
