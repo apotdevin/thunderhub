@@ -46,6 +46,8 @@ function toAssetField(ac: {
   };
 }
 
+import { ChannelNote } from './channel-notes.types';
+import { ChannelNotesService } from './channel-notes.service';
 @Resolver()
 export class ChannelsResolver {
   constructor(
@@ -53,6 +55,7 @@ export class ChannelsResolver {
     private fetchService: FetchService,
     private ambossService: AmbossService,
     private tapdNodeService: TapdNodeService,
+    private channelNotesService: ChannelNotesService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -451,5 +454,19 @@ export class ChannelsResolver {
     }
 
     return errors ? false : true;
+  }
+
+  @Query(() => [ChannelNote])
+  async getChannelNotes(@CurrentUser() { id }: UserId): Promise<ChannelNote[]> {
+    return this.channelNotesService.getNotes(id);
+  }
+
+  @Mutation(() => ChannelNote)
+  async setChannelNote(
+    @CurrentUser() { id }: UserId,
+    @Args('channelId') channelId: string,
+    @Args('note') note: string,
+  ): Promise<ChannelNote> {
+    return this.channelNotesService.upsertNote(id, channelId, note);
   }
 }
