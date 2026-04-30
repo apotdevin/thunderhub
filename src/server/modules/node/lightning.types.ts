@@ -80,6 +80,7 @@ export type PayOptions = {
   outgoing_channel?: string;
   tokens?: number;
   is_allow_self_payment?: boolean;
+  incoming_peer?: string;
 };
 
 export type CreateInvoiceOptions = {

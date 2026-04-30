@@ -979,7 +979,7 @@ export class RailsQueriesResolver {
 
     const [
       peersResult,
-      peerChannelsResult,
+      channelsResult,
       pendingResult,
       assetBalancesResult,
       ordersResult,
@@ -987,11 +987,7 @@ export class RailsQueriesResolver {
       onchainAssetResult,
     ] = await Promise.all([
       toWithError(this.nodeService.getPeers(id)),
-      toWithError(
-        this.nodeService.getChannels(id, {
-          partner_public_key: input.peer_pubkey,
-        })
-      ),
+      toWithError(this.nodeService.getChannels(id)),
       toWithError(this.nodeService.getPendingChannels(id)),
       input.tapd_asset_id || input.tapd_group_key
         ? toWithError(
@@ -1011,8 +1007,9 @@ export class RailsQueriesResolver {
       ),
     ]);
 
+    const allChannels = channelsResult[0]?.channels;
+
     const peers = peersResult[0]?.peers || [];
-    const peerChannels = peerChannelsResult[0]?.channels || [];
     const pendingChannels = pendingResult[0]?.pending_channels || [];
     const assetBalances = assetBalancesResult[0] || [];
     const hasPendingOrder = ordersResult;
@@ -1046,8 +1043,8 @@ export class RailsQueriesResolver {
       (ch: { partner_public_key: string; is_opening: boolean }) =>
         ch.partner_public_key === input.peer_pubkey && ch.is_opening
     );
-    const btcOpen = peerChannels.filter(isBtcChannel);
-    const btcPending = peerPending.filter(
+    const btcOpen = allChannels.filter(isBtcChannel);
+    const btcPending = pendingChannels.filter(
       (ch: { asset?: unknown }) => !ch.asset
     );
 

@@ -276,149 +276,17 @@ export class TradeResolver {
       );
     }
 
-    this.logger.debug('Decoded invoice route hints', {
-      routes: JSON.stringify(decoded.routes),
-      peerPubkey: input.peer_pubkey,
-      cltvDelta: decoded.cltv_delta,
-      paymentHash: decoded.id,
-    });
+    const btcChannels = await this.getBtcChannels(accountId);
 
-    const routeHint = this.findVirtualScidHint(
-      decoded.routes,
-      input.peer_pubkey
-    );
+    // Prefer a direct BTC channel with sufficient outbound (one BTC hop + the
+    // virtual TA hop). When none exists, fall back to multi-hop pathfinding
+    // through the wider network, which lets us trade with the peer using only
+    // the asset channel.
+    const btcChannel = [...btcChannels]
+      .filter(c => c.local_balance >= decoded.tokens)
+      .sort((a, b) => b.local_balance - a.local_balance)[0];
 
-    if (!routeHint) {
-      this.logger.error('No virtual SCID route hint found in invoice', {
-        routes: JSON.stringify(decoded.routes),
-        peerPubkey: input.peer_pubkey,
-      });
-      throw new GraphQLError(
-        'Invoice has no route hint for the trade peer — was it created via addAssetInvoice?'
-      );
-    }
-
-    this.logger.debug('Found virtual SCID route hint', {
-      virtualScid: routeHint.channel,
-      cltvDelta: routeHint.cltv_delta,
-    });
-
-    const btcChannels = await this.getBtcChannelsWithPeer(
-      accountId,
-      input.peer_pubkey
-    );
-
-    if (btcChannels.length === 0) {
-      throw new GraphQLError(
-        'No active BTC channel with trade partner — cannot execute trade'
-      );
-    }
-
-    const btcChannel = [...btcChannels].sort(
-      (a, b) => b.local_balance - a.local_balance
-    )[0];
-
-    if (btcChannel.local_balance < decoded.tokens) {
-      throw new GraphQLError(
-        `Insufficient outbound BTC liquidity with trade partner: ` +
-          `need ${decoded.tokens} sats, have ${btcChannel.local_balance} sats`
-      );
-    }
-
-    const [
-      [heightResult, heightError],
-      [identity, identityError],
-      [channelInfo, channelInfoError],
-    ] = await Promise.all([
-      toWithError(this.nodeService.getHeight(accountId)),
-      toWithError(this.nodeService.getIdentity(accountId)),
-      toWithError(this.nodeService.getChannel(accountId, btcChannel.id)),
-    ]);
-
-    if (channelInfoError) {
-      this.logger.warn(
-        'Could not fetch channel info for fee estimation; using defaults',
-        { error: channelInfoError, channelId: btcChannel.id }
-      );
-    }
-
-    if (heightError || !heightResult?.current_block_height) {
-      throw new GraphQLError('Failed to get current block height');
-    }
-
-    if (identityError || !identity?.public_key) {
-      throw new GraphQLError('Failed to get node identity');
-    }
-
-    const peerPolicy = channelInfo?.policies?.find(
-      (p: { public_key: string }) => p.public_key === input.peer_pubkey
-    );
-
-    const currentHeight: number = heightResult.current_block_height;
-    const invoiceCltvDelta = decoded.cltv_delta ?? DEFAULT_INVOICE_CLTV_DELTA;
-    const hintCltvDelta = routeHint.cltv_delta ?? 144;
-    const btcChannelCltvDelta: number =
-      peerPolicy?.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
-
-    // Use the larger of the virtual SCID's cltv_delta and the BTC channel's
-    // cltv_delta for the hop delta — the peer may enforce its BTC channel
-    // policy on forwards.
-    const hop2Timeout = currentHeight + invoiceCltvDelta + CLTV_BLOCK_BUFFER;
-    const hopCltvDelta = Math.max(hintCltvDelta, btcChannelCltvDelta);
-    const hop1Timeout = hop2Timeout + hopCltvDelta;
-
-    const forwardMtokens = BigInt(decoded.mtokens);
-    const baseFee = BigInt(peerPolicy?.base_fee_mtokens ?? '1000');
-    const feeRate = BigInt(peerPolicy?.fee_rate ?? 2500);
-    const hop1FeeMtokens =
-      baseFee + (forwardMtokens * feeRate) / BigInt(1_000_000);
-    const hop1Fee = Number((hop1FeeMtokens + BigInt(999)) / BigInt(1000));
-
-    const totalMtokens = forwardMtokens + hop1FeeMtokens;
-
-    const route = {
-      fee: hop1Fee,
-      fee_mtokens: String(hop1FeeMtokens),
-      hops: [
-        {
-          channel: btcChannel.id,
-          channel_capacity: btcChannel.capacity,
-          fee: hop1Fee,
-          fee_mtokens: String(hop1FeeMtokens),
-          forward: decoded.tokens,
-          forward_mtokens: decoded.mtokens,
-          public_key: input.peer_pubkey,
-          timeout: hop2Timeout,
-        },
-        {
-          channel: routeHint.channel,
-          channel_capacity: btcChannel.capacity,
-          fee: 0,
-          fee_mtokens: '0',
-          forward: decoded.tokens,
-          forward_mtokens: decoded.mtokens,
-          public_key: identity.public_key,
-          timeout: hop2Timeout,
-        },
-      ],
-      mtokens: String(totalMtokens),
-      payment: decoded.payment,
-      timeout: hop1Timeout,
-      tokens: Number((totalMtokens + BigInt(999)) / BigInt(1000)),
-      total_mtokens: decoded.mtokens,
-    };
-
-    this.logger.info('Executing buy trade via explicit route', {
-      assetAmount: input.asset_amount,
-      invoicePrefix: paymentRequest.slice(0, 20),
-      virtualScid: routeHint.channel,
-      btcChannelId: btcChannel.id,
-      currentHeight,
-      hintCltvDelta,
-      btcChannelCltvDelta,
-      hopCltvDelta,
-      route,
-    });
+    if (!btcChannel) throw new GraphQLError(`No bitcoin channels found`);
 
     let payResult:
       | {
@@ -430,9 +298,10 @@ export class TradeResolver {
       | undefined;
 
     try {
-      payResult = await this.nodeService.payViaRoutes(accountId, {
-        id: decoded.id,
-        routes: [route],
+      payResult = await this.nodeService.pay(accountId, {
+        incoming_peer: input.peer_pubkey,
+        is_allow_self_payment: true,
+        request: input.payment_request,
       });
     } catch (err: unknown) {
       // payViaRoutes throws [code, message, {failures}] on failure.
@@ -506,26 +375,11 @@ export class TradeResolver {
       throw new GraphQLError('Derived sats amount is zero or negative');
     }
 
-    // Fetch BTC channels once for both the return-hint and the liquidity check.
-    const btcChannels = await this.getBtcChannelsWithPeer(
-      accountId,
-      input.peer_pubkey
-    );
-    if (btcChannels.length === 0) {
-      throw new GraphQLError(
-        'No active BTC channel with trade partner — cannot execute trade'
-      );
-    }
-
-    const maxRemote = btcChannels.reduce(
-      (max, ch) => (ch.remote_balance > max ? ch.remote_balance : max),
-      0
-    );
-    if (maxRemote < invoiceSats) {
-      throw new GraphQLError(
-        `Insufficient inbound BTC liquidity with trade partner: need ${invoiceSats} sats, have ${maxRemote} sats`
-      );
-    }
+    // Fetch BTC channels once for both the return-hint and the rebalance.
+    // We don't hard-fail when there's no direct BTC channel or when inbound is
+    // short: the return leg can route through the wider network. Let the
+    // underlying sendAssetPayment surface its own failure if no path exists.
+    const btcChannels = await this.getBtcChannels(accountId);
 
     await this.ensureTaChannelSatReserve(
       accountId,
@@ -1081,21 +935,16 @@ export class TradeResolver {
     }
   }
 
-  private async getBtcChannelsWithPeer(
-    id: string,
-    peerPubkey: string
-  ): Promise<Array<BtcChannel>> {
+  private async getBtcChannels(id: string): Promise<Array<BtcChannel>> {
     const [channelsResult, channelsError] = await toWithError(
       this.nodeService.getChannels(id, {
-        partner_public_key: peerPubkey,
         is_active: true,
       })
     );
 
     if (channelsError) {
-      this.logger.warn('Failed to fetch channels with peer', {
+      this.logger.warn('Failed to fetch channels', {
         error: channelsError,
-        peerPubkey,
       });
     }
 

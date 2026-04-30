@@ -237,13 +237,11 @@ export const TradingPartners: FC = () => {
 
   const tradingPartners = useMemo(() => {
     if (!assetPeersForSelectedAsset) return [];
-    return Array.from(assetPeersForSelectedAsset)
-      .filter(pubkey => btcChannelPubkeys.has(pubkey))
-      .map(pubkey => ({
-        pubkey,
-        alias: aliasMap.get(pubkey) || null,
-        assets: peerAssets.get(pubkey) || [],
-      }));
+    return Array.from(assetPeersForSelectedAsset).map(pubkey => ({
+      pubkey,
+      alias: aliasMap.get(pubkey) || null,
+      assets: peerAssets.get(pubkey) || [],
+    }));
   }, [assetPeersForSelectedAsset, btcChannelPubkeys, aliasMap, peerAssets]);
 
   const selectPartner = (

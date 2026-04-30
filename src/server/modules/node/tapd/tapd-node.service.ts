@@ -56,7 +56,6 @@ type AssetChannelInfo = {
 
 /** Timeout for sendPayment RPC before the stream-level guard kicks in. */
 const SEND_PAYMENT_TIMEOUT_SECONDS = 60;
-const FEE_LIMIT_MAX = 100;
 
 @Injectable()
 export class TapdNodeService {
@@ -668,7 +667,6 @@ export class TapdNodeService {
         // Required: asset sale is a self-payment loop — assets flow out via the
         // asset channel while sats return via the BTC channel on the same node.
         allowSelfPayment: true,
-        feeLimitSat: FEE_LIMIT_MAX,
         timeoutSeconds: SEND_PAYMENT_TIMEOUT_SECONDS,
       },
     });
