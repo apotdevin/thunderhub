@@ -11,10 +11,10 @@ export const channelMetadata = sqliteTable(
       .$defaultFn(() => crypto.randomUUID()),
     user_id: text('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     node_id: text('node_id')
       .notNull()
-      .references(() => nodes.id),
+      .references(() => nodes.id, { onDelete: 'cascade' }),
     channel_id: text('channel_id').notNull(),
     note: text('note').notNull(),
     created_at: text('created_at')

@@ -9,5 +9,5 @@ CREATE TABLE "channel_metadata" (
 	CONSTRAINT "channel_metadata_user_id_node_id_channel_id_unique" UNIQUE("user_id","node_id","channel_id")
 );
 --> statement-breakpoint
-ALTER TABLE "channel_metadata" ADD CONSTRAINT "channel_metadata_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "channel_metadata" ADD CONSTRAINT "channel_metadata_node_id_nodes_id_fk" FOREIGN KEY ("node_id") REFERENCES "public"."nodes"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "channel_metadata" ADD CONSTRAINT "channel_metadata_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "channel_metadata" ADD CONSTRAINT "channel_metadata_node_id_nodes_id_fk" FOREIGN KEY ("node_id") REFERENCES "public"."nodes"("id") ON DELETE cascade ON UPDATE no action;

@@ -11,10 +11,10 @@ export const channelMetadata = pgTable(
       .default(sql`gen_random_uuid()`),
     user_id: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     node_id: uuid('node_id')
       .notNull()
-      .references(() => nodes.id),
+      .references(() => nodes.id, { onDelete: 'cascade' }),
     channel_id: text('channel_id').notNull(),
     note: text('note').notNull(),
     created_at: timestamp('created_at', { precision: 6, mode: 'string' })

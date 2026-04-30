@@ -1,5 +1,5 @@
 {
-  "id": "41748944-1bc9-4193-93b5-18a2cf13357e",
+  "id": "9d1326c3-8439-43b5-aa48-3b341750cb68",
   "prevId": "6e99aaac-c7ae-4c97-a3ca-12073d7da436",
   "version": "7",
   "dialect": "postgresql",
@@ -66,7 +66,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "channel_metadata_node_id_nodes_id_fk": {
@@ -79,7 +79,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b53e5290-a5d8-4125-b80b-d6d61f08e41d",
+  "id": "62dfa64c-8696-4c03-9c25-2921fff5fd5f",
   "prevId": "2b0142c3-134e-4c4d-b5ef-e7aae8280038",
   "tables": {
     "channel_metadata": {
@@ -81,7 +81,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "channel_metadata_node_id_nodes_id_fk": {
@@ -94,7 +94,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
