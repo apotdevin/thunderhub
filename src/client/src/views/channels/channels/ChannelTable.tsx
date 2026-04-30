@@ -1,8 +1,29 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
-import { ArrowDown, ArrowUp, Check, Circle, Edit, X } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  Circle,
+  Edit,
+  StickyNote,
+  Trash2,
+  X,
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { BalanceBars } from '../../../components/balance';
 import {
   getChannelLink,
@@ -14,7 +35,10 @@ import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
 import Table from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
-import { useUpsertChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
+import {
+  useUpsertChannelNoteMutation,
+  useDeleteChannelNoteMutation,
+} from '../../../graphql/mutations/__generated__/setChannelNote.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
@@ -25,6 +49,7 @@ import {
   getPercent,
 } from '../../../utils/helpers';
 import { colorFromString } from '../../../utils/color';
+import { useAccount } from '../../../hooks/UseAccount';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
@@ -40,57 +65,134 @@ const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
 type NoteCellProps = {
   note: string;
-  onSave: (note: string) => Promise<void>;
+  channelId: string;
+  isDbAccount: boolean;
 };
 
-const NoteCell = ({ note, onSave }: NoteCellProps) => {
-  const [editing, setEditing] = useState(false);
+const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(note);
+  const [upsertNote, { loading: saving }] = useUpsertChannelNoteMutation();
+  const [deleteNote, { loading: deleting }] = useDeleteChannelNoteMutation();
 
-  useEffect(() => {
-    if (!editing) setValue(note);
-  }, [note, editing]);
+  const updateCache = (newNote: string) => (cache: any) => {
+    cache.modify({
+      id: cache.identify({ __typename: 'Channel', id: channelId }),
+      fields: { note: () => newNote },
+    });
+  };
 
-  if (!editing) {
-    return (
-      <span
-        onClick={() => setEditing(true)}
-        className="cursor-pointer text-xs text-muted-foreground hover:text-foreground block max-w-[140px] truncate"
-        title={value || 'Click to add note'}
-      >
-        {value || <span className="opacity-30 select-none">+</span>}
-      </span>
-    );
-  }
+  const handleOpen = () => {
+    setValue(note);
+    setOpen(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      await upsertNote({
+        variables: { channelId, note: value },
+        update: updateCache(value),
+      });
+      setOpen(false);
+    } catch {
+      toast.error('Failed to save note');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteNote({
+        variables: { channelId },
+        update: updateCache(''),
+      });
+      setOpen(false);
+    } catch {
+      toast.error('Failed to delete note');
+    }
+  };
+
+  const truncated = note.length > 32 ? `${note.slice(0, 32)}...` : note;
+
+  const icon = (
+    <button
+      onClick={e => {
+        e.stopPropagation();
+        handleOpen();
+      }}
+      className="inline-flex items-center gap-1.5 border-none bg-transparent p-0 cursor-pointer text-muted-foreground hover:text-foreground"
+    >
+      {note ? (
+        <>
+          <span className="text-xs max-w-[120px] truncate">{truncated}</span>
+          <StickyNote size={14} className="shrink-0" />
+        </>
+      ) : (
+        <span className="text-base opacity-30 select-none">+</span>
+      )}
+    </button>
+  );
 
   return (
-    <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-      <Input
-        autoFocus
-        className="w-32 h-6 text-xs"
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        onKeyDown={async e => {
-          if (e.key === 'Enter') {
-            await onSave(value);
-            setEditing(false);
-          }
-          if (e.key === 'Escape') {
-            setValue(note);
-            setEditing(false);
-          }
-        }}
-      />
-      <Button
-        size="icon-xs"
-        onClick={async () => {
-          await onSave(value);
-          setEditing(false);
-        }}
-      >
-        <Check size={12} />
-      </Button>
-    </div>
+    <>
+      {note.length > 32 ? (
+        <Tooltip>
+          <TooltipTrigger asChild>{icon}</TooltipTrigger>
+          <TooltipContent className="max-w-xs wrap-break-words">
+            {note}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        icon
+      )}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent onClick={e => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>Channel Note</DialogTitle>
+          </DialogHeader>
+          {isDbAccount ? (
+            <>
+              <Input
+                autoFocus
+                value={value}
+                onChange={e => setValue(e.target.value)}
+                placeholder="Personal note for this channel..."
+                onKeyDown={e => {
+                  if (e.key === 'Enter') handleSave();
+                }}
+              />
+              <DialogFooter>
+                {note && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={deleting}
+                    onClick={handleDelete}
+                  >
+                    <Trash2 size={14} />
+                    Delete
+                  </Button>
+                )}
+                <Button size="sm" disabled={saving} onClick={handleSave}>
+                  Save
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground text-balance">
+              Channel notes require a database account.{' '}
+              <a
+                href="https://docs.thunderhub.io/setup#database-optional"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-3 hover:text-foreground"
+              >
+                Learn how to set up a database.
+              </a>
+            </p>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
@@ -101,6 +203,8 @@ export const ChannelTable = ({
   storageKey = 'hiddenColumns-v2',
 }: { assetOnly?: boolean; storageKey?: string } = {}) => {
   const chartColors = useChartColors();
+  const account = useAccount();
+  const isDbAccount = account?.type === 'db';
 
   const [channel, setChannel] = useState<{
     name: string;
@@ -108,16 +212,9 @@ export const ChannelTable = ({
     action: string;
   } | null>();
 
-  const {
-    data,
-    loading,
-    error,
-    refetch: refetchChannels,
-  } = useGetChannelsQuery({
+  const { data, loading, error } = useGetChannelsQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
-
-  const [upsertChannelNote] = useUpsertChannelNoteMutation();
 
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
     storageKey,
@@ -474,6 +571,18 @@ export const ChannelTable = ({
             ),
           },
           {
+            header: 'Note',
+            accessorKey: 'note',
+            enableSorting: false,
+            cell: ({ row }: any) => (
+              <NoteCell
+                note={row.original.note}
+                channelId={row.original.id}
+                isDbAccount={isDbAccount}
+              />
+            ),
+          },
+          {
             header: 'Capacity',
             accessorKey: 'capacity',
             cell: ({ row }: any) => (
@@ -495,26 +604,6 @@ export const ChannelTable = ({
           {
             header: 'Past States',
             accessorKey: 'past_states',
-          },
-          {
-            header: 'Note',
-            accessorKey: 'note',
-            enableSorting: false,
-            cell: ({ row }: any) => (
-              <NoteCell
-                note={row.original.note}
-                onSave={async note => {
-                  try {
-                    await upsertChannelNote({
-                      variables: { channelId: row.original.id, note },
-                    });
-                    await refetchChannels();
-                  } catch {
-                    toast.error('Failed to save note');
-                  }
-                }}
-              />
-            ),
           },
         ],
       },
@@ -731,7 +820,7 @@ export const ChannelTable = ({
         };
       }),
     ],
-    [numberStringSorting, uniqueAssets, upsertChannelNote, refetchChannels]
+    [numberStringSorting, uniqueAssets, isDbAccount]
   );
 
   const handleToggle = (hide: boolean, id: string) => {
@@ -768,16 +857,7 @@ export const ChannelTable = ({
 
     switch (channel.action) {
       case 'edit':
-        return (
-          <ChannelDetails
-            id={channel.channel}
-            name={channel.name}
-            initialNote={
-              data?.getChannels.find(c => c.id === channel.channel)?.note ?? ''
-            }
-            onNoteSaved={refetchChannels}
-          />
-        );
+        return <ChannelDetails id={channel.channel} name={channel.name} />;
       case 'close':
         return (
           <CloseChannel
