@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
@@ -23,7 +23,12 @@ import { FetchService } from '../../fetch/fetch.service';
 import { GetRecommendedNode } from '../amboss/amboss.gql';
 import { AmbossService } from '../amboss/amboss.service';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
-import { ChannelMetadata } from './channel-metadata.types';
+import {
+  ChannelMetadata,
+  ChannelsMutations,
+  OffchainMutations,
+  UserMutations,
+} from './channel-metadata.types';
 import { ChannelMetadataService } from './channel-metadata.service';
 
 function toAssetField(ac: {
@@ -54,7 +59,6 @@ export class ChannelsResolver {
     private fetchService: FetchService,
     private ambossService: AmbossService,
     private tapdNodeService: TapdNodeService,
-    private channelMetadataService: ChannelMetadataService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -454,9 +458,38 @@ export class ChannelsResolver {
 
     return errors ? false : true;
   }
+}
 
-  @Mutation(() => ChannelMetadata)
-  async setChannelMetadata(
+@Resolver()
+export class UserMutationRoot {
+  @Mutation(() => UserMutations)
+  async user(): Promise<UserMutations> {
+    return {} as any;
+  }
+}
+
+@Resolver(() => UserMutations)
+export class UserMutationsResolver {
+  @ResolveField(() => OffchainMutations)
+  async offchain(): Promise<OffchainMutations> {
+    return {} as any;
+  }
+}
+
+@Resolver(() => OffchainMutations)
+export class OffchainMutationsResolver {
+  @ResolveField(() => ChannelsMutations)
+  async channels(): Promise<ChannelsMutations> {
+    return {} as any;
+  }
+}
+
+@Resolver(() => ChannelsMutations)
+export class ChannelsMutationsResolver {
+  constructor(private channelMetadataService: ChannelMetadataService) {}
+
+  @ResolveField(() => ChannelMetadata)
+  async upsert_note(
     @CurrentUser() user: UserId,
     @Args('channelId') channelId: string,
     @Args('note') note: string
@@ -472,5 +505,15 @@ export class ChannelsResolver {
       channelId,
       note
     );
+  }
+
+  @ResolveField(() => Boolean)
+  async delete_note(
+    @CurrentUser() user: UserId,
+    @Args('channelId') channelId: string
+  ): Promise<boolean> {
+    const dbUserId = user.userId ?? user.id;
+    const nodeId = user.id;
+    return this.channelMetadataService.deleteNote(dbUserId, nodeId, channelId);
   }
 }

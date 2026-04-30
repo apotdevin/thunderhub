@@ -3,71 +3,155 @@ import * as Types from '../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type SetChannelNoteMutationVariables = Types.Exact<{
+export type UpsertChannelNoteMutationVariables = Types.Exact<{
   channelId: Types.Scalars['String']['input'];
   note: Types.Scalars['String']['input'];
 }>;
 
-export type SetChannelNoteMutation = {
+export type UpsertChannelNoteMutation = {
   __typename?: 'Mutation';
-  setChannelNote: {
-    __typename?: 'ChannelNote';
-    channelId: string;
-    note: string;
-    updatedAt: string;
+  user: {
+    __typename?: 'UserMutations';
+    offchain: {
+      __typename?: 'OffchainMutations';
+      channels: {
+        __typename?: 'ChannelsMutations';
+        upsert_note: {
+          __typename?: 'ChannelMetadata';
+          channel_id: string;
+          note: string;
+          updated_at: string;
+        };
+      };
+    };
   };
 };
 
-export const SetChannelNoteDocument = gql`
-  mutation SetChannelNote($channelId: String!, $note: String!) {
-    setChannelNote(channelId: $channelId, note: $note) {
-      channelId
-      note
-      updatedAt
+export type DeleteChannelNoteMutationVariables = Types.Exact<{
+  channelId: Types.Scalars['String']['input'];
+}>;
+
+export type DeleteChannelNoteMutation = {
+  __typename?: 'Mutation';
+  user: {
+    __typename?: 'UserMutations';
+    offchain: {
+      __typename?: 'OffchainMutations';
+      channels: { __typename?: 'ChannelsMutations'; delete_note: boolean };
+    };
+  };
+};
+
+export const UpsertChannelNoteDocument = gql`
+  mutation UpsertChannelNote($channelId: String!, $note: String!) {
+    user {
+      offchain {
+        channels {
+          upsert_note(channelId: $channelId, note: $note) {
+            channel_id
+            note
+            updated_at
+          }
+        }
+      }
     }
   }
 `;
-export type SetChannelNoteMutationFn = Apollo.MutationFunction<
-  SetChannelNoteMutation,
-  SetChannelNoteMutationVariables
+export type UpsertChannelNoteMutationFn = Apollo.MutationFunction<
+  UpsertChannelNoteMutation,
+  UpsertChannelNoteMutationVariables
 >;
 
 /**
- * __useSetChannelNoteMutation__
+ * __useUpsertChannelNoteMutation__
  *
- * To run a mutation, you first call `useSetChannelNoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSetChannelNoteMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpsertChannelNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertChannelNoteMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [setChannelNoteMutation, { data, loading, error }] = useSetChannelNoteMutation({
+ * const [upsertChannelNoteMutation, { data, loading, error }] = useUpsertChannelNoteMutation({
  *   variables: {
  *      channelId: // value for 'channelId'
  *      note: // value for 'note'
  *   },
  * });
  */
-export function useSetChannelNoteMutation(
+export function useUpsertChannelNoteMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    SetChannelNoteMutation,
-    SetChannelNoteMutationVariables
+    UpsertChannelNoteMutation,
+    UpsertChannelNoteMutationVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    SetChannelNoteMutation,
-    SetChannelNoteMutationVariables
-  >(SetChannelNoteDocument, options);
+    UpsertChannelNoteMutation,
+    UpsertChannelNoteMutationVariables
+  >(UpsertChannelNoteDocument, options);
 }
-export type SetChannelNoteMutationHookResult = ReturnType<
-  typeof useSetChannelNoteMutation
+export type UpsertChannelNoteMutationHookResult = ReturnType<
+  typeof useUpsertChannelNoteMutation
 >;
-export type SetChannelNoteMutationResult =
-  Apollo.MutationResult<SetChannelNoteMutation>;
-export type SetChannelNoteMutationOptions = Apollo.BaseMutationOptions<
-  SetChannelNoteMutation,
-  SetChannelNoteMutationVariables
+export type UpsertChannelNoteMutationResult =
+  Apollo.MutationResult<UpsertChannelNoteMutation>;
+export type UpsertChannelNoteMutationOptions = Apollo.BaseMutationOptions<
+  UpsertChannelNoteMutation,
+  UpsertChannelNoteMutationVariables
+>;
+export const DeleteChannelNoteDocument = gql`
+  mutation DeleteChannelNote($channelId: String!) {
+    user {
+      offchain {
+        channels {
+          delete_note(channelId: $channelId)
+        }
+      }
+    }
+  }
+`;
+export type DeleteChannelNoteMutationFn = Apollo.MutationFunction<
+  DeleteChannelNoteMutation,
+  DeleteChannelNoteMutationVariables
+>;
+
+/**
+ * __useDeleteChannelNoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteChannelNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteChannelNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteChannelNoteMutation, { data, loading, error }] = useDeleteChannelNoteMutation({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useDeleteChannelNoteMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteChannelNoteMutation,
+    DeleteChannelNoteMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteChannelNoteMutation,
+    DeleteChannelNoteMutationVariables
+  >(DeleteChannelNoteDocument, options);
+}
+export type DeleteChannelNoteMutationHookResult = ReturnType<
+  typeof useDeleteChannelNoteMutation
+>;
+export type DeleteChannelNoteMutationResult =
+  Apollo.MutationResult<DeleteChannelNoteMutation>;
+export type DeleteChannelNoteMutationOptions = Apollo.BaseMutationOptions<
+  DeleteChannelNoteMutation,
+  DeleteChannelNoteMutationVariables
 >;

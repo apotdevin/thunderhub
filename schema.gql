@@ -195,9 +195,9 @@ type ChannelInfo {
 }
 
 type ChannelMetadata {
-  channelId: String!
+  channel_id: String!
   note: String!
-  updatedAt: String!
+  updated_at: String!
 }
 
 type ChannelReport {
@@ -224,6 +224,11 @@ type ChannelSummary {
   pending_count: Int!
   total_local_sats: String!
   total_remote_sats: String!
+}
+
+type ChannelsMutations {
+  delete_note(channelId: String!): Boolean!
+  upsert_note(channelId: String!, note: String!): ChannelMetadata!
 }
 
 type ClosedChannel {
@@ -569,7 +574,6 @@ type Mutation {
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
-  setChannelMetadata(channelId: String!, note: String!): ChannelMetadata!
   setupTradeCapacity(input: SetupTradeCapacityInput!): SetupTradeCapacityResult!
   taproot_assets: TaprootAssetsMutations!
   team: TeamMutations!
@@ -577,6 +581,7 @@ type Mutation {
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
   updateTwofaSecret(secret: String!, token: String!): Boolean!
+  user: UserMutations!
 }
 
 type NetworkInfo {
@@ -666,6 +671,10 @@ type NodeSocialInfo {
 type NodeType {
   alias: String!
   public_key: String!
+}
+
+type OffchainMutations {
+  channels: ChannelsMutations!
 }
 
 input OfferReadinessInput {
@@ -1346,6 +1355,10 @@ type UserBackupInfo {
   last_update: String
   last_update_size: String
   total_size_saved: String!
+}
+
+type UserMutations {
+  offchain: OffchainMutations!
 }
 
 type UserNode {

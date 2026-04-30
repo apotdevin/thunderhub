@@ -14,7 +14,7 @@ import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
 import Table from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
-import { useSetChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
+import { useUpsertChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
@@ -117,7 +117,7 @@ export const ChannelTable = ({
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const [setChannelNote] = useSetChannelNoteMutation();
+  const [upsertChannelNote] = useUpsertChannelNoteMutation();
 
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
     storageKey,
@@ -505,7 +505,7 @@ export const ChannelTable = ({
                 note={row.original.note}
                 onSave={async note => {
                   try {
-                    await setChannelNote({
+                    await upsertChannelNote({
                       variables: { channelId: row.original.id, note },
                     });
                     await refetchChannels();
@@ -731,7 +731,7 @@ export const ChannelTable = ({
         };
       }),
     ],
-    [numberStringSorting, uniqueAssets, setChannelNote, refetchChannels]
+    [numberStringSorting, uniqueAssets, upsertChannelNote, refetchChannels]
   );
 
   const handleToggle = (hide: boolean, id: string) => {

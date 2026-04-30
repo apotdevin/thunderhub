@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ChangeDetails } from '../../../components/modal/changeDetails/ChangeDetails';
 import { useGetChannelInfoQuery } from '../../../graphql/queries/__generated__/getChannel.generated';
-import { useSetChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
+import { useUpsertChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
 
 export const ChannelDetails: FC<{
   id?: string;
@@ -19,7 +19,8 @@ export const ChannelDetails: FC<{
   });
 
   const [note, setNote] = useState(initialNote);
-  const [setChannelNote, { loading: savingNote }] = useSetChannelNoteMutation();
+  const [upsertChannelNote, { loading: savingNote }] =
+    useUpsertChannelNoteMutation();
 
   useEffect(() => {
     setNote(initialNote);
@@ -27,7 +28,7 @@ export const ChannelDetails: FC<{
 
   const saveNote = async () => {
     try {
-      await setChannelNote({ variables: { channelId: id, note } });
+      await upsertChannelNote({ variables: { channelId: id, note } });
       onNoteSaved?.();
     } catch {
       toast.error('Failed to save note');

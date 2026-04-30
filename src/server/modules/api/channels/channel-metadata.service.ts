@@ -58,6 +58,29 @@ export class ChannelMetadataService {
         ],
         set: { note, updated_at: now },
       });
-    return { channelId, note, updatedAt: now };
+    return { channel_id: channelId, note, updated_at: now };
+  }
+
+  async deleteNote(
+    userId: string,
+    nodeId: string,
+    channelId: string
+  ): Promise<boolean> {
+    if (!this.drizzle) {
+      throw new Error(
+        'Channel notes require a database. Set DB_TYPE and DB_SQLITE_PATH (or DB_POSTGRES_URL) in your environment.'
+      );
+    }
+    const { db, schema } = this.drizzle;
+    await (db as any)
+      .delete(schema.channelMetadata)
+      .where(
+        and(
+          eq(schema.channelMetadata.user_id, userId),
+          eq(schema.channelMetadata.node_id, nodeId),
+          eq(schema.channelMetadata.channel_id, channelId)
+        )
+      );
+    return true;
   }
 }

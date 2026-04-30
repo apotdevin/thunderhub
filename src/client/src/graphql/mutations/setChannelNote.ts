@@ -1,11 +1,29 @@
 import { gql } from '@apollo/client';
 
-export const SET_CHANNEL_NOTE = gql`
-  mutation SetChannelNote($channelId: String!, $note: String!) {
-    setChannelNote(channelId: $channelId, note: $note) {
-      channelId
-      note
-      updatedAt
+export const UPSERT_CHANNEL_NOTE = gql`
+  mutation UpsertChannelNote($channelId: String!, $note: String!) {
+    user {
+      offchain {
+        channels {
+          upsert_note(channelId: $channelId, note: $note) {
+            channel_id
+            note
+            updated_at
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_CHANNEL_NOTE = gql`
+  mutation DeleteChannelNote($channelId: String!) {
+    user {
+      offchain {
+        channels {
+          delete_note(channelId: $channelId)
+        }
+      }
     }
   }
 `;
