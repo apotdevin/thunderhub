@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.0](https://github.com/apotdevin/thunderhub/compare/v0.16.2...v0.17.0) (2026-04-30)
+
+
+### Features
+
+* per-channel notes (inline editing in channels table) ([#744](https://github.com/apotdevin/thunderhub/issues/744)) ([f62b48f](https://github.com/apotdevin/thunderhub/commit/f62b48fa245b382dd07b3921cec5f91186069c00))
+
+
+### Improvements
+
+* default to buy side order form ([3b110fc](https://github.com/apotdevin/thunderhub/commit/3b110fc77ec7b60ea0bfa6714c2d7c6e8147e3bb))
+* trading partner change ([fa1de4d](https://github.com/apotdevin/thunderhub/commit/fa1de4dd7fe44702f634c9534440e1aefe8d59bc))
+
 ## [0.16.2](https://github.com/apotdevin/thunderhub/compare/v0.16.1...v0.16.2) (2026-04-29)
 
 
