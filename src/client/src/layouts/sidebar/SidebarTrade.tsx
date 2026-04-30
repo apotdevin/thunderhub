@@ -575,7 +575,14 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
               {hasPendingOrder && (
                 <div className="flex items-center gap-1 text-[10px] text-yellow-500 pb-1.5 border-b border-border/40">
                   <span>Unpaid Magma order pending —</span>
-                  <Link to="/magma">view</Link>
+                  <a
+                    href={`https://magma.amboss.tech/order/${pendingOrderId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    view
+                  </a>
                 </div>
               )}
               <div className="flex items-center justify-between mb-0.5">
@@ -943,6 +950,17 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                 <p className="text-[11px] text-yellow-500 font-medium">
                   An unpaid Magma order is blocking trading. Pay or cancel it to
                   continue.
+                  <br />
+                  {pendingOrderId && (
+                    <a
+                      href={`https://magma.amboss.tech/order/${pendingOrderId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-yellow-500/70 hover:text-yellow-500 underline"
+                    >
+                      View order on Magma
+                    </a>
+                  )}
                 </p>
                 <div className="flex gap-2">
                   <Button
