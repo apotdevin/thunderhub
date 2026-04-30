@@ -225,6 +225,7 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   const hasAssetPending = (assetCh?.pending_count ?? 0) > 0;
   const hasPendingOrder = readiness?.has_pending_order ?? false;
   const pendingOrderId = readiness?.pending_order_id ?? null;
+  const pendingOrderStatus = readiness?.pending_order_status ?? null;
   const onchainSats = Number(readiness?.onchain_balance_sats ?? '0');
   const onchainAsset = BigInt(readiness?.onchain_asset_balance ?? '0');
   const channelsReady = hasBtcChannel && hasAssetChannel;
@@ -572,9 +573,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
           {/* Trading capacity */}
           {channelsReady && (
             <div className="flex flex-col gap-1 rounded-md border border-border/60 bg-muted/20 px-3 py-2.5 text-xs">
-              {hasPendingOrder && (
+              {(hasPendingOrder || pendingOrderId) && (
                 <div className="flex items-center gap-1 text-[10px] text-yellow-500 pb-1.5 border-b border-border/40">
-                  <span>Unpaid Magma order pending —</span>
+                  <span>
+                    {hasPendingOrder
+                      ? 'Unpaid Magma order pending —'
+                      : 'Magma order in progress —'}
+                  </span>
                   <a
                     href={`https://magma.amboss.tech/order/${pendingOrderId}`}
                     target="_blank"
@@ -945,64 +950,91 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
               </Button>
             )}
 
-            {hasPendingOrder && (
+            {(hasPendingOrder || pendingOrderId) && (
               <div className="mt-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-2.5 space-y-2">
-                <p className="text-[11px] text-yellow-500 font-medium">
-                  An unpaid Magma order is blocking trading. Pay or cancel it to
-                  continue.
-                  <br />
-                  {pendingOrderId && (
-                    <a
-                      href={`https://magma.amboss.tech/order/${pendingOrderId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] text-yellow-500/70 hover:text-yellow-500 underline"
-                    >
-                      View order on Magma
-                    </a>
-                  )}
-                </p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10"
-                    disabled={!pendingOrderId}
-                    onClick={() => {
-                      if (!pendingOrderId) return;
-                      setPayDialogOpen(true);
-                      fetchInvoice({ variables: { orderId: pendingOrderId } });
-                    }}
-                  >
-                    <Zap size={12} className="mr-1" />
-                    Pay order
-                  </Button>
-                  {pendingOrderId && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      disabled={cancelLoading}
-                      onClick={() =>
-                        cancelOrder({
-                          variables: {
-                            input: {
-                              orderId: pendingOrderId,
-                              cancellationReason:
-                                OrderCancellationReason.UnableToPay,
-                            },
-                          },
-                        })
-                      }
-                    >
-                      {cancelLoading ? (
-                        <Loader2 size={12} className="animate-spin" />
-                      ) : (
-                        'Cancel order'
+                {hasPendingOrder ? (
+                  <>
+                    <p className="text-[11px] text-yellow-500 font-medium">
+                      An unpaid Magma order is blocking trading. Pay or cancel
+                      it to continue.
+                      <br />
+                      {pendingOrderId && (
+                        <a
+                          href={`https://magma.amboss.tech/order/${pendingOrderId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-yellow-500/70 hover:text-yellow-500 underline"
+                        >
+                          View order on Magma
+                        </a>
                       )}
-                    </Button>
-                  )}
-                </div>
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10"
+                        disabled={!pendingOrderId}
+                        onClick={() => {
+                          if (!pendingOrderId) return;
+                          setPayDialogOpen(true);
+                          fetchInvoice({
+                            variables: { orderId: pendingOrderId },
+                          });
+                        }}
+                      >
+                        <Zap size={12} className="mr-1" />
+                        Pay order
+                      </Button>
+                      {pendingOrderId && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          disabled={cancelLoading}
+                          onClick={() =>
+                            cancelOrder({
+                              variables: {
+                                input: {
+                                  orderId: pendingOrderId,
+                                  cancellationReason:
+                                    OrderCancellationReason.UnableToPay,
+                                },
+                              },
+                            })
+                          }
+                        >
+                          {cancelLoading ? (
+                            <Loader2 size={12} className="animate-spin" />
+                          ) : (
+                            'Cancel order'
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-[11px] text-yellow-500 font-medium">
+                    Magma order in progress.
+                    {pendingOrderStatus && (
+                      <span className="text-yellow-500/70">
+                        {' '}
+                        {pendingOrderStatus.replace(/_/g, ' ').toLowerCase()}
+                      </span>
+                    )}
+                    <br />
+                    {pendingOrderId && (
+                      <a
+                        href={`https://magma.amboss.tech/order/${pendingOrderId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-yellow-500/70 hover:text-yellow-500 underline"
+                      >
+                        View order on Magma
+                      </a>
+                    )}
+                  </p>
+                )}
               </div>
             )}
 

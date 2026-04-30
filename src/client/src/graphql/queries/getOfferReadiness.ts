@@ -8,6 +8,7 @@ export const GET_OFFER_READINESS = gql`
         is_peer_connected
         has_pending_order
         pending_order_id
+        pending_order_status
         onchain_balance_sats
         onchain_asset_balance
         btc_channels {

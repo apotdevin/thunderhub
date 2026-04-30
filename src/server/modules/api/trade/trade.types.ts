@@ -287,6 +287,9 @@ export class OfferReadinessResult {
   @Field({ nullable: true })
   pending_order_id?: string;
 
+  @Field({ nullable: true })
+  pending_order_status?: string;
+
   @Field()
   onchain_balance_sats: string;
 

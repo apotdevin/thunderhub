@@ -691,6 +691,7 @@ type OfferReadinessResult {
   onchain_asset_balance: String!
   onchain_balance_sats: String!
   pending_order_id: String
+  pending_order_status: String
 }
 
 type OnChainBalance {
