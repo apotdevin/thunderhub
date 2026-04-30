@@ -1318,6 +1318,7 @@ export type SetupTradeCapacityInput = {
 
 export type SetupTradeCapacityResult = {
   __typename?: 'SetupTradeCapacityResult';
+  channelOpenPending?: Maybe<Scalars['Boolean']['output']>;
   magmaOrderAmountAsset?: Maybe<Scalars['String']['output']>;
   magmaOrderAmountSats?: Maybe<Scalars['String']['output']>;
   magmaOrderFeeSats?: Maybe<Scalars['String']['output']>;

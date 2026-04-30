@@ -129,8 +129,9 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
       onCompleted: data => {
         const result = data.setupTradeCapacity;
         if (result.success) {
-          const msg =
-            result.skippedMagmaOrder && result.skippedOutboundChannel
+          const msg = result.channelOpenPending
+            ? 'Payment sent — inbound channel is being set up by the peer'
+            : result.skippedMagmaOrder && result.skippedOutboundChannel
               ? 'Capacity already sufficient'
               : result.skippedMagmaOrder || result.skippedOutboundChannel
                 ? 'Trade capacity increased successfully'
@@ -138,9 +139,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
           toast.success(msg);
           setAmount('');
           clearQuote();
+          refetchReadiness();
         }
       },
-      onError: err => toast.error(getErrorContent(err)),
+      onError: err => {
+        toast.error(getErrorContent(err));
+        refetchReadiness();
+      },
     });
 
   const [cancelOrder, { loading: cancelLoading }] = useCancelMagmaOrderMutation(

@@ -431,6 +431,10 @@ export class SetupTradeCapacityResult {
   /** True when the outbound channel open was skipped because outbound capacity already exists. */
   @Field({ nullable: true })
   skippedOutboundChannel?: boolean;
+
+  /** True when the Magma invoice was paid but the channel open was not yet detected (still in progress). */
+  @Field({ nullable: true })
+  channelOpenPending?: boolean;
 }
 
 export type ChannelStateInfo = {
@@ -461,7 +465,7 @@ export type SetupTradeCapacityAuto = {
         feeSats?: number;
       }
     | undefined;
-  payMagma: void;
+  payMagma: { channelOpenPending: boolean } | void;
   outboundChannel: { txid: string; outputIndex: number } | undefined;
 };
 

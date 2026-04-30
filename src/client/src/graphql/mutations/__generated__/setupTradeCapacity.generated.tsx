@@ -21,6 +21,7 @@ export type SetupTradeCapacityMutation = {
     outboundChannelOutputIndex?: number | null;
     skippedMagmaOrder?: boolean | null;
     skippedOutboundChannel?: boolean | null;
+    channelOpenPending?: boolean | null;
   };
 };
 
@@ -37,6 +38,7 @@ export const SetupTradeCapacityDocument = gql`
       outboundChannelOutputIndex
       skippedMagmaOrder
       skippedOutboundChannel
+      channelOpenPending
     }
   }
 `;

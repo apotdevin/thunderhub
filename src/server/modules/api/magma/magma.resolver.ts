@@ -431,14 +431,33 @@ export class MagmaResolver {
             });
           });
 
-          await Promise.race([
-            this.nodeService.waitForChannelFromPeer(
-              user.id,
-              input.swapNodePubkey,
-              120_000
-            ),
-            payFailureGuard,
-          ]);
+          let channelOpenPending = false;
+
+          try {
+            await Promise.race([
+              this.nodeService.waitForChannelFromPeer(
+                user.id,
+                input.swapNodePubkey,
+                120_000
+              ),
+              payFailureGuard,
+            ]);
+            this.logger.info('Magma channel opening detected', {
+              orderId: magmaOrder.id,
+            });
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            if (msg.includes('Timed out')) {
+              // Payment is in-flight; channel will open on Magma's schedule.
+              channelOpenPending = true;
+              this.logger.info(
+                'Timed out waiting for channel open — payment in-flight, channel will open eventually',
+                { orderId: magmaOrder.id }
+              );
+            } else {
+              throw err;
+            }
+          }
 
           // Suppress the now-detached payFailureGuard rejection and log the
           // eventual settlement outcome for observability.
@@ -456,9 +475,7 @@ export class MagmaResolver {
               );
             });
 
-          this.logger.info('Magma channel opening detected', {
-            orderId: magmaOrder.id,
-          });
+          return { channelOpenPending };
         },
       ],
 
@@ -561,6 +578,9 @@ export class MagmaResolver {
       skippedMagmaOrder: !result.magmaOrder || undefined,
       skippedOutboundChannel:
         (!!input.satsAmount && !result.outboundChannel) || undefined,
+      channelOpenPending:
+        (result.payMagma as { channelOpenPending?: boolean } | undefined)
+          ?.channelOpenPending || undefined,
     };
   }
 }
@@ -1166,11 +1186,8 @@ export class RailsQueriesResolver {
         magmaUrl,
         getOrdersQuery,
         {
-          page: { offset: 0, limit: 1 },
-          input: {
-            peer_pubkey: peerPubkey,
-            action_needed: true,
-          },
+          page: { offset: 0, limit: 10 },
+          input: { peer_pubkey: peerPubkey },
         },
         { authorization: `Bearer ${ambossAuth}` }
       );

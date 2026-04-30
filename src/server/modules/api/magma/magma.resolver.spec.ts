@@ -611,15 +611,20 @@ describe('MagmaResolver', () => {
       ).rejects.toThrow('Failed to pay Magma invoice');
     });
 
-    it('rejects when inbound channel times out (outbound may have started in parallel)', async () => {
-      // waitForChannelFromPeer rejects (timeout) and pay never settles
+    it('resolves with channelOpenPending when inbound channel open times out', async () => {
+      // waitForChannelFromPeer rejects (timeout) — payment is in-flight so
+      // this is treated as success with channelOpenPending=true rather than
+      // an error, so the caller can show the right UI state.
       mockNodeService.waitForChannelFromPeer.mockRejectedValue(
         new Error('Timed out waiting for channel from peer')
       );
 
-      await expect(
-        setupResolver.setupTradeCapacity(userId, purchaseInput)
-      ).rejects.toThrow('Timed out waiting for channel from peer');
+      const result = await setupResolver.setupTradeCapacity(
+        userId,
+        purchaseInput
+      );
+      expect(result.success).toBe(true);
+      expect(result.channelOpenPending).toBe(true);
     });
 
     it('throws when asset amount is zero', async () => {
