@@ -690,6 +690,7 @@ type OfferReadinessResult {
   is_peer_connected: Boolean!
   onchain_asset_balance: String!
   onchain_balance_sats: String!
+  pending_order_id: String
 }
 
 type OnChainBalance {

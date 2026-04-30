@@ -10,19 +10,36 @@ import {
   CheckCircle2,
   Circle,
   RefreshCw,
+  Copy,
+  Zap,
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { useQuery } from '@apollo/client';
+import { Link } from '@/components/link/Link';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import {
   useTradingState,
   useTradingDispatch,
 } from '../../context/TradingContext';
-import { TapTransactionType } from '../../graphql/types';
+import {
+  TapTransactionType,
+  OrderCancellationReason,
+} from '../../graphql/types';
 import { useGetTradeQuoteLazyQuery } from '../../graphql/queries/__generated__/getTradeQuote.generated';
 import { useExecuteTradeMutation } from '../../graphql/mutations/__generated__/executeTrade.generated';
 import { useSetupTradeCapacityMutation } from '../../graphql/mutations/__generated__/setupTradeCapacity.generated';
+import { useCancelMagmaOrderMutation } from '../../graphql/mutations/__generated__/cancelMagmaOrder.generated';
+import { useGetMagmaOrderInvoiceLazyQuery } from '../../graphql/queries/__generated__/getMagmaOrderInvoice.generated';
 import { GET_OFFER_READINESS } from '../../graphql/queries/getOfferReadiness';
+import { Pay } from '../../views/home/account/pay/Pay';
 import { getErrorContent } from '../../utils/error';
 import { formatNumber } from '../../utils/helpers';
 import {
@@ -126,6 +143,28 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
       onError: err => toast.error(getErrorContent(err)),
     });
 
+  const [cancelOrder, { loading: cancelLoading }] = useCancelMagmaOrderMutation(
+    {
+      onCompleted: data => {
+        if (data.magma.cancel_order.success) {
+          toast.success('Magma order cancelled');
+          refetchReadiness();
+        } else {
+          toast.error('Failed to cancel order');
+        }
+      },
+      onError: err => toast.error(getErrorContent(err)),
+    }
+  );
+
+  const [payDialogOpen, setPayDialogOpen] = useState(false);
+  const [
+    fetchInvoice,
+    { data: invoiceData, loading: invoiceLoading, reset: resetInvoice },
+  ] = useGetMagmaOrderInvoiceLazyQuery();
+  const payingInvoice =
+    invoiceData?.magma?.orders?.get_invoice?.invoice ?? null;
+
   const isAssetPurchase = txType === TapTransactionType.Purchase;
   const offerAsset = selectedOffer?.asset;
   const symbol = offerAsset?.symbol || selectedAsset?.symbol || '';
@@ -135,7 +174,7 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   const hasRate = rateDisplay !== '0' || rateFull !== '0';
   const isValid = amount && Number(amount) > 0;
   const quoteExpired = secondsLeft != null && secondsLeft <= 0;
-  const loading = tradeLoading || setupLoading;
+  const loading = tradeLoading || setupLoading || cancelLoading;
 
   const atomicAmount = isValid ? displayToAtomic(amount, precision) : BigInt(0);
 
@@ -185,6 +224,7 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
   const hasAssetChannel = (assetCh?.open_count ?? 0) > 0;
   const hasAssetPending = (assetCh?.pending_count ?? 0) > 0;
   const hasPendingOrder = readiness?.has_pending_order ?? false;
+  const pendingOrderId = readiness?.pending_order_id ?? null;
   const onchainSats = Number(readiness?.onchain_balance_sats ?? '0');
   const onchainAsset = BigInt(readiness?.onchain_asset_balance ?? '0');
   const channelsReady = hasBtcChannel && hasAssetChannel;
@@ -443,11 +483,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                     {!hasBtcChannel &&
                       (hasBtcPending || hasPendingOrder || setupLoading) && (
                         <span className="ml-auto text-yellow-500">
-                          {setupLoading
-                            ? 'Setting up...'
-                            : hasBtcPending
-                              ? 'Opening...'
-                              : 'Order in progress'}
+                          {setupLoading ? (
+                            'Setting up...'
+                          ) : hasBtcPending ? (
+                            'Opening...'
+                          ) : (
+                            <Link to="/magma">Order pending</Link>
+                          )}
                         </span>
                       )}
                   </div>
@@ -490,11 +532,13 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                     {!hasAssetChannel &&
                       (hasAssetPending || hasPendingOrder || setupLoading) && (
                         <span className="ml-auto text-yellow-500">
-                          {setupLoading
-                            ? 'Setting up...'
-                            : hasAssetPending
-                              ? 'Opening...'
-                              : 'Order in progress'}
+                          {setupLoading ? (
+                            'Setting up...'
+                          ) : hasAssetPending ? (
+                            'Opening...'
+                          ) : (
+                            <Link to="/magma">Order pending</Link>
+                          )}
                         </span>
                       )}
                   </div>
@@ -528,6 +572,12 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
           {/* Trading capacity */}
           {channelsReady && (
             <div className="flex flex-col gap-1 rounded-md border border-border/60 bg-muted/20 px-3 py-2.5 text-xs">
+              {hasPendingOrder && (
+                <div className="flex items-center gap-1 text-[10px] text-yellow-500 pb-1.5 border-b border-border/40">
+                  <span>Unpaid Magma order pending —</span>
+                  <Link to="/magma">view</Link>
+                </div>
+              )}
               <div className="flex items-center justify-between mb-0.5">
                 <span className="text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider">
                   Capacity
@@ -838,7 +888,11 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
                   size="sm"
                   onClick={handleGetQuote}
                   disabled={
-                    quoteLoading || !isValid || !hasCapacity || exceedsCapacity
+                    quoteLoading ||
+                    !isValid ||
+                    !hasCapacity ||
+                    exceedsCapacity ||
+                    hasPendingOrder
                   }
                 >
                   {quoteLoading ? (
@@ -884,6 +938,56 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
               </Button>
             )}
 
+            {hasPendingOrder && (
+              <div className="mt-2 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-2.5 space-y-2">
+                <p className="text-[11px] text-yellow-500 font-medium">
+                  An unpaid Magma order is blocking trading. Pay or cancel it to
+                  continue.
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10"
+                    disabled={!pendingOrderId}
+                    onClick={() => {
+                      if (!pendingOrderId) return;
+                      setPayDialogOpen(true);
+                      fetchInvoice({ variables: { orderId: pendingOrderId } });
+                    }}
+                  >
+                    <Zap size={12} className="mr-1" />
+                    Pay order
+                  </Button>
+                  {pendingOrderId && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      disabled={cancelLoading}
+                      onClick={() =>
+                        cancelOrder({
+                          variables: {
+                            input: {
+                              orderId: pendingOrderId,
+                              cancellationReason:
+                                OrderCancellationReason.UnableToPay,
+                            },
+                          },
+                        })
+                      }
+                    >
+                      {cancelLoading ? (
+                        <Loader2 size={12} className="animate-spin" />
+                      ) : (
+                        'Cancel order'
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
             {quoteExpired && (
               <Button
                 variant="outline"
@@ -898,6 +1002,75 @@ export const SidebarTrade: FC<{ embedded?: boolean }> = ({
           </div>
         </>
       )}
+
+      <Dialog
+        open={payDialogOpen}
+        onOpenChange={open => {
+          if (!open) {
+            setPayDialogOpen(false);
+            resetInvoice();
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Pay Invoice</DialogTitle>
+            <DialogDescription>
+              Scan the QR code, copy the invoice, or pay directly.
+            </DialogDescription>
+          </DialogHeader>
+
+          {invoiceLoading && (
+            <div className="flex justify-center py-8">
+              <Loader2 className="animate-spin size-6 text-muted-foreground" />
+            </div>
+          )}
+
+          {!invoiceLoading && !payingInvoice && (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No invoice available for this order.
+            </p>
+          )}
+
+          {!invoiceLoading && payingInvoice && (
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-center">
+                <div className="rounded border border-border bg-white p-3">
+                  <QRCodeSVG value={`lightning:${payingInvoice}`} size={200} />
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-2">
+                <div className="max-w-full break-all text-center font-mono text-[11px] text-muted-foreground">
+                  {payingInvoice}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    navigator.clipboard
+                      .writeText(payingInvoice)
+                      .then(() => toast.success('Copied to clipboard'))
+                      .catch(() => toast.error('Failed to copy to clipboard'))
+                  }
+                >
+                  <Copy size={14} className="mr-1" />
+                  Copy Invoice
+                </Button>
+              </div>
+
+              <Pay
+                predefinedRequest={payingInvoice}
+                payCallback={() => {
+                  setPayDialogOpen(false);
+                  resetInvoice();
+                  refetchReadiness();
+                }}
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 

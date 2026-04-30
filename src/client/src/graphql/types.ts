@@ -947,6 +947,7 @@ export type OfferReadinessResult = {
   is_peer_connected: Scalars['Boolean']['output'];
   onchain_asset_balance: Scalars['String']['output'];
   onchain_balance_sats: Scalars['String']['output'];
+  pending_order_id?: Maybe<Scalars['String']['output']>;
 };
 
 export type OnChainBalance = {
@@ -1304,6 +1305,7 @@ export type SetupTradeCapacityInput = {
   ambossAssetId: Scalars['String']['input'];
   assetAmount: Scalars['String']['input'];
   assetRate: Scalars['String']['input'];
+  feeRateSatPerVbyte?: InputMaybe<Scalars['Int']['input']>;
   magmaOfferId: Scalars['String']['input'];
   openOutboundAssetChannel?: InputMaybe<Scalars['Boolean']['input']>;
   satsAmount?: InputMaybe<Scalars['String']['input']>;

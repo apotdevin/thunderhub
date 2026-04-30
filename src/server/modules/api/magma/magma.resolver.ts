@@ -1015,7 +1015,8 @@ export class RailsQueriesResolver {
     const peers = peersResult[0]?.peers || [];
     const pendingChannels = pendingResult[0]?.pending_channels || [];
     const assetBalances = assetBalancesResult[0] || [];
-    const hasPendingOrder = ordersResult;
+    const { hasPending: hasPendingOrder, orderId: pendingOrderId } =
+      ordersResult;
     const chainBalance = chainBalanceResult[0]?.chain_balance ?? 0;
 
     // On-chain asset balance for the specific asset
@@ -1113,6 +1114,7 @@ export class RailsQueriesResolver {
         has_active_channel: matchingAssets.length > 0,
       },
       has_pending_order: hasPendingOrder,
+      pending_order_id: pendingOrderId,
       onchain_balance_sats: String(chainBalance),
       onchain_asset_balance: onchainAssetBalance.toString(),
     };
@@ -1121,19 +1123,12 @@ export class RailsQueriesResolver {
   private async fetchPendingOrdersForPeer(
     user: UserId,
     peerPubkey: string
-  ): Promise<boolean> {
+  ): Promise<{ hasPending: boolean; orderId?: string }> {
     try {
       const [ambossAuth, magmaUrl] = await Promise.all([
         this.ambossTokenService.getOrCreate(user),
         this.ambossService.resolveMagmaUrl(user),
       ]);
-
-      const pendingStatuses = [
-        'WAITING_FOR_CHANNEL_OPEN',
-        'WAITING_FOR_SELLER_APPROVAL',
-        'WAITING_FOR_PAYMENT',
-        'CHANNEL_OPENING',
-      ];
 
       const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
         user: {
@@ -1151,18 +1146,19 @@ export class RailsQueriesResolver {
           page: { offset: 0, limit: 1 },
           input: {
             peer_pubkey: peerPubkey,
-            status: pendingStatuses,
+            action_needed: true,
           },
         },
         { authorization: `Bearer ${ambossAuth}` }
       );
 
-      if (error || !data?.user?.market?.orders) return false;
+      if (error || !data?.user?.market?.orders) return { hasPending: false };
 
       const { purchases, sales } = data.user.market.orders;
-      return purchases.total > 0 || sales.total > 0;
+      const match = purchases.list[0] || sales.list[0];
+      return { hasPending: !!match, orderId: match?.id };
     } catch {
-      return false;
+      return { hasPending: false };
     }
   }
 }
