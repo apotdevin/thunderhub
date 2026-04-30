@@ -4,6 +4,7 @@ CREATE TABLE "channel_metadata" (
 	"node_id" uuid NOT NULL,
 	"channel_id" text NOT NULL,
 	"note" text NOT NULL,
+	"created_at" timestamp(6) DEFAULT now() NOT NULL,
 	"updated_at" timestamp(6) DEFAULT now() NOT NULL,
 	CONSTRAINT "channel_metadata_user_id_node_id_channel_id_unique" UNIQUE("user_id","node_id","channel_id")
 );

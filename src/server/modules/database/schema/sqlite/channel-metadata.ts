@@ -17,6 +17,9 @@ export const channelMetadata = sqliteTable(
       .references(() => nodes.id),
     channel_id: text('channel_id').notNull(),
     note: text('note').notNull(),
+    created_at: text('created_at')
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
     updated_at: text('updated_at')
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),

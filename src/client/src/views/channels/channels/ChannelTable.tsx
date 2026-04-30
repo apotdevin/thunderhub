@@ -5,7 +5,6 @@ import {
   Check,
   Circle,
   Edit,
-  StickyNote,
   Trash2,
   X,
 } from 'lucide-react';
@@ -113,7 +112,7 @@ const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
 
   const truncated = note.length > 32 ? `${note.slice(0, 32)}...` : note;
 
-  const icon = (
+  const trigger = (
     <button
       onClick={e => {
         e.stopPropagation();
@@ -124,7 +123,7 @@ const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
       {note ? (
         <>
           <span className="text-xs max-w-[120px] truncate">{truncated}</span>
-          <StickyNote size={14} className="shrink-0" />
+          <Edit size={14} className="shrink-0" />
         </>
       ) : (
         <span className="text-base opacity-30 select-none">+</span>
@@ -134,15 +133,15 @@ const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
 
   return (
     <>
-      {note.length > 32 ? (
+      {note.length > 10 ? (
         <Tooltip>
-          <TooltipTrigger asChild>{icon}</TooltipTrigger>
+          <TooltipTrigger asChild>{trigger}</TooltipTrigger>
           <TooltipContent className="max-w-xs wrap-break-words">
             {note}
           </TooltipContent>
         </Tooltip>
       ) : (
-        icon
+        trigger
       )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent onClick={e => e.stopPropagation()}>
@@ -154,10 +153,11 @@ const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
               <Input
                 autoFocus
                 value={value}
+                maxLength={500}
                 onChange={e => setValue(e.target.value)}
                 placeholder="Personal note for this channel..."
                 onKeyDown={e => {
-                  if (e.key === 'Enter') handleSave();
+                  if (e.key === 'Enter' && value.trim()) handleSave();
                 }}
               />
               <DialogFooter>
@@ -172,7 +172,11 @@ const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
                     Delete
                   </Button>
                 )}
-                <Button size="sm" disabled={saving} onClick={handleSave}>
+                <Button
+                  size="sm"
+                  disabled={saving || !value.trim()}
+                  onClick={handleSave}
+                >
                   Save
                 </Button>
               </DialogFooter>

@@ -1,19 +1,18 @@
 import { Inject } from '@nestjs/common';
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
+import { ContextType } from 'src/server/app.module';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { AuthType, UserId } from '../../security/security.types';
-import { ChannelMetadataService } from './channel-metadata.service';
 import { Channel, SingleChannelParentType } from './channels.types';
 
 @Resolver(Channel)
 export class ChannelResolver {
   constructor(
     private nodeService: NodeService,
-    private channelMetadataService: ChannelMetadataService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -107,11 +106,16 @@ export class ChannelResolver {
   @ResolveField(() => String, { nullable: true })
   async note(
     @CurrentUser() user: UserId,
-    @Parent() { id }: Channel
+    @Parent() { id }: Channel,
+    @Context() { loaders }: ContextType
   ): Promise<string | null> {
     if (user.authType !== AuthType.USER) return null;
     const dbUserId = user.userId ?? user.id;
     const nodeId = user.id;
-    return this.channelMetadataService.getNote(dbUserId, nodeId, id);
+    return loaders.channelNotesLoader.load({
+      userId: dbUserId,
+      nodeId,
+      channelId: id,
+    });
   }
 }

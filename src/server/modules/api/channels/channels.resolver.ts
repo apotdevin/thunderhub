@@ -52,6 +52,7 @@ function toAssetField(ac: {
     capacity: ac.capacity,
   };
 }
+
 @Resolver()
 export class ChannelsResolver {
   constructor(
@@ -494,6 +495,12 @@ export class ChannelsMutationsResolver {
     @Args('channelId') channelId: string,
     @Args('note') note: string
   ): Promise<ChannelMetadata> {
+    if (!/^\d+x\d+x\d+$/.test(channelId)) {
+      throw new GraphQLError('Invalid channel ID format.');
+    }
+    if (!note.trim()) {
+      throw new GraphQLError('Note cannot be empty.');
+    }
     if (note.length > 500) {
       throw new GraphQLError('Note must be 500 characters or fewer.');
     }
@@ -512,6 +519,9 @@ export class ChannelsMutationsResolver {
     @CurrentUser() user: UserId,
     @Args('channelId') channelId: string
   ): Promise<boolean> {
+    if (!/^\d+x\d+x\d+$/.test(channelId)) {
+      throw new GraphQLError('Invalid channel ID format.');
+    }
     const dbUserId = user.userId ?? user.id;
     const nodeId = user.id;
     return this.channelMetadataService.deleteNote(dbUserId, nodeId, channelId);

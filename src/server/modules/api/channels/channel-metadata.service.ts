@@ -7,25 +7,29 @@ import { ChannelMetadata } from './channel-metadata.types';
 export class ChannelMetadataService {
   constructor(@Inject(DRIZZLE) private readonly drizzle: DrizzleProvider) {}
 
-  async getNote(
+  async getNotesByNode(
     userId: string,
-    nodeId: string,
-    channelId: string
-  ): Promise<string | null> {
-    if (!this.drizzle) return null;
+    nodeId: string
+  ): Promise<Map<string, string>> {
+    if (!this.drizzle) return new Map();
     const { db, schema } = this.drizzle;
     const rows = await (db as any)
-      .select({ note: schema.channelMetadata.note })
+      .select({
+        channel_id: schema.channelMetadata.channel_id,
+        note: schema.channelMetadata.note,
+      })
       .from(schema.channelMetadata)
       .where(
         and(
           eq(schema.channelMetadata.user_id, userId),
-          eq(schema.channelMetadata.node_id, nodeId),
-          eq(schema.channelMetadata.channel_id, channelId)
+          eq(schema.channelMetadata.node_id, nodeId)
         )
-      )
-      .limit(1);
-    return rows[0]?.note ?? null;
+      );
+    const map = new Map<string, string>();
+    for (const row of rows) {
+      map.set(row.channel_id, row.note);
+    }
+    return map;
   }
 
   async upsertNote(

@@ -17,6 +17,9 @@ export const channelMetadata = pgTable(
       .references(() => nodes.id),
     channel_id: text('channel_id').notNull(),
     note: text('note').notNull(),
+    created_at: timestamp('created_at', { precision: 6, mode: 'string' })
+      .notNull()
+      .defaultNow(),
     updated_at: timestamp('updated_at', { precision: 6, mode: 'string' })
       .notNull()
       .defaultNow(),

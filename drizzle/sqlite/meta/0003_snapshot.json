@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "98243e6c-54ad-4f35-983c-32dd7899da89",
+  "id": "b53e5290-a5d8-4125-b80b-d6d61f08e41d",
   "prevId": "2b0142c3-134e-4c4d-b5ef-e7aae8280038",
   "tables": {
     "channel_metadata": {
@@ -41,6 +41,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
         },
         "updated_at": {
           "name": "updated_at",
