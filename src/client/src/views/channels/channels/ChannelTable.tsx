@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { ArrowDown, ArrowUp, Check, Circle, Edit, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useQuery, useMutation } from '@apollo/client';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { BalanceBars } from '../../../components/balance';
 import {
   getChannelLink,
@@ -13,8 +14,7 @@ import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
 import Table from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
-import { GET_CHANNEL_NOTES } from '../../../graphql/queries/getChannelNotes';
-import { SET_CHANNEL_NOTE } from '../../../graphql/mutations/setChannelNote';
+import { useSetChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
@@ -39,7 +39,6 @@ const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 // ── NoteCell ──────────────────────────────────────────────────────────────────
 
 type NoteCellProps = {
-  channelId: string;
   note: string;
   onSave: (note: string) => Promise<void>;
 };
@@ -66,22 +65,31 @@ const NoteCell = ({ note, onSave }: NoteCellProps) => {
 
   return (
     <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-      <input
+      <Input
         autoFocus
-        className="text-xs border border-input rounded px-1.5 py-0.5 w-32 bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+        className="w-32 h-6 text-xs"
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={async e => {
-          if (e.key === 'Enter') { await onSave(value); setEditing(false); }
-          if (e.key === 'Escape') { setValue(note); setEditing(false); }
+          if (e.key === 'Enter') {
+            await onSave(value);
+            setEditing(false);
+          }
+          if (e.key === 'Escape') {
+            setValue(note);
+            setEditing(false);
+          }
         }}
       />
-      <button
-        className="text-xs px-1.5 py-0.5 rounded bg-primary text-primary-foreground hover:bg-primary/90"
-        onClick={async () => { await onSave(value); setEditing(false); }}
+      <Button
+        size="icon-xs"
+        onClick={async () => {
+          await onSave(value);
+          setEditing(false);
+        }}
       >
-        ✓
-      </button>
+        <Check size={12} />
+      </Button>
     </div>
   );
 };
@@ -100,20 +108,16 @@ export const ChannelTable = ({
     action: string;
   } | null>();
 
-  const { data, loading, error } = useGetChannelsQuery({
+  const {
+    data,
+    loading,
+    error,
+    refetch: refetchChannels,
+  } = useGetChannelsQuery({
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  const { data: notesData, refetch: refetchNotes } = useQuery(GET_CHANNEL_NOTES);
-  const [setChannelNote] = useMutation(SET_CHANNEL_NOTE);
-
-  const notesMap = useMemo<Record<string, string>>(() => {
-    const map: Record<string, string> = {};
-    for (const n of notesData?.getChannelNotes ?? []) {
-      map[n.channelId] = n.note;
-    }
-    return map;
-  }, [notesData]);
+  const [setChannelNote] = useSetChannelNoteMutation();
 
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
     storageKey,
@@ -323,7 +327,7 @@ export const ChannelTable = ({
         ...partnerInfo,
         ...actions,
         ...assetFields,
-        note: notesMap[c.id] ?? '',
+        note: c.note ?? '',
         alias: c.partner_node_info.node?.alias || 'Unknown',
         undercaseAlias: (
           c.partner_node_info.node?.alias || 'Unknown'
@@ -400,7 +404,7 @@ export const ChannelTable = ({
         ),
       };
     });
-  }, [data, assetOnly, chartColors, uniqueAssets, notesMap]);
+  }, [data, assetOnly, chartColors, uniqueAssets]);
 
   const columns = useMemo(
     () => [
@@ -498,14 +502,13 @@ export const ChannelTable = ({
             enableSorting: false,
             cell: ({ row }: any) => (
               <NoteCell
-                channelId={row.original.id}
                 note={row.original.note}
-                onSave={async (note) => {
+                onSave={async note => {
                   try {
                     await setChannelNote({
                       variables: { channelId: row.original.id, note },
                     });
-                    await refetchNotes();
+                    await refetchChannels();
                   } catch {
                     toast.error('Failed to save note');
                   }
@@ -728,7 +731,7 @@ export const ChannelTable = ({
         };
       }),
     ],
-    [numberStringSorting, uniqueAssets, setChannelNote, refetchNotes]
+    [numberStringSorting, uniqueAssets, setChannelNote, refetchChannels]
   );
 
   const handleToggle = (hide: boolean, id: string) => {
@@ -769,8 +772,10 @@ export const ChannelTable = ({
           <ChannelDetails
             id={channel.channel}
             name={channel.name}
-            initialNote={notesMap[channel.channel] ?? ''}
-            onNoteSaved={refetchNotes}
+            initialNote={
+              data?.getChannels.find(c => c.id === channel.channel)?.note ?? ''
+            }
+            onNoteSaved={refetchChannels}
           />
         );
       case 'close':

@@ -5,13 +5,15 @@ import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
-import { UserId } from '../../security/security.types';
+import { AuthType, UserId } from '../../security/security.types';
+import { ChannelMetadataService } from './channel-metadata.service';
 import { Channel, SingleChannelParentType } from './channels.types';
 
 @Resolver(Channel)
 export class ChannelResolver {
   constructor(
     private nodeService: NodeService,
+    private channelMetadataService: ChannelMetadataService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -100,5 +102,16 @@ export class ChannelResolver {
       node_policies,
       partner_node_policies,
     };
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async note(
+    @CurrentUser() user: UserId,
+    @Parent() { id }: Channel
+  ): Promise<string | null> {
+    if (user.authType !== AuthType.USER) return null;
+    const dbUserId = user.userId ?? user.id;
+    const nodeId = user.id;
+    return this.channelMetadataService.getNote(dbUserId, nodeId, id);
   }
 }

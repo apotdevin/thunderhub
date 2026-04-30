@@ -1,9 +1,11 @@
 import { FC, useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
-import { useMutation } from '@apollo/client';
+import toast from 'react-hot-toast';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { ChangeDetails } from '../../../components/modal/changeDetails/ChangeDetails';
 import { useGetChannelInfoQuery } from '../../../graphql/queries/__generated__/getChannel.generated';
-import { SET_CHANNEL_NOTE } from '../../../graphql/mutations/setChannelNote';
+import { useSetChannelNoteMutation } from '../../../graphql/mutations/__generated__/setChannelNote.generated';
 
 export const ChannelDetails: FC<{
   id?: string;
@@ -17,7 +19,7 @@ export const ChannelDetails: FC<{
   });
 
   const [note, setNote] = useState(initialNote);
-  const [setChannelNote, { loading: savingNote }] = useMutation(SET_CHANNEL_NOTE);
+  const [setChannelNote, { loading: savingNote }] = useSetChannelNoteMutation();
 
   useEffect(() => {
     setNote(initialNote);
@@ -28,7 +30,7 @@ export const ChannelDetails: FC<{
       await setChannelNote({ variables: { channelId: id, note } });
       onNoteSaved?.();
     } catch {
-      // DB not configured — silently skip
+      toast.error('Failed to save note');
     }
   };
 
@@ -68,20 +70,18 @@ export const ChannelDetails: FC<{
           Channel Note
         </p>
         <div className="flex gap-2">
-          <input
-            className="flex-1 text-sm border border-input rounded-md px-3 py-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+          <Input
+            className="flex-1"
             value={note}
             onChange={e => setNote(e.target.value)}
             placeholder="Personal note for this channel..."
-            onKeyDown={e => { if (e.key === 'Enter') saveNote(); }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') saveNote();
+            }}
           />
-          <button
-            disabled={savingNote}
-            className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50"
-            onClick={saveNote}
-          >
+          <Button disabled={savingNote} size="sm" onClick={saveNote}>
             Save
-          </button>
+          </Button>
         </div>
       </div>
     </div>

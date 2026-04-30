@@ -34,6 +34,7 @@ export type GetChannelsQuery = {
     transaction_vout: number;
     unsettled_balance: number;
     channel_age: number;
+    note?: string | null;
     pending_resume: {
       __typename?: 'PendingResume';
       incoming_tokens: number;
@@ -123,6 +124,7 @@ export const GetChannelsDocument = gql`
       transaction_vout
       unsettled_balance
       channel_age
+      note
       pending_resume {
         incoming_tokens
         outgoing_tokens

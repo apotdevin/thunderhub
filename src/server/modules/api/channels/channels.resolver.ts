@@ -23,6 +23,8 @@ import { FetchService } from '../../fetch/fetch.service';
 import { GetRecommendedNode } from '../amboss/amboss.gql';
 import { AmbossService } from '../amboss/amboss.service';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
+import { ChannelMetadata } from './channel-metadata.types';
+import { ChannelMetadataService } from './channel-metadata.service';
 
 function toAssetField(ac: {
   assetId: string;
@@ -45,9 +47,6 @@ function toAssetField(ac: {
     capacity: ac.capacity,
   };
 }
-
-import { ChannelNote } from './channel-notes.types';
-import { ChannelNotesService } from './channel-notes.service';
 @Resolver()
 export class ChannelsResolver {
   constructor(
@@ -55,7 +54,7 @@ export class ChannelsResolver {
     private fetchService: FetchService,
     private ambossService: AmbossService,
     private tapdNodeService: TapdNodeService,
-    private channelNotesService: ChannelNotesService,
+    private channelMetadataService: ChannelMetadataService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -456,17 +455,22 @@ export class ChannelsResolver {
     return errors ? false : true;
   }
 
-  @Query(() => [ChannelNote])
-  async getChannelNotes(@CurrentUser() { id }: UserId): Promise<ChannelNote[]> {
-    return this.channelNotesService.getNotes(id);
-  }
-
-  @Mutation(() => ChannelNote)
-  async setChannelNote(
-    @CurrentUser() { id }: UserId,
+  @Mutation(() => ChannelMetadata)
+  async setChannelMetadata(
+    @CurrentUser() user: UserId,
     @Args('channelId') channelId: string,
-    @Args('note') note: string,
-  ): Promise<ChannelNote> {
-    return this.channelNotesService.upsertNote(id, channelId, note);
+    @Args('note') note: string
+  ): Promise<ChannelMetadata> {
+    if (note.length > 500) {
+      throw new GraphQLError('Note must be 500 characters or fewer.');
+    }
+    const dbUserId = user.userId ?? user.id;
+    const nodeId = user.id;
+    return this.channelMetadataService.upsertNote(
+      dbUserId,
+      nodeId,
+      channelId,
+      note
+    );
   }
 }

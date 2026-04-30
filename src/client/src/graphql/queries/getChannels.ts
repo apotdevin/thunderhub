@@ -26,6 +26,7 @@ export const GET_CHANNELS = gql`
       transaction_vout
       unsettled_balance
       channel_age
+      note
       pending_resume {
         incoming_tokens
         outgoing_tokens

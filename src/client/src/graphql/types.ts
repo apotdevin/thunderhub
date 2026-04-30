@@ -202,6 +202,7 @@ export type Channel = {
   is_private: Scalars['Boolean']['output'];
   local_balance: Scalars['Float']['output'];
   local_reserve: Scalars['Float']['output'];
+  note?: Maybe<Scalars['String']['output']>;
   partner_fee_info?: Maybe<SingleChannel>;
   partner_node_info: Node;
   partner_public_key: Scalars['String']['output'];
@@ -235,6 +236,13 @@ export type ChannelInfo = {
   __typename?: 'ChannelInfo';
   node1_info: BaseNodeInfo;
   node2_info: BaseNodeInfo;
+};
+
+export type ChannelNote = {
+  __typename?: 'ChannelNote';
+  channelId: Scalars['String']['output'];
+  note: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
 };
 
 export type ChannelReport = {
@@ -655,6 +663,7 @@ export type Mutation = {
   removePeer: Scalars['Boolean']['output'];
   removeTwofaSecret: Scalars['Boolean']['output'];
   sendToAddress: ChainAddressSend;
+  setChannelNote: ChannelNote;
   setupTradeCapacity: SetupTradeCapacityResult;
   taproot_assets: TaprootAssetsMutations;
   team: TeamMutations;
@@ -778,6 +787,11 @@ export type MutationSendToAddressArgs = {
   sendAll?: InputMaybe<Scalars['Boolean']['input']>;
   target?: InputMaybe<Scalars['Float']['input']>;
   tokens?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type MutationSetChannelNoteArgs = {
+  channelId: Scalars['String']['input'];
+  note: Scalars['String']['input'];
 };
 
 export type MutationSetupTradeCapacityArgs = {
@@ -916,8 +930,8 @@ export type OfferReadinessResult = {
   btc_channels: ChannelSummary;
   has_pending_order: Scalars['Boolean']['output'];
   is_peer_connected: Scalars['Boolean']['output'];
-  onchain_balance_sats: Scalars['String']['output'];
   onchain_asset_balance: Scalars['String']['output'];
+  onchain_balance_sats: Scalars['String']['output'];
 };
 
 export type OnChainBalance = {

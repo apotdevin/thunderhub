@@ -160,6 +160,7 @@ type Channel {
   is_private: Boolean!
   local_balance: Float!
   local_reserve: Float!
+  note: String
   partner_fee_info: SingleChannel
   partner_node_info: Node!
   partner_public_key: String!
@@ -191,6 +192,12 @@ type ChannelAsset {
 type ChannelInfo {
   node1_info: BaseNodeInfo!
   node2_info: BaseNodeInfo!
+}
+
+type ChannelMetadata {
+  channelId: String!
+  note: String!
+  updatedAt: String!
 }
 
 type ChannelReport {
@@ -562,6 +569,7 @@ type Mutation {
   removePeer(publicKey: String): Boolean!
   removeTwofaSecret(token: String!): Boolean!
   sendToAddress(address: String!, fee: Float, sendAll: Boolean, target: Float, tokens: Float): ChainAddressSend!
+  setChannelMetadata(channelId: String!, note: String!): ChannelMetadata!
   setupTradeCapacity(input: SetupTradeCapacityInput!): SetupTradeCapacityResult!
   taproot_assets: TaprootAssetsMutations!
   team: TeamMutations!

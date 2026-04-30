@@ -1,9 +1,99 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b0e86d97-0e05-43d0-9fe2-2feef84305dd",
+  "id": "98243e6c-54ad-4f35-983c-32dd7899da89",
   "prevId": "2b0142c3-134e-4c4d-b5ef-e7aae8280038",
   "tables": {
+    "channel_metadata": {
+      "name": "channel_metadata",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "node_id": {
+          "name": "node_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "channel_id": {
+          "name": "channel_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
+        }
+      },
+      "indexes": {
+        "channel_metadata_user_id_node_id_channel_id_unique": {
+          "name": "channel_metadata_user_id_node_id_channel_id_unique",
+          "columns": [
+            "user_id",
+            "node_id",
+            "channel_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "channel_metadata_user_id_users_id_fk": {
+          "name": "channel_metadata_user_id_users_id_fk",
+          "tableFrom": "channel_metadata",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "channel_metadata_node_id_nodes_id_fk": {
+          "name": "channel_metadata_node_id_nodes_id_fk",
+          "tableFrom": "channel_metadata",
+          "tableTo": "nodes",
+          "columnsFrom": [
+            "node_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "nodes": {
       "name": "nodes",
       "columns": {
@@ -311,54 +401,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "channel_notes": {
-      "name": "channel_notes",
-      "columns": {
-        "account_id": {
-          "name": "account_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "channel_id": {
-          "name": "channel_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "note": {
-          "name": "note",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "''"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "channel_notes_account_id_channel_id_pk": {
-          "columns": [
-            "account_id",
-            "channel_id"
-          ],
-          "name": "channel_notes_account_id_channel_id_pk"
-        }
-      },
       "uniqueConstraints": {},
       "checkConstraints": {}
     }

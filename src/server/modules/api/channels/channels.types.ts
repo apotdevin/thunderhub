@@ -169,6 +169,8 @@ export class Channel {
   pending_resume: PendingResume;
   @Field(() => ChannelAsset, { nullable: true })
   asset?: ChannelAsset;
+  @Field({ nullable: true })
+  note?: string;
 }
 
 export type SingleChannelParentType = {

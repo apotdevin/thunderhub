@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class ChannelNote {
+export class ChannelMetadata {
   @Field(() => String)
   channelId: string;
 
