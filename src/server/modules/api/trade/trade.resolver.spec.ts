@@ -78,7 +78,12 @@ describe('TradeResolver', () => {
   const mockTapdNodeService = {
     getAssetChannelBalances: jest.fn(),
   };
-  const mockLogger = { error: jest.fn(), warn: jest.fn(), info: jest.fn() };
+  const mockLogger = {
+    error: jest.fn(),
+    warn: jest.fn(),
+    info: jest.fn(),
+    debug: jest.fn(),
+  };
 
   let resolver: TradeResolver;
   let priv: PrivateMethods;

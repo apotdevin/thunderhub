@@ -126,30 +126,6 @@ export const TradingPartners: FC = () => {
     };
   }, [allAssetChannelsData]);
 
-  const btcChannelPubkeys = useMemo(() => {
-    const assetChannelCountByPubkey = new Map<string, number>();
-    for (const ac of allAssetChannelsData?.taproot_assets
-      ?.get_asset_channel_balances || []) {
-      assetChannelCountByPubkey.set(
-        ac.partner_public_key,
-        (assetChannelCountByPubkey.get(ac.partner_public_key) || 0) + 1
-      );
-    }
-    const totalChannelCountByPubkey = new Map<string, number>();
-    for (const ch of allChannelsData?.getChannels || []) {
-      totalChannelCountByPubkey.set(
-        ch.partner_public_key,
-        (totalChannelCountByPubkey.get(ch.partner_public_key) || 0) + 1
-      );
-    }
-    const pubkeys = new Set<string>();
-    for (const [pubkey, total] of totalChannelCountByPubkey) {
-      const assetCount = assetChannelCountByPubkey.get(pubkey) || 0;
-      if (total > assetCount) pubkeys.add(pubkey);
-    }
-    return pubkeys;
-  }, [allChannelsData, allAssetChannelsData]);
-
   const aliasMap = useMemo(() => {
     const map = new Map<string, string>();
     for (const ch of allChannelsData?.getChannels || []) {
@@ -242,7 +218,7 @@ export const TradingPartners: FC = () => {
       alias: aliasMap.get(pubkey) || null,
       assets: peerAssets.get(pubkey) || [],
     }));
-  }, [assetPeersForSelectedAsset, btcChannelPubkeys, aliasMap, peerAssets]);
+  }, [assetPeersForSelectedAsset, aliasMap, peerAssets]);
 
   const selectPartner = (
     pubkey: string,

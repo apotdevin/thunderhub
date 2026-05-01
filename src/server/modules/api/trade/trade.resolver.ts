@@ -281,7 +281,10 @@ export class TradeResolver {
       .filter(c => c.local_balance >= decoded.tokens)
       .sort((a, b) => b.local_balance - a.local_balance)[0];
 
-    if (!btcChannel) throw new GraphQLError(`No bitcoin channels found`);
+    if (!btcChannel)
+      throw new GraphQLError(
+        `No BTC channel with sufficient outbound liquidity for this trade (need ${decoded.tokens} sats)`
+      );
 
     let payResult:
       | {
@@ -914,8 +917,8 @@ export class TradeResolver {
       peerOutgoingTimeout: peerForwardingHop.timeout,
       taHopTimeout: taHop.timeout,
       effectiveTaDelta: peerIncomingTimeout - peerForwardingHop.timeout,
-      fullHops,
     });
+    this.logger.debug('Full circular rebalance hops', { fullHops });
 
     // Total amount entering the route is unchanged: peer used to be the
     // destination receiving (rebalanceSats + peerFee); now they receive the
