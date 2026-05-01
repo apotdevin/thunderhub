@@ -15,6 +15,7 @@ import {
   CreateInvoiceOptions,
   PayViaPaymentDetailsOptions,
   PayViaRoutesOptions,
+  GetRouteToDestinationOptions,
   SendToChainAddressOptions,
   CreateChainAddressFormat,
   UpdateRoutingFeesOptions,
@@ -190,6 +191,16 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
 
   async payViaRoutes(connection: LitdConnection, options: PayViaRoutesOptions) {
     return this.lndService.payViaRoutes(this.getLnd(connection), options);
+  }
+
+  async getRouteToDestination(
+    connection: LitdConnection,
+    options: GetRouteToDestinationOptions
+  ) {
+    return this.lndService.getRouteToDestination(
+      this.getLnd(connection),
+      options
+    );
   }
 
   async decodePaymentRequest(connection: LitdConnection, request: string) {

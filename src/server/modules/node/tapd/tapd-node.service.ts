@@ -56,7 +56,7 @@ type AssetChannelInfo = {
 
 /** Timeout for sendPayment RPC before the stream-level guard kicks in. */
 const SEND_PAYMENT_TIMEOUT_SECONDS = 60;
-const FEE_LIMIT = 500; // Has to be high in order to find a route, not sure why.
+const FEE_LIMIT = 1_000; // Has to be high in order to find a route, not sure why.
 
 @Injectable()
 export class TapdNodeService {
