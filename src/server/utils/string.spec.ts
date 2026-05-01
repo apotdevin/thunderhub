@@ -2,6 +2,7 @@ import {
   bufToHex,
   buildXCoordToFullKeyMap,
   resolveFullGroupKey,
+  isValidNodeSlug,
 } from './string';
 
 describe('bufToHex', () => {
@@ -112,5 +113,47 @@ describe('resolveFullGroupKey', () => {
 
   it('returns null for invalid length keys', () => {
     expect(resolveFullGroupKey('aabb', map)).toBeNull();
+  });
+});
+
+describe('isValidNodeSlug', () => {
+  // Regression: the setup wizard lives at /node-setup. The Apollo client used
+  // to forward that path segment as x-node-slug, triggering a
+  // SUBSTR(nodes.id, …) query. On PostgreSQL nodes.id is typed as uuid, so
+  // SUBSTR raises a type error. The fix rejects any slug that doesn't look
+  // like a UUID 8-char hex prefix before querying the DB.
+  it('rejects "node-setup" — the setup wizard route segment', () => {
+    expect(isValidNodeSlug('node-setup')).toBe(false);
+  });
+
+  it('rejects "login"', () => {
+    expect(isValidNodeSlug('login')).toBe(false);
+  });
+
+  it('rejects empty string', () => {
+    expect(isValidNodeSlug('')).toBe(false);
+  });
+
+  it('rejects slugs shorter than 8 chars', () => {
+    expect(isValidNodeSlug('abc123')).toBe(false);
+  });
+
+  it('rejects slugs longer than 8 chars', () => {
+    expect(isValidNodeSlug('abc123456')).toBe(false);
+  });
+
+  it('rejects non-hex characters', () => {
+    expect(isValidNodeSlug('zzzzzzzz')).toBe(false);
+    expect(isValidNodeSlug('gggggggg')).toBe(false);
+  });
+
+  it('accepts a valid 8-char lowercase hex slug', () => {
+    expect(isValidNodeSlug('abcd1234')).toBe(true);
+    expect(isValidNodeSlug('00000000')).toBe(true);
+    expect(isValidNodeSlug('ffffffff')).toBe(true);
+  });
+
+  it('accepts uppercase hex (case-insensitive)', () => {
+    expect(isValidNodeSlug('ABCD1234')).toBe(true);
   });
 });

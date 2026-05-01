@@ -9,6 +9,7 @@ import { NodeType } from '../node/lightning.types';
 import { DRIZZLE, DrizzleProvider } from '../database/drizzle.provider';
 import { decryptValue } from '../../utils/encryption/field-encryption';
 import { eq, sql } from 'drizzle-orm';
+import { isValidNodeSlug } from '../../utils/string';
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
@@ -125,7 +126,9 @@ export class AccountsService implements OnModuleInit {
     slug: string,
     userId: string
   ): Promise<EnrichedAccount | null> {
-    if (!slug || !this.drizzle) return null;
+    // Reject slugs that don't look like a UUID prefix to avoid a
+    // dialect-unsafe SUBSTR(uuid, …) query in PostgreSQL.
+    if (!isValidNodeSlug(slug) || !this.drizzle) return null;
 
     // Check cache first (try slug-based lookup)
     for (const key of Object.keys(this.accounts)) {
@@ -135,6 +138,8 @@ export class AccountsService implements OnModuleInit {
 
     const { db, schema } = this.drizzle;
 
+    // CAST to TEXT so the SUBSTR call is dialect-safe: PostgreSQL stores
+    // nodes.id as uuid (not text), and SUBSTR(uuid, …) is a type error there.
     const rows = await (db as any)
       .select()
       .from(schema.nodes)
@@ -143,7 +148,7 @@ export class AccountsService implements OnModuleInit {
         eq(schema.userNodes.node_id, schema.nodes.id)
       )
       .where(eq(schema.userNodes.user_id, userId))
-      .where(sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`)
+      .where(sql`SUBSTR(CAST(${schema.nodes.id} AS TEXT), 1, 8) = ${slug}`)
       .limit(1);
 
     const row = rows[0];
