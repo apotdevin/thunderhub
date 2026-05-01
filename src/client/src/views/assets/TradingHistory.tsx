@@ -75,7 +75,7 @@ export const TradingHistory: FC = () => {
   }
 
   return (
-    <table className="w-full text-xs">
+    <table className="w-full min-w-[600px] text-xs md:min-w-0">
       <thead>
         <tr className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">
           <th className="text-left font-medium pb-1.5 pl-1">Type</th>
