@@ -95,15 +95,6 @@ const resetWidgetGrid = {
   maxH: 1,
 };
 
-const cardClass =
-  'flex flex-col overflow-hidden rounded-lg bg-background text-card-foreground ring-1 ring-foreground/10';
-
-const cardHeaderClass =
-  'flex items-center justify-between px-3 py-1 border-b border-border/60 shrink-0';
-
-const cardTitleClass =
-  'text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60';
-
 export const TradingGrid: FC = () => {
   const { width, containerRef, mounted } = useContainerWidth();
 
@@ -141,15 +132,21 @@ export const TradingGrid: FC = () => {
             onLayoutChange={handleLayoutChange}
           >
             {widgets.map(w => (
-              <div className={cardClass} key={w.id} data-grid={w.default}>
+              <div
+                className="flex flex-col overflow-hidden rounded-lg bg-background text-card-foreground ring-1 ring-foreground/10"
+                key={w.id}
+                data-grid={w.default}
+              >
                 <div
                   className={cn(
-                    cardHeaderClass,
+                    'flex items-center justify-between px-3 py-1 border-b border-border/60 shrink-0',
                     !isMobile &&
                       'drag-handle cursor-grab active:cursor-grabbing'
                   )}
                 >
-                  <span className={cardTitleClass}>{w.title}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                    {w.title}
+                  </span>
                   {w.headerRight && (
                     <div
                       className="cursor-default"
