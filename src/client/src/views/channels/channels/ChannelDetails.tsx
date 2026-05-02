@@ -3,10 +3,10 @@ import { Loader2 } from 'lucide-react';
 import { ChangeDetails } from '../../../components/modal/changeDetails/ChangeDetails';
 import { useGetChannelInfoQuery } from '../../../graphql/queries/__generated__/getChannel.generated';
 
-export const ChannelDetails: FC<{ id?: string; name?: string }> = ({
-  id = '',
-  name = '',
-}) => {
+export const ChannelDetails: FC<{
+  id?: string;
+  name?: string;
+}> = ({ id = '', name = '' }) => {
   const { data, loading, error } = useGetChannelInfoQuery({
     variables: { id },
     skip: !id,

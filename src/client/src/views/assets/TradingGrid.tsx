@@ -98,6 +98,7 @@ const widgets: TradingWidget[] = [
 
 export const TradingGrid: FC = () => {
   const { width, containerRef, mounted } = useContainerWidth();
+  const isMobile = width > 0 && width <= defaultGrid.breakpoints.xs;
 
   const [layouts, setLayouts] = useLocalStorage<ResponsiveLayouts>(
     'tradingLayouts',
@@ -122,7 +123,13 @@ export const TradingGrid: FC = () => {
             margin={[8, 8]}
             breakpoints={defaultGrid.breakpoints}
             cols={defaultGrid.columns}
-            dragConfig={{ bounded: true, handle: '.drag-handle' }}
+            dragConfig={{
+              bounded: true,
+              handle: '.drag-handle',
+              enabled: !isMobile,
+              threshold: 10,
+            }}
+            resizeConfig={{ enabled: !isMobile }}
             onLayoutChange={handleChange}
           >
             {widgets.map(w =>
@@ -148,7 +155,12 @@ export const TradingGrid: FC = () => {
                   key={w.id}
                   data-grid={w.default}
                 >
-                  <div className="drag-handle flex items-center justify-between px-3 py-1 border-b border-border/60 shrink-0 cursor-grab active:cursor-grabbing select-none">
+                  <div
+                    className={cn(
+                      'drag-handle flex items-center justify-between px-3 py-1 border-b border-border/60 shrink-0 select-none',
+                      !isMobile && 'cursor-grab active:cursor-grabbing'
+                    )}
+                  >
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
                       {w.title}
                     </span>

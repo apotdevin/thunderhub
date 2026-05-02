@@ -1,6 +1,28 @@
 import { useCallback, useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, Check, Circle, Edit, X } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  Circle,
+  Edit,
+  Trash2,
+  X,
+} from 'lucide-react';
 import toast from 'react-hot-toast';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { BalanceBars } from '../../../components/balance';
 import {
   getChannelLink,
@@ -12,6 +34,10 @@ import Modal from '../../../components/modal/ReactModal';
 import { Price } from '../../../components/price/Price';
 import Table from '../../../components/table';
 import { useGetChannelsQuery } from '../../../graphql/queries/__generated__/getChannels.generated';
+import {
+  useUpsertChannelNoteMutation,
+  useDeleteChannelNoteMutation,
+} from '../../../graphql/mutations/__generated__/setChannelNote.generated';
 import { useLocalStorage } from '../../../hooks/UseLocalStorage';
 import { useChartColors } from '../../../lib/chart-colors';
 import { getErrorContent } from '../../../utils/error';
@@ -22,6 +48,7 @@ import {
   getPercent,
 } from '../../../utils/helpers';
 import { colorFromString } from '../../../utils/color';
+import { useAccount } from '../../../hooks/UseAccount';
 import { ChannelDetails } from './ChannelDetails';
 import { defaultHiddenColumns } from './helpers';
 import { VisibilityState } from '@tanstack/react-table';
@@ -33,11 +60,155 @@ const getBar = (top: number, bottom: number) => {
 
 const REMOTE_COLOR = 'rgba(209, 213, 219, 0.6)';
 
+// ── NoteCell ──────────────────────────────────────────────────────────────────
+
+type NoteCellProps = {
+  note: string;
+  channelId: string;
+  isDbAccount: boolean;
+};
+
+const NoteCell = ({ note, channelId, isDbAccount }: NoteCellProps) => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(note);
+  const [upsertNote, { loading: saving }] = useUpsertChannelNoteMutation();
+  const [deleteNote, { loading: deleting }] = useDeleteChannelNoteMutation();
+
+  const updateCache = (newNote: string) => (cache: any) => {
+    cache.modify({
+      id: cache.identify({ __typename: 'Channel', id: channelId }),
+      fields: { note: () => newNote },
+    });
+  };
+
+  const handleOpen = () => {
+    setValue(note);
+    setOpen(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      await upsertNote({
+        variables: { channelId, note: value },
+        update: updateCache(value),
+      });
+      setOpen(false);
+    } catch {
+      toast.error('Failed to save note');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteNote({
+        variables: { channelId },
+        update: updateCache(''),
+      });
+      setOpen(false);
+    } catch {
+      toast.error('Failed to delete note');
+    }
+  };
+
+  const truncated = note.length > 32 ? `${note.slice(0, 32)}...` : note;
+
+  const trigger = (
+    <button
+      onClick={e => {
+        e.stopPropagation();
+        handleOpen();
+      }}
+      className="inline-flex items-center gap-1.5 border-none bg-transparent p-0 cursor-pointer text-muted-foreground hover:text-foreground"
+    >
+      {note ? (
+        <>
+          <span className="text-xs max-w-[120px] truncate">{truncated}</span>
+          <Edit size={14} className="shrink-0" />
+        </>
+      ) : (
+        <span className="text-base opacity-30 select-none">+</span>
+      )}
+    </button>
+  );
+
+  return (
+    <>
+      {note.length > 10 ? (
+        <Tooltip>
+          <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+          <TooltipContent className="max-w-xs wrap-break-words">
+            {note}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        trigger
+      )}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent onClick={e => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>Channel Note</DialogTitle>
+          </DialogHeader>
+          {isDbAccount ? (
+            <>
+              <Input
+                autoFocus
+                value={value}
+                maxLength={500}
+                onChange={e => setValue(e.target.value)}
+                placeholder="Personal note for this channel..."
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && value.trim()) handleSave();
+                }}
+              />
+              <DialogFooter>
+                {note && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={deleting}
+                    onClick={handleDelete}
+                  >
+                    <Trash2 size={14} />
+                    Delete
+                  </Button>
+                )}
+                <Button
+                  size="sm"
+                  disabled={saving || !value.trim()}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground text-balance">
+              Channel notes require a database account.{' '}
+              <a
+                href="https://docs.thunderhub.io/setup#database-optional"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-3 hover:text-foreground"
+              >
+                Learn how to set up a database.
+              </a>
+            </p>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+// ── ChannelTable ──────────────────────────────────────────────────────────────
+
 export const ChannelTable = ({
   assetOnly,
   storageKey = 'hiddenColumns-v2',
 }: { assetOnly?: boolean; storageKey?: string } = {}) => {
   const chartColors = useChartColors();
+  const account = useAccount();
+  const isDbAccount = account?.type === 'db';
 
   const [channel, setChannel] = useState<{
     name: string;
@@ -200,7 +371,6 @@ export const ChannelTable = ({
         ),
       };
 
-      // Build dynamic asset fields for each unique asset
       const assetFields: Record<string, any> = {};
       for (const [key, assetInfo] of uniqueAssets) {
         const channelAssetKey = c.asset
@@ -258,6 +428,7 @@ export const ChannelTable = ({
         ...partnerInfo,
         ...actions,
         ...assetFields,
+        note: c.note ?? '',
         alias: c.partner_node_info.node?.alias || 'Unknown',
         undercaseAlias: (
           c.partner_node_info.node?.alias || 'Unknown'
@@ -401,6 +572,18 @@ export const ChannelTable = ({
               <div className="whitespace-nowrap">
                 {getChannelLink(row.original.id)}
               </div>
+            ),
+          },
+          {
+            header: 'Note',
+            accessorKey: 'note',
+            enableSorting: false,
+            cell: ({ row }: any) => (
+              <NoteCell
+                note={row.original.note}
+                channelId={row.original.id}
+                isDbAccount={isDbAccount}
+              />
             ),
           },
           {
@@ -641,7 +824,7 @@ export const ChannelTable = ({
         };
       }),
     ],
-    [numberStringSorting, uniqueAssets]
+    [numberStringSorting, uniqueAssets, isDbAccount]
   );
 
   const handleToggle = (hide: boolean, id: string) => {

@@ -202,6 +202,7 @@ export type Channel = {
   is_private: Scalars['Boolean']['output'];
   local_balance: Scalars['Float']['output'];
   local_reserve: Scalars['Float']['output'];
+  note?: Maybe<Scalars['String']['output']>;
   partner_fee_info?: Maybe<SingleChannel>;
   partner_node_info: Node;
   partner_public_key: Scalars['String']['output'];
@@ -237,6 +238,13 @@ export type ChannelInfo = {
   node2_info: BaseNodeInfo;
 };
 
+export type ChannelMetadata = {
+  __typename?: 'ChannelMetadata';
+  channel_id: Scalars['String']['output'];
+  note: Scalars['String']['output'];
+  updated_at: Scalars['String']['output'];
+};
+
 export type ChannelReport = {
   __typename?: 'ChannelReport';
   commit: Scalars['Float']['output'];
@@ -264,6 +272,21 @@ export type ChannelSummary = {
   pending_count: Scalars['Int']['output'];
   total_local_sats: Scalars['String']['output'];
   total_remote_sats: Scalars['String']['output'];
+};
+
+export type ChannelsMutations = {
+  __typename?: 'ChannelsMutations';
+  delete_note: Scalars['Boolean']['output'];
+  upsert_note: ChannelMetadata;
+};
+
+export type ChannelsMutationsDelete_NoteArgs = {
+  channelId: Scalars['String']['input'];
+};
+
+export type ChannelsMutationsUpsert_NoteArgs = {
+  channelId: Scalars['String']['input'];
+  note: Scalars['String']['input'];
 };
 
 export type ClosedChannel = {
@@ -662,6 +685,7 @@ export type Mutation = {
   updateFees: Scalars['Boolean']['output'];
   updateMultipleFees: Scalars['Boolean']['output'];
   updateTwofaSecret: Scalars['Boolean']['output'];
+  user: UserMutations;
 };
 
 export type MutationAddPeerArgs = {
@@ -904,6 +928,11 @@ export type NodeType = {
   public_key: Scalars['String']['output'];
 };
 
+export type OffchainMutations = {
+  __typename?: 'OffchainMutations';
+  channels: ChannelsMutations;
+};
+
 export type OfferReadinessInput = {
   peer_pubkey: Scalars['String']['input'];
   tapd_asset_id?: InputMaybe<Scalars['String']['input']>;
@@ -916,8 +945,8 @@ export type OfferReadinessResult = {
   btc_channels: ChannelSummary;
   has_pending_order: Scalars['Boolean']['output'];
   is_peer_connected: Scalars['Boolean']['output'];
-  onchain_balance_sats: Scalars['String']['output'];
   onchain_asset_balance: Scalars['String']['output'];
+  onchain_balance_sats: Scalars['String']['output'];
 };
 
 export type OnChainBalance = {
@@ -1805,6 +1834,11 @@ export type UserBackupInfo = {
   last_update?: Maybe<Scalars['String']['output']>;
   last_update_size?: Maybe<Scalars['String']['output']>;
   total_size_saved: Scalars['String']['output'];
+};
+
+export type UserMutations = {
+  __typename?: 'UserMutations';
+  offchain: OffchainMutations;
 };
 
 export type UserNode = {

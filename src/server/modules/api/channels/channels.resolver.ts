@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
@@ -23,6 +23,13 @@ import { FetchService } from '../../fetch/fetch.service';
 import { GetRecommendedNode } from '../amboss/amboss.gql';
 import { AmbossService } from '../amboss/amboss.service';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
+import {
+  ChannelMetadata,
+  ChannelsMutations,
+  OffchainMutations,
+  UserMutations,
+} from './channel-metadata.types';
+import { ChannelMetadataService } from './channel-metadata.service';
 
 function toAssetField(ac: {
   assetId: string;
@@ -451,5 +458,72 @@ export class ChannelsResolver {
     }
 
     return errors ? false : true;
+  }
+}
+
+@Resolver()
+export class UserMutationRoot {
+  @Mutation(() => UserMutations)
+  async user(): Promise<UserMutations> {
+    return {} as any;
+  }
+}
+
+@Resolver(() => UserMutations)
+export class UserMutationsResolver {
+  @ResolveField(() => OffchainMutations)
+  async offchain(): Promise<OffchainMutations> {
+    return {} as any;
+  }
+}
+
+@Resolver(() => OffchainMutations)
+export class OffchainMutationsResolver {
+  @ResolveField(() => ChannelsMutations)
+  async channels(): Promise<ChannelsMutations> {
+    return {} as any;
+  }
+}
+
+@Resolver(() => ChannelsMutations)
+export class ChannelsMutationsResolver {
+  constructor(private channelMetadataService: ChannelMetadataService) {}
+
+  @ResolveField(() => ChannelMetadata)
+  async upsert_note(
+    @CurrentUser() user: UserId,
+    @Args('channelId') channelId: string,
+    @Args('note') note: string
+  ): Promise<ChannelMetadata> {
+    if (!/^\d+x\d+x\d+$/.test(channelId)) {
+      throw new GraphQLError('Invalid channel ID format.');
+    }
+    if (!note.trim()) {
+      throw new GraphQLError('Note cannot be empty.');
+    }
+    if (note.length > 500) {
+      throw new GraphQLError('Note must be 500 characters or fewer.');
+    }
+    const dbUserId = user.userId ?? user.id;
+    const nodeId = user.id;
+    return this.channelMetadataService.upsertNote(
+      dbUserId,
+      nodeId,
+      channelId,
+      note
+    );
+  }
+
+  @ResolveField(() => Boolean)
+  async delete_note(
+    @CurrentUser() user: UserId,
+    @Args('channelId') channelId: string
+  ): Promise<boolean> {
+    if (!/^\d+x\d+x\d+$/.test(channelId)) {
+      throw new GraphQLError('Invalid channel ID format.');
+    }
+    const dbUserId = user.userId ?? user.id;
+    const nodeId = user.id;
+    return this.channelMetadataService.deleteNote(dbUserId, nodeId, channelId);
   }
 }

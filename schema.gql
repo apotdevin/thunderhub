@@ -160,6 +160,7 @@ type Channel {
   is_private: Boolean!
   local_balance: Float!
   local_reserve: Float!
+  note: String
   partner_fee_info: SingleChannel
   partner_node_info: Node!
   partner_public_key: String!
@@ -193,6 +194,12 @@ type ChannelInfo {
   node2_info: BaseNodeInfo!
 }
 
+type ChannelMetadata {
+  channel_id: String!
+  note: String!
+  updated_at: String!
+}
+
 type ChannelReport {
   commit: Float!
   incomingPendingHtlc: Float!
@@ -217,6 +224,11 @@ type ChannelSummary {
   pending_count: Int!
   total_local_sats: String!
   total_remote_sats: String!
+}
+
+type ChannelsMutations {
+  delete_note(channelId: String!): Boolean!
+  upsert_note(channelId: String!, note: String!): ChannelMetadata!
 }
 
 type ClosedChannel {
@@ -569,6 +581,7 @@ type Mutation {
   updateFees(base_fee_tokens: Float, cltv_delta: Float, fee_rate: Float, max_htlc_mtokens: String, min_htlc_mtokens: String, transaction_id: String, transaction_vout: Float): Boolean!
   updateMultipleFees(channels: [UpdateRoutingFeesParams!]!): Boolean!
   updateTwofaSecret(secret: String!, token: String!): Boolean!
+  user: UserMutations!
 }
 
 type NetworkInfo {
@@ -658,6 +671,10 @@ type NodeSocialInfo {
 type NodeType {
   alias: String!
   public_key: String!
+}
+
+type OffchainMutations {
+  channels: ChannelsMutations!
 }
 
 input OfferReadinessInput {
@@ -1338,6 +1355,10 @@ type UserBackupInfo {
   last_update: String
   last_update_size: String
   total_size_saved: String!
+}
+
+type UserMutations {
+  offchain: OffchainMutations!
 }
 
 type UserNode {

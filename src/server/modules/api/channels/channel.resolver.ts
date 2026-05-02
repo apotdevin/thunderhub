@@ -1,11 +1,12 @@
 import { Inject } from '@nestjs/common';
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Context, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { toWithError } from 'src/server/utils/async';
 import { Logger } from 'winston';
+import { ContextType } from 'src/server/app.module';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
-import { UserId } from '../../security/security.types';
+import { AuthType, UserId } from '../../security/security.types';
 import { Channel, SingleChannelParentType } from './channels.types';
 
 @Resolver(Channel)
@@ -100,5 +101,21 @@ export class ChannelResolver {
       node_policies,
       partner_node_policies,
     };
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async note(
+    @CurrentUser() user: UserId,
+    @Parent() { id }: Channel,
+    @Context() { loaders }: ContextType
+  ): Promise<string | null> {
+    if (user.authType !== AuthType.USER) return null;
+    const dbUserId = user.userId ?? user.id;
+    const nodeId = user.id;
+    return loaders.channelNotesLoader.load({
+      userId: dbUserId,
+      nodeId,
+      channelId: id,
+    });
   }
 }
