@@ -24,6 +24,7 @@ import {
   PayOptions,
   PayViaPaymentDetailsOptions,
   PayViaRoutesOptions,
+  GetRouteToDestinationOptions,
   SendToChainAddressOptions,
   UpdateRoutingFeesOptions,
   VerifyBackupsOptions,
@@ -270,6 +271,14 @@ export class NodeService {
   async payViaRoutes(id: string, options: PayViaRoutesOptions) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.payViaRoutes(account.connection, options);
+  }
+
+  async getRouteToDestination(
+    id: string,
+    options: GetRouteToDestinationOptions
+  ) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getRouteToDestination(account.connection, options);
   }
 
   subscribeToInvoice(id: string, invoice: string): EventEmitter {

@@ -30,6 +30,7 @@ import {
   pay,
   payViaPaymentDetails,
   payViaRoutes,
+  getRouteToDestination,
   createInvoice,
   getChannel,
   closeChannel,
@@ -59,6 +60,8 @@ import {
   CreateInvoiceOptions,
   PayViaPaymentDetailsOptions,
   PayViaRoutesOptions,
+  GetRouteToDestinationOptions,
+  GetRouteToDestinationResult,
   SendToChainAddressOptions,
   CreateChainAddressFormat,
   UpdateRoutingFeesOptions,
@@ -320,6 +323,13 @@ export class LndService implements LightningProvider {
   // {failures}] array that payViaRoutes throws on failure for diagnostics.
   async payViaRoutes(lnd: AuthenticatedLnd, options: PayViaRoutesOptions) {
     return payViaRoutes({ lnd, ...options } as any);
+  }
+
+  async getRouteToDestination(
+    lnd: AuthenticatedLnd,
+    options: GetRouteToDestinationOptions
+  ): Promise<GetRouteToDestinationResult> {
+    return to(getRouteToDestination({ lnd, ...options } as any));
   }
 
   subscribeToInvoice(lnd: AuthenticatedLnd, id: string): EventEmitter {

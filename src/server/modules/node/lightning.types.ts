@@ -80,6 +80,7 @@ export type PayOptions = {
   outgoing_channel?: string;
   tokens?: number;
   is_allow_self_payment?: boolean;
+  incoming_peer?: string;
 };
 
 export type CreateInvoiceOptions = {
@@ -130,6 +131,57 @@ export type PayViaRoutesRoute = {
 export type PayViaRoutesOptions = {
   id?: string;
   routes: PayViaRoutesRoute[];
+};
+
+export type GetRouteToDestinationOptions = {
+  destination: string;
+  tokens?: number;
+  mtokens?: string;
+  cltv_delta?: number;
+  max_fee?: number;
+  max_fee_mtokens?: string;
+  max_timeout_height?: number;
+  outgoing_channel?: string;
+  incoming_peer?: string;
+  payment?: string;
+  total_mtokens?: string;
+  is_ignoring_past_failures?: boolean;
+  ignore?: {
+    channel?: string;
+    from_public_key: string;
+    to_public_key?: string;
+  }[];
+  routes?: {
+    base_fee_mtokens?: string;
+    channel?: string;
+    channel_capacity?: number;
+    cltv_delta?: number;
+    fee_rate?: number;
+    public_key: string;
+  }[][];
+};
+
+export type GetRouteToDestinationResult = {
+  route?: {
+    confidence?: number;
+    fee: number;
+    fee_mtokens: string;
+    hops: {
+      channel: string;
+      channel_capacity: number;
+      fee: number;
+      fee_mtokens: string;
+      forward: number;
+      forward_mtokens: string;
+      public_key: string;
+      timeout: number;
+    }[];
+    mtokens: string;
+    safe_fee: number;
+    safe_tokens: number;
+    timeout: number;
+    tokens: number;
+  };
 };
 
 export type SendToChainAddressOptions = {
@@ -237,6 +289,10 @@ export interface LightningProvider {
     options: PayViaPaymentDetailsOptions
   ): Promise<any>;
   payViaRoutes(connection: any, options: PayViaRoutesOptions): Promise<any>;
+  getRouteToDestination(
+    connection: any,
+    options: GetRouteToDestinationOptions
+  ): Promise<GetRouteToDestinationResult>;
   decodePaymentRequest(connection: any, request: string): Promise<any>;
   getPayments(connection: any, options: GetPaymentsOptions): Promise<any>;
 
