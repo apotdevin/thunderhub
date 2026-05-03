@@ -13,6 +13,9 @@ import { setContext } from '@apollo/client/link/context';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
+// Top-level routes that are not node slugs. Never send x-node-slug for these.
+const NON_SLUG_PREFIXES = new Set(['login', 'sso', 'setup', 'node-setup']);
+
 function createApolloClient(authToken: string) {
   const httpLink = createHttpLink({
     uri: config.apiUrl,
@@ -25,7 +28,8 @@ function createApolloClient(authToken: string) {
       .replace(config.basePath, '')
       .split('/')
       .filter(Boolean);
-    const nodeSlug = segments[0] || '';
+    const first = segments[0] || '';
+    const nodeSlug = NON_SLUG_PREFIXES.has(first) ? '' : first;
 
     return {
       headers: {

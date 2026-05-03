@@ -79,3 +79,9 @@ export const bufToHex = (val: any): string | undefined => {
   }
   return undefined;
 };
+
+// A valid node slug is exactly 8 lowercase hex characters (first 8 chars of a
+// UUID). Anything else — including route segments like "node-setup" — must be
+// rejected before being passed into a SUBSTR(nodes.id …) DB query.
+export const isValidNodeSlug = (slug: string): boolean =>
+  /^[0-9a-f]{8}$/i.test(slug);
