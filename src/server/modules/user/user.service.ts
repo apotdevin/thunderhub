@@ -259,7 +259,8 @@ export class UserService {
 
     const { db, schema } = this.drizzle;
 
-    // Find the node by slug (first 8 chars of id) and verify user owns it
+    // Find the node by slug (first 8 chars of id) and verify user owns it.
+    // CAST to TEXT so SUBSTR is dialect-safe on PostgreSQL's uuid column type.
     const rows = await (db as any)
       .select({ node_id: schema.userNodes.node_id })
       .from(schema.userNodes)
@@ -267,7 +268,7 @@ export class UserService {
       .where(
         and(
           eq(schema.userNodes.user_id, userId),
-          sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`
+          sql`SUBSTR(CAST(${schema.nodes.id} AS TEXT), 1, 8) = ${slug}`
         )
       )
       .limit(1);
@@ -302,7 +303,8 @@ export class UserService {
 
     const { db, schema } = this.drizzle;
 
-    // Find the node by slug and verify user owns it
+    // Find the node by slug and verify user owns it.
+    // CAST to TEXT so SUBSTR is dialect-safe on PostgreSQL's uuid column type.
     const rows = await (db as any)
       .select({
         node_id: schema.userNodes.node_id,
@@ -313,7 +315,7 @@ export class UserService {
       .where(
         and(
           eq(schema.userNodes.user_id, userId),
-          sql`SUBSTR(${schema.nodes.id}, 1, 8) = ${slug}`
+          sql`SUBSTR(CAST(${schema.nodes.id} AS TEXT), 1, 8) = ${slug}`
         )
       )
       .limit(1);
