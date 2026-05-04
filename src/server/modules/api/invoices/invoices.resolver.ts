@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLError } from 'graphql';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
@@ -122,9 +123,18 @@ export class InvoicesResolver {
 
     this.logger.debug('Paying invoice with params', props);
 
-    const response = await this.nodeService.pay(user.id, props);
-
-    this.logger.debug('Paid invoice', response);
-    return true;
+    try {
+      const response = await this.nodeService.pay(user.id, props);
+      this.logger.debug('Paid invoice', response);
+      return true;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg === 'InsufficientBalanceToAttemptPayment') {
+        throw new GraphQLError(
+          'Payment failed: could not find a funded route. Check for inactive channels or stuck HTLCs.'
+        );
+      }
+      throw err;
+    }
   }
 }
