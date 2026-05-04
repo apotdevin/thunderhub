@@ -13,6 +13,7 @@ export const SETUP_TRADE_CAPACITY = gql`
       outboundChannelOutputIndex
       skippedMagmaOrder
       skippedOutboundChannel
+      channelOpenPending
     }
   }
 `;

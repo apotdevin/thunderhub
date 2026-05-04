@@ -951,6 +951,7 @@ input SetupTradeCapacityInput {
 }
 
 type SetupTradeCapacityResult {
+  channelOpenPending: Boolean
   magmaOrderAmountAsset: String
   magmaOrderAmountSats: String
   magmaOrderFeeSats: String
