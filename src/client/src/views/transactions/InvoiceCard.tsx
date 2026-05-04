@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { DetailTable, DetailRow } from './DetailTable';
+import { formatTradeMemo } from './tradeMemo';
 
 interface InvoiceCardProps {
   invoice: InvoiceType;
@@ -96,7 +97,10 @@ export const InvoiceCard = ({
     payments,
   } = invoice;
 
-  const texts = payments.map(p => p?.messages?.message).filter(Boolean);
+  const displayDescription = formatTradeMemo(description) || 'Invoice';
+  const texts = payments
+    .map(p => formatTradeMemo(p?.messages?.message))
+    .filter(Boolean);
   const hasMessages = !!texts.length;
   const isOpen = index === indexOpen;
 
@@ -116,7 +120,7 @@ export const InvoiceCard = ({
           </div>
           <div className="hidden sm:flex flex-1 min-w-0 items-center gap-2">
             <span className="font-medium text-sm truncate">
-              {description || 'Invoice'}
+              {displayDescription}
             </span>
             {hasMessages && (
               <MessageCircle size={14} className="text-primary shrink-0" />
@@ -136,7 +140,7 @@ export const InvoiceCard = ({
         </div>
         <div className="flex sm:hidden items-center gap-2 mt-1.5">
           <span className="text-xs truncate text-muted-foreground">
-            {description || 'Invoice'}
+            {displayDescription}
           </span>
           {hasMessages && (
             <MessageCircle size={12} className="text-primary shrink-0" />
@@ -164,9 +168,9 @@ export const InvoiceCard = ({
                     <DetailRow label="Peer">
                       <ChannelAlias id={p.in_channel} />
                     </DetailRow>
-                    {p.messages?.message && (
+                    {formatTradeMemo(p.messages?.message) && (
                       <DetailRow label="Message">
-                        {p.messages.message}
+                        {formatTradeMemo(p.messages?.message)}
                       </DetailRow>
                     )}
                   </DetailTable>

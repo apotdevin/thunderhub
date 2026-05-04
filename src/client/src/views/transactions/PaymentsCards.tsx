@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { decode } from 'light-bolt11-decoder';
 import { DetailTable, DetailRow } from './DetailTable';
+import { formatTradeMemo } from './tradeMemo';
 
 interface PaymentsCardProps {
   payment: PaymentType;
@@ -46,7 +47,7 @@ const decodeRequest = (request: string | null | undefined) => {
     const decoded = decode(request);
     const descSection = decoded.sections.find(s => s.name === 'description');
     if (descSection && 'value' in descSection && descSection.value) {
-      return descSection.value as string;
+      return formatTradeMemo(descSection.value as string);
     }
     return null;
   } catch {
