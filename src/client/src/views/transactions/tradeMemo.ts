@@ -2,11 +2,19 @@ import { formatNumber } from '../../utils/helpers';
 
 const TRADE_MEMO_PREFIX = 'th:trade:';
 
+export type TradeDisplayMode = 'computed' | 'raw';
+
 type TradeMemo = {
   t?: 'buy' | 'sell' | string;
   amt?: string;
   s?: string;
   p?: number;
+};
+
+export type TradeMemoDisplay = {
+  isTradeMemo: boolean;
+  raw: string;
+  computed: string;
 };
 
 const formatAssetAmount = (atomic?: string, precision?: number) => {
@@ -27,9 +35,7 @@ const formatAssetAmount = (atomic?: string, precision?: number) => {
   return formatNumber(atomic);
 };
 
-export const formatTradeMemo = (value?: string | null) => {
-  if (!value?.startsWith(TRADE_MEMO_PREFIX)) return value ?? null;
-
+const formatTradeMemo = (value: string) => {
   try {
     const parsed = JSON.parse(
       value.slice(TRADE_MEMO_PREFIX.length)
@@ -45,4 +51,34 @@ export const formatTradeMemo = (value?: string | null) => {
   } catch {
     return 'Trade';
   }
+};
+
+export const getTradeMemoDisplay = (
+  value?: string | null
+): TradeMemoDisplay | null => {
+  if (!value) return null;
+
+  if (!value.startsWith(TRADE_MEMO_PREFIX)) {
+    return {
+      isTradeMemo: false,
+      raw: value,
+      computed: value,
+    };
+  }
+
+  return {
+    isTradeMemo: true,
+    raw: value,
+    computed: formatTradeMemo(value),
+  };
+};
+
+export const getTradeMemoText = (
+  value: string | null | undefined,
+  mode: TradeDisplayMode
+) => {
+  const display = getTradeMemoDisplay(value);
+  if (!display) return null;
+
+  return mode === 'raw' ? display.raw : display.computed;
 };

@@ -10,11 +10,17 @@ import { Price } from '../../components/price/Price';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { decode } from 'light-bolt11-decoder';
+import { ComputedMarker } from './ComputedMarker';
 import { DetailTable, DetailRow } from './DetailTable';
-import { formatTradeMemo } from './tradeMemo';
+import {
+  getTradeMemoDisplay,
+  getTradeMemoText,
+  TradeDisplayMode,
+} from './tradeMemo';
 
 interface PaymentsCardProps {
   payment: PaymentType;
+  tradeDisplayMode: TradeDisplayMode;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -41,13 +47,16 @@ const StatusBadge = ({ confirmed }: { confirmed: boolean }) => {
   );
 };
 
-const decodeRequest = (request: string | null | undefined) => {
+const decodeRequest = (
+  request: string | null | undefined,
+  tradeDisplayMode: TradeDisplayMode
+) => {
   if (!request) return null;
   try {
     const decoded = decode(request);
     const descSection = decoded.sections.find(s => s.name === 'description');
     if (descSection && 'value' in descSection && descSection.value) {
-      return formatTradeMemo(descSection.value as string);
+      return getTradeMemoText(descSection.value as string, tradeDisplayMode);
     }
     return null;
   } catch {
@@ -57,6 +66,7 @@ const decodeRequest = (request: string | null | undefined) => {
 
 export const PaymentsCard = ({
   payment,
+  tradeDisplayMode,
   index,
   setIndexOpen,
   indexOpen,
@@ -81,7 +91,26 @@ export const PaymentsCard = ({
   const alias = destination_node?.node?.alias;
   const isOpen = index === indexOpen;
 
-  const description = useMemo(() => decodeRequest(request), [request]);
+  const description = useMemo(
+    () => decodeRequest(request, tradeDisplayMode),
+    [request, tradeDisplayMode]
+  );
+  const descriptionDisplay = useMemo(() => {
+    if (!request) return null;
+
+    try {
+      const decoded = decode(request);
+      const descSection = decoded.sections.find(s => s.name === 'description');
+
+      if (descSection && 'value' in descSection && descSection.value) {
+        return getTradeMemoDisplay(descSection.value as string);
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  }, [request]);
 
   const handleClick = () => {
     setIndexOpen(isOpen ? 0 : index);
@@ -99,8 +128,10 @@ export const PaymentsCard = ({
           <div className="shrink-0">
             <StatusBadge confirmed={is_confirmed} />
           </div>
-          <div className="hidden sm:block flex-1 min-w-0">
-            <span className="font-medium text-sm truncate block">{title}</span>
+          <div className="hidden sm:flex flex-1 min-w-0 items-center gap-2">
+            <span className="font-medium text-sm truncate">{title}</span>
+            {tradeDisplayMode === 'computed' &&
+              descriptionDisplay?.isTradeMemo && <ComputedMarker />}
           </div>
           <span className="hidden sm:block text-xs text-muted-foreground shrink-0">
             {getDateDif(date)} ago
@@ -118,6 +149,8 @@ export const PaymentsCard = ({
           <span className="text-xs truncate text-muted-foreground">
             {title}
           </span>
+          {tradeDisplayMode === 'computed' &&
+            descriptionDisplay?.isTradeMemo && <ComputedMarker />}
           <span className="text-[11px] text-muted-foreground shrink-0 ml-auto">
             {getDateDif(date)} ago
           </span>
@@ -128,7 +161,13 @@ export const PaymentsCard = ({
           <Separator className="mb-3" />
           <DetailTable>
             {description && (
-              <DetailRow label="Description">{description}</DetailRow>
+              <DetailRow label="Description">
+                <div className="inline-flex items-start gap-1">
+                  <span>{description}</span>
+                  {tradeDisplayMode === 'computed' &&
+                    descriptionDisplay?.isTradeMemo && <ComputedMarker />}
+                </div>
+              </DetailRow>
             )}
             <DetailRow label="Created">
               {`${getDateDif(created_at)} ago (${getFormatDate(created_at)})`}

@@ -12,10 +12,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { DetailTable, DetailRow } from './DetailTable';
-import { formatTradeMemo } from './tradeMemo';
+import { ComputedMarker } from './ComputedMarker';
+import {
+  getTradeMemoDisplay,
+  getTradeMemoText,
+  TradeDisplayMode,
+} from './tradeMemo';
 
 interface InvoiceCardProps {
   invoice: InvoiceType;
+  tradeDisplayMode: TradeDisplayMode;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -74,6 +80,7 @@ const StatusBadge = ({
 
 export const InvoiceCard = ({
   invoice,
+  tradeDisplayMode,
   index,
   setIndexOpen,
   indexOpen,
@@ -97,9 +104,11 @@ export const InvoiceCard = ({
     payments,
   } = invoice;
 
-  const displayDescription = formatTradeMemo(description) || 'Invoice';
+  const descriptionDisplay = getTradeMemoDisplay(description);
+  const displayDescription =
+    getTradeMemoText(description, tradeDisplayMode) || 'Invoice';
   const texts = payments
-    .map(p => formatTradeMemo(p?.messages?.message))
+    .map(p => getTradeMemoText(p?.messages?.message, tradeDisplayMode))
     .filter(Boolean);
   const hasMessages = !!texts.length;
   const isOpen = index === indexOpen;
@@ -122,6 +131,8 @@ export const InvoiceCard = ({
             <span className="font-medium text-sm truncate">
               {displayDescription}
             </span>
+            {tradeDisplayMode === 'computed' &&
+              descriptionDisplay?.isTradeMemo && <ComputedMarker />}
             {hasMessages && (
               <MessageCircle size={14} className="text-primary shrink-0" />
             )}
@@ -142,6 +153,8 @@ export const InvoiceCard = ({
           <span className="text-xs truncate text-muted-foreground">
             {displayDescription}
           </span>
+          {tradeDisplayMode === 'computed' &&
+            descriptionDisplay?.isTradeMemo && <ComputedMarker />}
           {hasMessages && (
             <MessageCircle size={12} className="text-primary shrink-0" />
           )}
@@ -158,27 +171,48 @@ export const InvoiceCard = ({
               <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Payments
               </div>
-              {payments.map((p, idx) => (
-                <div key={idx} className="rounded bg-muted/50 p-2">
-                  <DetailTable>
-                    <DetailRow label="Amount">
-                      <Price amount={p.tokens} />
-                    </DetailRow>
-                    <DetailRow label="Channel">{p.in_channel}</DetailRow>
-                    <DetailRow label="Peer">
-                      <ChannelAlias id={p.in_channel} />
-                    </DetailRow>
-                    {formatTradeMemo(p.messages?.message) && (
-                      <DetailRow label="Message">
-                        {formatTradeMemo(p.messages?.message)}
+              {payments.map((p, idx) => {
+                const message = getTradeMemoText(
+                  p.messages?.message,
+                  tradeDisplayMode
+                );
+                const messageDisplay = getTradeMemoDisplay(p.messages?.message);
+
+                return (
+                  <div key={idx} className="rounded bg-muted/50 p-2">
+                    <DetailTable>
+                      <DetailRow label="Amount">
+                        <Price amount={p.tokens} />
                       </DetailRow>
-                    )}
-                  </DetailTable>
-                </div>
-              ))}
+                      <DetailRow label="Channel">{p.in_channel}</DetailRow>
+                      <DetailRow label="Peer">
+                        <ChannelAlias id={p.in_channel} />
+                      </DetailRow>
+                      {message && (
+                        <DetailRow label="Message">
+                          <div className="inline-flex items-start gap-1">
+                            <span>{message}</span>
+                            {tradeDisplayMode === 'computed' &&
+                              messageDisplay?.isTradeMemo && <ComputedMarker />}
+                          </div>
+                        </DetailRow>
+                      )}
+                    </DetailTable>
+                  </div>
+                );
+              })}
             </div>
           )}
           <DetailTable>
+            {descriptionDisplay && (
+              <DetailRow label="Description">
+                <div className="inline-flex items-start gap-1">
+                  <span>{displayDescription}</span>
+                  {tradeDisplayMode === 'computed' &&
+                    descriptionDisplay.isTradeMemo && <ComputedMarker />}
+                </div>
+              </DetailRow>
+            )}
             {is_confirmed && confirmed_at && (
               <DetailRow label="Confirmed">
                 {`${getDateDif(confirmed_at)} ago (${getFormatDate(confirmed_at)})`}
