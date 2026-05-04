@@ -1305,6 +1305,7 @@ export type SetupTradeCapacityInput = {
   assetAmount: Scalars['String']['input'];
   assetRate: Scalars['String']['input'];
   magmaOfferId: Scalars['String']['input'];
+  openOutboundAssetChannel?: InputMaybe<Scalars['Boolean']['input']>;
   satsAmount?: InputMaybe<Scalars['String']['input']>;
   swapNodePubkey: Scalars['String']['input'];
   swapNodeSockets?: InputMaybe<Array<Scalars['String']['input']>>;
