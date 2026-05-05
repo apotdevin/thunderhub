@@ -24,6 +24,7 @@ import {
 } from '../graphql/queries/__generated__/getPayments.generated';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { TradeDisplayMode } from '../views/transactions/tradeMemo';
 
 const TransactionsView = () => {
   const [activeTab, setActiveTab] = useState('invoices');
@@ -35,6 +36,7 @@ const TransactionsView = () => {
   const { publicKey } = useNodeInfo();
 
   const [settings] = useLocalStorage('transactionSettings', defaultSettings);
+  const tradeDisplayMode = settings.tradeDisplayMode as TradeDisplayMode;
 
   const invoiceQuery = useGetInvoicesQuery({
     notifyOnNetworkStatusChange: true,
@@ -118,6 +120,7 @@ const TransactionsView = () => {
         {filtered.map((i, index) => (
           <InvoiceCard
             invoice={i as any}
+            tradeDisplayMode={tradeDisplayMode}
             key={index}
             index={index + 1}
             setIndexOpen={setIndexOpen}
@@ -126,7 +129,7 @@ const TransactionsView = () => {
         ))}
       </div>
     );
-  }, [invoiceQuery.data, indexOpen, settings]);
+  }, [invoiceQuery.data, indexOpen, settings, tradeDisplayMode]);
 
   const renderPayments = useCallback(() => {
     const list = paymentQuery.data?.getPayments.payments || [];
@@ -166,6 +169,7 @@ const TransactionsView = () => {
         {filtered.map((i, index) => (
           <PaymentsCard
             payment={i}
+            tradeDisplayMode={tradeDisplayMode}
             key={index}
             index={index + 1}
             setIndexOpen={setIndexOpen}
@@ -174,7 +178,14 @@ const TransactionsView = () => {
         ))}
       </div>
     );
-  }, [paymentQuery.data, indexOpen, settings, publicKey, selfInvoices]);
+  }, [
+    paymentQuery.data,
+    indexOpen,
+    settings,
+    publicKey,
+    selfInvoices,
+    tradeDisplayMode,
+  ]);
 
   const isDisabled = useMemo(() => {
     if (activeTab === 'invoices') {

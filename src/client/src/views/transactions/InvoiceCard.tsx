@@ -12,9 +12,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { DetailTable, DetailRow } from './DetailTable';
+import { ComputedMarker } from './ComputedMarker';
+import {
+  getTradeMemoDisplay,
+  getTradeMemoText,
+  TradeDisplayMode,
+} from './tradeMemo';
 
 interface InvoiceCardProps {
   invoice: InvoiceType;
+  tradeDisplayMode: TradeDisplayMode;
   index: number;
   setIndexOpen: (index: number) => void;
   indexOpen: number;
@@ -73,6 +80,7 @@ const StatusBadge = ({
 
 export const InvoiceCard = ({
   invoice,
+  tradeDisplayMode,
   index,
   setIndexOpen,
   indexOpen,
@@ -96,7 +104,12 @@ export const InvoiceCard = ({
     payments,
   } = invoice;
 
-  const texts = payments.map(p => p?.messages?.message).filter(Boolean);
+  const descriptionDisplay = getTradeMemoDisplay(description);
+  const displayDescription =
+    getTradeMemoText(description, tradeDisplayMode) || 'Invoice';
+  const texts = payments
+    .map(p => getTradeMemoText(p?.messages?.message, tradeDisplayMode))
+    .filter(Boolean);
   const hasMessages = !!texts.length;
   const isOpen = index === indexOpen;
 
@@ -116,8 +129,10 @@ export const InvoiceCard = ({
           </div>
           <div className="hidden sm:flex flex-1 min-w-0 items-center gap-2">
             <span className="font-medium text-sm truncate">
-              {description || 'Invoice'}
+              {displayDescription}
             </span>
+            {tradeDisplayMode === 'computed' &&
+              descriptionDisplay?.isTradeMemo && <ComputedMarker />}
             {hasMessages && (
               <MessageCircle size={14} className="text-primary shrink-0" />
             )}
@@ -136,8 +151,10 @@ export const InvoiceCard = ({
         </div>
         <div className="flex sm:hidden items-center gap-2 mt-1.5">
           <span className="text-xs truncate text-muted-foreground">
-            {description || 'Invoice'}
+            {displayDescription}
           </span>
+          {tradeDisplayMode === 'computed' &&
+            descriptionDisplay?.isTradeMemo && <ComputedMarker />}
           {hasMessages && (
             <MessageCircle size={12} className="text-primary shrink-0" />
           )}
@@ -154,27 +171,55 @@ export const InvoiceCard = ({
               <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Payments
               </div>
-              {payments.map((p, idx) => (
-                <div key={idx} className="rounded bg-muted/50 p-2">
-                  <DetailTable>
-                    <DetailRow label="Amount">
-                      <Price amount={p.tokens} />
-                    </DetailRow>
-                    <DetailRow label="Channel">{p.in_channel}</DetailRow>
-                    <DetailRow label="Peer">
-                      <ChannelAlias id={p.in_channel} />
-                    </DetailRow>
-                    {p.messages?.message && (
-                      <DetailRow label="Message">
-                        {p.messages.message}
+              {payments.map((p, idx) => {
+                const message = getTradeMemoText(
+                  p.messages?.message,
+                  tradeDisplayMode
+                );
+                const messageDisplay = getTradeMemoDisplay(p.messages?.message);
+                return (
+                  <div key={idx} className="rounded bg-muted/50 p-2">
+                    <DetailTable>
+                      <DetailRow label="Amount">
+                        <Price amount={p.tokens} />
                       </DetailRow>
-                    )}
-                  </DetailTable>
-                </div>
-              ))}
+                      <DetailRow label="Channel">{p.in_channel}</DetailRow>
+                      <DetailRow label="Peer">
+                        <ChannelAlias id={p.in_channel} />
+                      </DetailRow>
+                      {messageDisplay?.isTradeMemo && (
+                        <DetailRow label="Parsed Message">
+                          <div className="inline-flex items-start gap-1">
+                            <span>{messageDisplay.computed}</span>
+                            <ComputedMarker />
+                          </div>
+                        </DetailRow>
+                      )}
+                      {message && (
+                        <DetailRow label="Message">
+                          {messageDisplay?.raw ?? message}
+                        </DetailRow>
+                      )}
+                    </DetailTable>
+                  </div>
+                );
+              })}
             </div>
           )}
           <DetailTable>
+            {descriptionDisplay?.isTradeMemo && (
+              <DetailRow label="Parsed Description">
+                <div className="inline-flex items-start gap-1">
+                  <span>{descriptionDisplay.computed}</span>
+                  <ComputedMarker />
+                </div>
+              </DetailRow>
+            )}
+            {descriptionDisplay && (
+              <DetailRow label="Description">
+                {descriptionDisplay.raw}
+              </DetailRow>
+            )}
             {is_confirmed && confirmed_at && (
               <DetailRow label="Confirmed">
                 {`${getDateDif(confirmed_at)} ago (${getFormatDate(confirmed_at)})`}
