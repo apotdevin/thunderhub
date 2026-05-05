@@ -347,7 +347,10 @@ export class MagmaResolver {
                   size: magmaSize,
                   payment_method: 'SATS',
                   options: {
-                    asset_id: input.ambossAssetId,
+                    asset_id:
+                      input.transactionType === TapTransactionType.PURCHASE
+                        ? input.ambossAssetId
+                        : null,
                     private: true,
                   },
                 },
