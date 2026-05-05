@@ -169,6 +169,12 @@ export const PaymentsCard = ({
                 </div>
               </DetailRow>
             )}
+            {tradeDisplayMode === 'computed' &&
+              descriptionDisplay?.isTradeMemo && (
+                <DetailRow label="Raw Description">
+                  {descriptionDisplay.raw}
+                </DetailRow>
+              )}
             <DetailRow label="Created">
               {`${getDateDif(created_at)} ago (${getFormatDate(created_at)})`}
             </DetailRow>

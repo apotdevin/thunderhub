@@ -177,6 +177,9 @@ export const InvoiceCard = ({
                   tradeDisplayMode
                 );
                 const messageDisplay = getTradeMemoDisplay(p.messages?.message);
+                const showRawMessage =
+                  tradeDisplayMode === 'computed' &&
+                  messageDisplay?.isTradeMemo;
 
                 return (
                   <div key={idx} className="rounded bg-muted/50 p-2">
@@ -197,6 +200,11 @@ export const InvoiceCard = ({
                           </div>
                         </DetailRow>
                       )}
+                      {showRawMessage && (
+                        <DetailRow label="Raw Message">
+                          {messageDisplay.raw}
+                        </DetailRow>
+                      )}
                     </DetailTable>
                   </div>
                 );
@@ -213,6 +221,12 @@ export const InvoiceCard = ({
                 </div>
               </DetailRow>
             )}
+            {tradeDisplayMode === 'computed' &&
+              descriptionDisplay?.isTradeMemo && (
+                <DetailRow label="Raw Description">
+                  {descriptionDisplay.raw}
+                </DetailRow>
+              )}
             {is_confirmed && confirmed_at && (
               <DetailRow label="Confirmed">
                 {`${getDateDif(confirmed_at)} ago (${getFormatDate(confirmed_at)})`}
