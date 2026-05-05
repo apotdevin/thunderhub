@@ -23,7 +23,7 @@ export const TransactionSettings = () => {
         <div className="flex flex-col gap-0.5">
           <span className="text-xs font-medium">Trade Metadata</span>
           <span className="text-[11px] text-muted-foreground">
-            Switch between raw node memos and ThunderHub-computed labels
+            Switch between raw node memos and ThunderHub-parsed labels
           </span>
         </div>
         <ToggleGroup

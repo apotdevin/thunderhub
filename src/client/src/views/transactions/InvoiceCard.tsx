@@ -177,10 +177,6 @@ export const InvoiceCard = ({
                   tradeDisplayMode
                 );
                 const messageDisplay = getTradeMemoDisplay(p.messages?.message);
-                const showRawMessage =
-                  tradeDisplayMode === 'computed' &&
-                  messageDisplay?.isTradeMemo;
-
                 return (
                   <div key={idx} className="rounded bg-muted/50 p-2">
                     <DetailTable>
@@ -191,18 +187,17 @@ export const InvoiceCard = ({
                       <DetailRow label="Peer">
                         <ChannelAlias id={p.in_channel} />
                       </DetailRow>
-                      {message && (
-                        <DetailRow label="Message">
+                      {messageDisplay?.isTradeMemo && (
+                        <DetailRow label="Parsed Message">
                           <div className="inline-flex items-start gap-1">
-                            <span>{message}</span>
-                            {tradeDisplayMode === 'computed' &&
-                              messageDisplay?.isTradeMemo && <ComputedMarker />}
+                            <span>{messageDisplay.computed}</span>
+                            <ComputedMarker />
                           </div>
                         </DetailRow>
                       )}
-                      {showRawMessage && (
-                        <DetailRow label="Raw Message">
-                          {messageDisplay.raw}
+                      {message && (
+                        <DetailRow label="Message">
+                          {messageDisplay?.raw ?? message}
                         </DetailRow>
                       )}
                     </DetailTable>
@@ -212,21 +207,19 @@ export const InvoiceCard = ({
             </div>
           )}
           <DetailTable>
-            {descriptionDisplay && (
-              <DetailRow label="Description">
+            {descriptionDisplay?.isTradeMemo && (
+              <DetailRow label="Parsed Description">
                 <div className="inline-flex items-start gap-1">
-                  <span>{displayDescription}</span>
-                  {tradeDisplayMode === 'computed' &&
-                    descriptionDisplay.isTradeMemo && <ComputedMarker />}
+                  <span>{descriptionDisplay.computed}</span>
+                  <ComputedMarker />
                 </div>
               </DetailRow>
             )}
-            {tradeDisplayMode === 'computed' &&
-              descriptionDisplay?.isTradeMemo && (
-                <DetailRow label="Raw Description">
-                  {descriptionDisplay.raw}
-                </DetailRow>
-              )}
+            {descriptionDisplay && (
+              <DetailRow label="Description">
+                {descriptionDisplay.raw}
+              </DetailRow>
+            )}
             {is_confirmed && confirmed_at && (
               <DetailRow label="Confirmed">
                 {`${getDateDif(confirmed_at)} ago (${getFormatDate(confirmed_at)})`}

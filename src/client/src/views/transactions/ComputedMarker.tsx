@@ -10,12 +10,12 @@ export const ComputedMarker = () => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <span className="inline-flex shrink-0 cursor-help text-amber-600 dark:text-amber-400">
-          <Calculator size={12} />
+        <span className="inline-flex shrink-0 cursor-help text-muted-foreground/50">
+          <Calculator size={10} />
         </span>
       </TooltipTrigger>
       <TooltipContent side="top">
-        Computed by ThunderHub from the raw trade memo.
+        Parsed by ThunderHub from the raw description.
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>

@@ -160,21 +160,19 @@ export const PaymentsCard = ({
         <div className="px-3 pb-3">
           <Separator className="mb-3" />
           <DetailTable>
-            {description && (
-              <DetailRow label="Description">
+            {descriptionDisplay?.isTradeMemo && (
+              <DetailRow label="Parsed Description">
                 <div className="inline-flex items-start gap-1">
-                  <span>{description}</span>
-                  {tradeDisplayMode === 'computed' &&
-                    descriptionDisplay?.isTradeMemo && <ComputedMarker />}
+                  <span>{descriptionDisplay.computed}</span>
+                  <ComputedMarker />
                 </div>
               </DetailRow>
             )}
-            {tradeDisplayMode === 'computed' &&
-              descriptionDisplay?.isTradeMemo && (
-                <DetailRow label="Raw Description">
-                  {descriptionDisplay.raw}
-                </DetailRow>
-              )}
+            {description && (
+              <DetailRow label="Description">
+                {descriptionDisplay?.raw ?? description}
+              </DetailRow>
+            )}
             <DetailRow label="Created">
               {`${getDateDif(created_at)} ago (${getFormatDate(created_at)})`}
             </DetailRow>
