@@ -19,7 +19,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "types": ["vite/client"]
+    "types": ["vite/client", "jest"]
   },
   "exclude": ["node_modules", "dist"],
   "include": ["**/*.ts", "**/*.tsx"]
