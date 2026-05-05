@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.0](https://github.com/apotdevin/thunderhub/compare/v0.17.0...v0.18.0) (2026-05-05)
+
+
+### Features
+
+* add fly.toml file ([#752](https://github.com/apotdevin/thunderhub/issues/752)) ([bd5dda7](https://github.com/apotdevin/thunderhub/commit/bd5dda71d3a5cb5b3769db1631048fa833fbc22f))
+* multi-hop swaps with circular rebalancing ([#749](https://github.com/apotdevin/thunderhub/issues/749)) ([7e5fb5c](https://github.com/apotdevin/thunderhub/commit/7e5fb5cdebc8a902ab66ef71a790d41ffd1a2b10))
+* show asset balance columns in pending asset channels table ([#740](https://github.com/apotdevin/thunderhub/issues/740)) ([295f6a9](https://github.com/apotdevin/thunderhub/commit/295f6a9a23b238520d4fd0c827d94f4133da8062))
+
+
+### Bug Fixes
+
+* **database:** postgres node-setup wizard query fails with SUBSTR on uuid ([#750](https://github.com/apotdevin/thunderhub/issues/750)) ([591e2ef](https://github.com/apotdevin/thunderhub/commit/591e2ef7770596c641a6578fb4550c9de2f54a2a))
+* handle channel-open timeout gracefully and reflect in-progress orders ([#746](https://github.com/apotdevin/thunderhub/issues/746)) ([dfc0476](https://github.com/apotdevin/thunderhub/commit/dfc0476e8fa5756f65fd9602a095fc8c00e1419f))
+* set asset_id to null for SALE magma orders ([#756](https://github.com/apotdevin/thunderhub/issues/756)) ([68d9146](https://github.com/apotdevin/thunderhub/commit/68d9146135dcb48a52bcd229ec1e524e309f91c4))
+* **transactions:** format trade memo in invoice and payments cards ([#754](https://github.com/apotdevin/thunderhub/issues/754)) ([818e82e](https://github.com/apotdevin/thunderhub/commit/818e82e052a2653859edf48397c8011d438da626))
+
+
+### Improvements
+
+* correct instructions in `/node-setup` route [AMB-2557] ([#747](https://github.com/apotdevin/thunderhub/issues/747)) ([9f06296](https://github.com/apotdevin/thunderhub/commit/9f06296c440ebabf294615187c3091fa2f3abb95))
+* disable mobile drag ([e0286fd](https://github.com/apotdevin/thunderhub/commit/e0286fd315702632fe6118d8d38b2e61a647a129))
+
 ## [0.17.0](https://github.com/apotdevin/thunderhub/compare/v0.16.2...v0.17.0) (2026-04-30)
 
 
