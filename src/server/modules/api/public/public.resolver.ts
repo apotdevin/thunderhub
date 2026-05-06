@@ -22,7 +22,7 @@ import { appConstants } from 'src/server/utils/appConstants';
 import { toWithError } from 'src/server/utils/async';
 import { decodeMacaroon, isCorrectPassword } from 'src/server/utils/crypto';
 import { AUTH_PREFIX, AuthType } from '../../security/security.types';
-import { verifySync } from 'otplib';
+import { createGuardrails, verifySync } from 'otplib';
 import { CreateInitialUserResult, PublicMutation } from './public.types';
 
 @Resolver(() => PublicMutation)
@@ -255,6 +255,9 @@ export class PublicResolver {
           token,
           secret: account.twofaSecret,
           epochTolerance: 30,
+          guardrails: createGuardrails({
+            MIN_SECRET_BYTES: 10,
+          }),
         });
         if (!valid) {
           throw new Error('token not valid');

@@ -11,7 +11,12 @@ import { appConstants } from 'src/server/utils/appConstants';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
-import { generateSecret, generateURI, verifySync } from 'otplib';
+import {
+  createGuardrails,
+  generateSecret,
+  generateURI,
+  verifySync,
+} from 'otplib';
 import { shorten } from 'src/server/utils/string';
 import { TwofaResult } from './auth.types';
 
@@ -75,7 +80,14 @@ export class AuthResolver {
     }
 
     try {
-      const { valid } = verifySync({ token, secret, epochTolerance: 30 });
+      const { valid } = verifySync({
+        token,
+        secret,
+        epochTolerance: 30,
+        guardrails: createGuardrails({
+          MIN_SECRET_BYTES: 10,
+        }),
+      });
 
       if (!valid) {
         throw new Error('Invalid token');
