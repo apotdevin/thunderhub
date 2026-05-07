@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { useGetTapBalancesQuery } from '../../graphql/queries/__generated__/getTapBalances.generated';
 import { useGetTapAssetChannelBalancesQuery } from '../../graphql/queries/__generated__/getTapAssetChannelBalances.generated';
 import { useGetNodeBalancesQuery } from '../../graphql/queries/__generated__/getNodeBalances.generated';
+import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { TapBalanceGroupBy } from '../../graphql/types';
 import { cn } from '@/lib/utils';
 
@@ -25,16 +26,35 @@ export const TradingPortfolio: FC = () => {
   const { data: nodeBalancesData, loading: nodeBalancesLoading } =
     useGetNodeBalancesQuery();
 
+  const { data: supportedData } = useGetTapSupportedAssetsQuery();
+
+  const symbolMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const a of supportedData?.rails?.get_tap_supported_assets?.list ||
+      []) {
+      if (!a.symbol) continue;
+      if (a.assetId) map.set(a.assetId, a.symbol);
+      if (a.groupKey) map.set(a.groupKey, a.symbol);
+    }
+    return map;
+  }, [supportedData]);
+
   const assets = useMemo(() => {
     const map = new Map<string, AggregatedAsset>();
+
+    // Prefer the Amboss marketplace symbol when listed — tapd's local
+    // asset_name can drift from the canonical user-facing symbol.
+    const resolveName = (key: string, fallback: string) =>
+      symbolMap.get(key) || fallback;
 
     for (const b of balancesData?.taproot_assets?.get_balances?.balances ||
       []) {
       const key = b.group_key || b.asset_id || '';
-      const name = b.names?.[0] || key.slice(0, 8);
+      const name = resolveName(key, b.names?.[0] || key.slice(0, 8));
       const existing = map.get(key);
       if (existing) {
         existing.onChain += Number(b.balance) || 0;
+        existing.name = name;
       } else {
         map.set(key, {
           name,
@@ -51,9 +71,10 @@ export const TradingPortfolio: FC = () => {
       const existing = map.get(key);
       if (existing) {
         existing.inLightning += Number(ac.local_balance) || 0;
+        existing.name = resolveName(key, existing.name);
       } else {
         map.set(key, {
-          name: ac.asset_name || key.slice(0, 8),
+          name: resolveName(key, ac.asset_name || key.slice(0, 8)),
           precision: ac.asset_precision,
           onChain: 0,
           inLightning: Number(ac.local_balance) || 0,
@@ -66,7 +87,7 @@ export const TradingPortfolio: FC = () => {
       const totalB = b.onChain + b.inLightning;
       return totalB - totalA;
     });
-  }, [balancesData, channelData]);
+  }, [balancesData, channelData, symbolMap]);
 
   const btcOnChain = Number(
     nodeBalancesData?.getNodeBalances?.onchain?.confirmed || 0

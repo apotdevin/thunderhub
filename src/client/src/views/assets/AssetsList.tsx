@@ -87,9 +87,10 @@ export const AssetsList: FC = () => {
   const channels =
     channelsData?.taproot_assets?.get_asset_channel_balances || [];
 
-  const { priceMap, supportedKeys } = useMemo(() => {
+  const { priceMap, supportedKeys, symbolMap } = useMemo(() => {
     const priceMap = new Map<string, PriceInfo>();
     const supportedKeys = new Set<string>();
+    const symbolMap = new Map<string, string>();
     for (const asset of supportedData?.rails?.get_tap_supported_assets?.list ||
       []) {
       const price = asset.prices?.usd;
@@ -100,8 +101,12 @@ export const AssetsList: FC = () => {
       }
       if (asset.assetId) supportedKeys.add(asset.assetId);
       if (asset.groupKey) supportedKeys.add(asset.groupKey);
+      if (asset.symbol) {
+        if (asset.assetId) symbolMap.set(asset.assetId, asset.symbol);
+        if (asset.groupKey) symbolMap.set(asset.groupKey, asset.symbol);
+      }
     }
-    return { priceMap, supportedKeys };
+    return { priceMap, supportedKeys, symbolMap };
   }, [supportedData]);
 
   const unified = useMemo(() => {
@@ -162,9 +167,15 @@ export const AssetsList: FC = () => {
 
       if (totalBalance === 0) continue;
 
-      const names = onChain?.names?.length
-        ? onChain.names
-        : (channel?.names ?? []);
+      // Prefer the Amboss marketplace symbol when the asset is listed —
+      // tapd's local asset_name can drift from the canonical user-facing
+      // symbol shown in trade history and offers.
+      const ambossSymbol = symbolMap.get(key);
+      const names = ambossSymbol
+        ? [ambossSymbol]
+        : onChain?.names?.length
+          ? onChain.names
+          : (channel?.names ?? []);
 
       const hasGroupKey = onChain?.hasGroupKey || channel?.hasGroupKey;
       const priceEntry = priceMap.get(key);
@@ -190,7 +201,7 @@ export const AssetsList: FC = () => {
     });
 
     return merged;
-  }, [balances, channels, priceMap, supportedKeys]);
+  }, [balances, channels, priceMap, supportedKeys, symbolMap]);
 
   const filtered = useMemo(() => {
     if (listingFilter === 'all') return unified;
