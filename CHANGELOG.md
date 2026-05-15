@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.2](https://github.com/apotdevin/thunderhub/compare/v0.18.1...v0.18.2) (2026-05-15)
+
+
+### Bug Fixes
+
+* otp guardrails min secret bytes 10 ([#757](https://github.com/apotdevin/thunderhub/issues/757)) ([7d9d197](https://github.com/apotdevin/thunderhub/commit/7d9d19713af0dc67ec35d793da8023c68df08685))
+
+
+### CI
+
+* workflow trigger change ([269e46c](https://github.com/apotdevin/thunderhub/commit/269e46ca5b9262b97fa95e5a692063cc2651dd9b))
+
 ## [0.18.1](https://github.com/apotdevin/thunderhub/compare/v0.18.0...v0.18.1) (2026-05-14)
 
 
