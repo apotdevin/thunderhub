@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.1](https://github.com/apotdevin/thunderhub/compare/v0.18.0...v0.18.1) (2026-05-14)
+
+
+### Improvements
+
+* **ci:** increase docker run timeout to 2hrs ([#759](https://github.com/apotdevin/thunderhub/issues/759)) ([e21c848](https://github.com/apotdevin/thunderhub/commit/e21c848515087541244ef9bb3b9bbf4e21ce7ea1))
+
 ## [0.18.0](https://github.com/apotdevin/thunderhub/compare/v0.17.0...v0.18.0) (2026-05-05)
 
 
