@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.3](https://github.com/apotdevin/thunderhub/compare/v0.18.2...v0.18.3) (2026-05-15)
+
+
+### CI
+
+* push flag change ([826dce3](https://github.com/apotdevin/thunderhub/commit/826dce3cf1ec7dd920a52dccdbf2a3ff99054e2a))
+
 ## [0.18.2](https://github.com/apotdevin/thunderhub/compare/v0.18.1...v0.18.2) (2026-05-15)
 
 
