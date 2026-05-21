@@ -11,6 +11,7 @@ jest.mock('../../security/security.types', () => ({}));
 
 import { TradeResolver } from './trade.resolver';
 import { BtcChannel, TaChannel } from './trade.types';
+import { TapTransactionType } from '../magma/magma.types';
 
 type RouteHop = {
   public_key: string;
@@ -627,6 +628,170 @@ describe('TradeResolver', () => {
       );
 
       expect(sats).toBeGreaterThanOrEqual(10_000);
+    });
+  });
+
+  // ── executeTrade purchase ──
+
+  describe('executeTrade purchase', () => {
+    const paymentRequest = 'lnbc91614390p...';
+    const paymentHash = 'de'.repeat(32);
+    const paymentAddress = '02'.repeat(32);
+    const virtualScid = '16126231x12208172x12187';
+    const currentHeight = 950_283;
+
+    const purchaseInput = {
+      transaction_type: TapTransactionType.PURCHASE,
+      peer_pubkey: peerPubkey,
+      asset_amount: '7000000',
+      sats_amount: '9161',
+      payment_request: paymentRequest,
+    };
+
+    beforeEach(() => {
+      mockNodeService.getHeight.mockResolvedValue({
+        current_block_height: currentHeight,
+      });
+      mockNodeService.decodePaymentRequest.mockResolvedValue({
+        id: paymentHash,
+        payment: paymentAddress,
+        destination: myPubkey,
+        cltv_delta: 80,
+        mtokens: '9161439',
+        tokens: 9161,
+        safe_tokens: 9162,
+        routes: [
+          [
+            { public_key: peerPubkey },
+            {
+              public_key: myPubkey,
+              channel: virtualScid,
+              cltv_delta: 80,
+              base_fee_mtokens: '1000',
+              fee_rate: 1,
+            },
+          ],
+        ],
+      });
+      mockNodeService.getChannels.mockResolvedValue({
+        channels: [
+          {
+            id: 'btc-out-1',
+            type: 'anchor',
+            capacity: 5_000_000,
+            local_balance: 50_000,
+            remote_balance: 1_000_000,
+          },
+        ],
+      });
+      mockNodeService.getRouteToDestination.mockResolvedValue({
+        route: {
+          fee: 2,
+          fee_mtokens: '2000',
+          hops: [
+            {
+              channel: 'btc-out-1',
+              channel_capacity: 5_000_000,
+              fee: 2,
+              fee_mtokens: '2000',
+              forward: 9164,
+              forward_mtokens: '9164448',
+              public_key: 'ef'.repeat(33),
+              timeout: currentHeight + 169,
+            },
+            {
+              channel: 'btc-mid-peer',
+              channel_capacity: 5_000_000,
+              fee: 0,
+              fee_mtokens: '0',
+              forward: 9162,
+              forward_mtokens: '9162448',
+              public_key: peerPubkey,
+              timeout: currentHeight + 166,
+            },
+          ],
+          mtokens: '9164448',
+          safe_fee: 2,
+          safe_tokens: 9165,
+          timeout: currentHeight + 169,
+          tokens: 9164,
+        },
+      });
+      mockNodeService.payViaRoutes.mockResolvedValue({
+        is_confirmed: true,
+        secret: 'preimage',
+        safe_tokens: 9165,
+        fee: 4,
+      });
+    });
+
+    it('builds an explicit BTC-to-peer plus virtual-SCID route', async () => {
+      const result = await resolver.executeTrade(
+        { id: userId } as never,
+        purchaseInput
+      );
+
+      expect(result).toEqual({
+        success: true,
+        payment_preimage: 'preimage',
+        sats_amount: '9165',
+        fee_sats: '4',
+      });
+      expect(mockNodeService.pay).not.toHaveBeenCalled();
+      expect(mockNodeService.getRouteToDestination).toHaveBeenCalledWith(
+        userId,
+        {
+          destination: peerPubkey,
+          mtokens: '9162448',
+          outgoing_channel: 'btc-out-1',
+          cltv_delta: 163,
+        }
+      );
+
+      expect(mockNodeService.payViaRoutes).toHaveBeenCalledTimes(1);
+      const submitted = mockNodeService.payViaRoutes.mock.calls[0][1] as {
+        id: string;
+        routes: Array<{
+          payment: string;
+          total_mtokens: string;
+          fee: number;
+          fee_mtokens: string;
+          mtokens: string;
+          hops: Array<{
+            channel: string;
+            fee: number;
+            fee_mtokens: string;
+            forward: number;
+            forward_mtokens: string;
+            public_key: string;
+            timeout: number;
+          }>;
+        }>;
+      };
+
+      expect(submitted.id).toBe(paymentHash);
+      const route = submitted.routes[0];
+      expect(route.payment).toBe(paymentAddress);
+      expect(route.total_mtokens).toBe('9161439');
+      expect(route.mtokens).toBe('9164448');
+      expect(route.fee_mtokens).toBe('3009');
+      expect(route.fee).toBe(4);
+      expect(route.hops).toHaveLength(3);
+
+      const peerHop = route.hops[1];
+      expect(peerHop.public_key).toBe(peerPubkey);
+      expect(peerHop.fee).toBe(2);
+      expect(peerHop.fee_mtokens).toBe('1009');
+      expect(peerHop.forward).toBe(9161);
+      expect(peerHop.forward_mtokens).toBe('9161439');
+      expect(peerHop.timeout).toBe(currentHeight + 83);
+
+      const taHop = route.hops[2];
+      expect(taHop.channel).toBe(virtualScid);
+      expect(taHop.public_key).toBe(myPubkey);
+      expect(taHop.fee).toBe(0);
+      expect(taHop.forward_mtokens).toBe('9161439');
+      expect(taHop.timeout).toBe(currentHeight + 83);
     });
   });
 
