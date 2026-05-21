@@ -745,6 +745,7 @@ describe('TradeResolver', () => {
           mtokens: '9162448',
           outgoing_channel: 'btc-out-1',
           cltv_delta: 163,
+          ignore: undefined,
         }
       );
 
@@ -792,6 +793,121 @@ describe('TradeResolver', () => {
       expect(taHop.fee).toBe(0);
       expect(taHop.forward_mtokens).toBe('9161439');
       expect(taHop.timeout).toBe(currentHeight + 83);
+    });
+
+    it('retries buy route after a temporary BTC channel failure', async () => {
+      const midPubkey = 'ef'.repeat(33);
+
+      mockNodeService.getRouteToDestination
+        .mockResolvedValueOnce({
+          route: {
+            fee: 2,
+            fee_mtokens: '2000',
+            hops: [
+              {
+                channel: 'btc-out-1',
+                channel_capacity: 5_000_000,
+                fee: 2,
+                fee_mtokens: '2000',
+                forward: 9164,
+                forward_mtokens: '9164448',
+                public_key: midPubkey,
+                timeout: currentHeight + 169,
+              },
+              {
+                channel: 'btc-mid-peer',
+                channel_capacity: 5_000_000,
+                fee: 0,
+                fee_mtokens: '0',
+                forward: 9162,
+                forward_mtokens: '9162448',
+                public_key: peerPubkey,
+                timeout: currentHeight + 166,
+              },
+            ],
+            mtokens: '9164448',
+            safe_fee: 2,
+            safe_tokens: 9165,
+            timeout: currentHeight + 169,
+            tokens: 9164,
+          },
+        })
+        .mockResolvedValueOnce({
+          route: {
+            fee: 3,
+            fee_mtokens: '3000',
+            hops: [
+              {
+                channel: 'btc-out-1',
+                channel_capacity: 5_000_000,
+                fee: 3,
+                fee_mtokens: '3000',
+                forward: 9165,
+                forward_mtokens: '9165448',
+                public_key: 'aa'.repeat(33),
+                timeout: currentHeight + 169,
+              },
+              {
+                channel: 'btc-alt-peer',
+                channel_capacity: 5_000_000,
+                fee: 0,
+                fee_mtokens: '0',
+                forward: 9162,
+                forward_mtokens: '9162448',
+                public_key: peerPubkey,
+                timeout: currentHeight + 166,
+              },
+            ],
+            mtokens: '9165448',
+            safe_fee: 3,
+            safe_tokens: 9166,
+            timeout: currentHeight + 169,
+            tokens: 9165,
+          },
+        });
+      mockNodeService.payViaRoutes
+        .mockRejectedValueOnce([
+          503,
+          'TemporaryChannelFailure',
+          {
+            failures: [
+              [
+                503,
+                'TemporaryChannelFailure',
+                { channel: 'btc-mid-peer', index: 1 },
+              ],
+            ],
+          },
+        ])
+        .mockResolvedValueOnce({
+          is_confirmed: true,
+          secret: 'retry-preimage',
+        });
+
+      const result = await resolver.executeTrade(
+        { id: userId } as never,
+        purchaseInput
+      );
+
+      expect(result.payment_preimage).toBe('retry-preimage');
+      expect(mockNodeService.payViaRoutes).toHaveBeenCalledTimes(2);
+      expect(mockNodeService.getRouteToDestination).toHaveBeenNthCalledWith(
+        2,
+        userId,
+        {
+          destination: peerPubkey,
+          mtokens: '9162448',
+          outgoing_channel: 'btc-out-1',
+          cltv_delta: 163,
+          ignore: [
+            {
+              channel: 'btc-mid-peer',
+              from_public_key: midPubkey,
+              to_public_key: peerPubkey,
+            },
+          ],
+        }
+      );
     });
   });
 

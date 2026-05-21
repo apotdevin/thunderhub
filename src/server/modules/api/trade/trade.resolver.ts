@@ -6,6 +6,7 @@ import { GraphQLError } from 'graphql';
 import type { PayViaRoutesResult, Route } from 'lightning';
 import { TapdNodeService } from '../../node/tapd/tapd-node.service';
 import { NodeService } from '../../node/node.service';
+import type { GetRouteToDestinationOptions } from '../../node/lightning.types';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { toWithError } from '../../../utils/async';
@@ -61,6 +62,8 @@ const DEFAULT_CHANNEL_CLTV_DELTA = 40; // LND default for channel forwarding pol
 // Extra block headroom on top of computed CLTV deltas to absorb slight
 // reorgs / block-tip drift between when we build the route and when it locks in.
 const CLTV_BLOCK_BUFFER = 3;
+
+const BUY_ROUTE_MAX_ATTEMPTS = 5;
 
 // The `lightning` package intentionally leaves SIMPLE_TAPROOT_OVERLAY unmapped,
 // so TA channels have type === undefined while all BTC channel types are strings.
@@ -308,9 +311,6 @@ export class TradeResolver {
       decoded.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
     const taCltvDelta: number =
       routeHint.cltv_delta ?? DEFAULT_CHANNEL_CLTV_DELTA;
-    const finalHopTimeout =
-      heightResult.current_block_height + invoiceCltvDelta + CLTV_BLOCK_BUFFER;
-
     const forwardMtokens = BigInt(decoded.mtokens);
     const taBaseFeeMtokens = BigInt(routeHint.base_fee_mtokens ?? '0');
     const taFeeRate = BigInt(routeHint.fee_rate ?? 0);
@@ -334,122 +334,6 @@ export class TradeResolver {
       );
     }
 
-    let baseRoute:
-      | NonNullable<
-          Awaited<ReturnType<NodeService['getRouteToDestination']>>['route']
-        >
-      | undefined;
-    let routeError: unknown;
-    let btcChannelId: string | undefined;
-
-    for (const candidate of sortedBtcCandidates) {
-      const [routeResult, error] = await toWithError(
-        this.nodeService.getRouteToDestination(accountId, {
-          destination: input.peer_pubkey,
-          mtokens: String(mtokensToPeer),
-          outgoing_channel: candidate.id,
-          cltv_delta: invoiceCltvDelta + taCltvDelta + CLTV_BLOCK_BUFFER,
-        })
-      );
-
-      if (error) {
-        routeError = error;
-        this.logger.warn('Failed to find BTC route to trade peer', {
-          error,
-          peerPubkey: input.peer_pubkey,
-          outgoingChannel: candidate.id,
-        });
-        continue;
-      }
-
-      if (routeResult?.route) {
-        if (candidate.local_balance < routeResult.route.safe_tokens) {
-          routeError = new Error('Route exceeds outbound liquidity');
-          this.logger.warn('BTC route exceeds outbound liquidity', {
-            peerPubkey: input.peer_pubkey,
-            outgoingChannel: candidate.id,
-            localBalance: candidate.local_balance,
-            routeTokens: routeResult.route.safe_tokens,
-          });
-          continue;
-        }
-
-        baseRoute = routeResult.route;
-        btcChannelId = candidate.id;
-        break;
-      }
-    }
-
-    if (!baseRoute) {
-      this.logger.error('No BTC route to trade peer for buy trade', {
-        routeError,
-        peerPubkey: input.peer_pubkey,
-        mtokensToPeer: String(mtokensToPeer),
-      });
-      throw new GraphQLError(
-        'No BTC route to trade partner with sufficient outbound liquidity'
-      );
-    }
-
-    const lastBaseHop = baseRoute.hops[baseRoute.hops.length - 1];
-    if (!lastBaseHop || lastBaseHop.public_key !== input.peer_pubkey) {
-      this.logger.error('BTC route did not terminate at trade peer', {
-        peerPubkey: input.peer_pubkey,
-        route: baseRoute,
-      });
-      throw new GraphQLError('Route to trade peer was invalid');
-    }
-
-    const peerForwardingHop = {
-      ...lastBaseHop,
-      fee: peerFee,
-      fee_mtokens: String(peerFeeMtokens),
-      forward: decoded.tokens,
-      forward_mtokens: decoded.mtokens,
-      timeout: finalHopTimeout,
-    };
-
-    const taHop = {
-      channel: routeHint.channel,
-      channel_capacity: Math.max(
-        tokensToPeer,
-        decoded.safe_tokens ?? 0,
-        100_000
-      ),
-      fee: 0,
-      fee_mtokens: '0',
-      forward: decoded.tokens,
-      forward_mtokens: decoded.mtokens,
-      public_key: identity.public_key,
-      timeout: finalHopTimeout,
-    };
-
-    const fullHops = [...baseRoute.hops.slice(0, -1), peerForwardingHop, taHop];
-    const feeMtokens = BigInt(baseRoute.fee_mtokens) + peerFeeMtokens;
-    const route = {
-      fee: Number((feeMtokens + BigInt(999)) / BigInt(1000)),
-      fee_mtokens: String(feeMtokens),
-      hops: fullHops,
-      mtokens: baseRoute.mtokens,
-      payment: decoded.payment,
-      timeout: baseRoute.timeout,
-      tokens: baseRoute.tokens,
-      total_mtokens: decoded.mtokens,
-    };
-
-    this.logger.info('Executing buy trade via explicit route', {
-      assetAmount: input.asset_amount,
-      invoicePrefix: paymentRequest.slice(0, 20),
-      virtualScid: routeHint.channel,
-      btcChannelId,
-      invoiceCltvDelta,
-      taCltvDelta,
-      finalHopTimeout,
-      peerFeeMtokens: String(peerFeeMtokens),
-      mtokensToPeer: String(mtokensToPeer),
-      hopCount: fullHops.length,
-    });
-
     let payResult:
       | {
           is_confirmed: boolean;
@@ -459,22 +343,186 @@ export class TradeResolver {
         }
       | undefined;
 
-    try {
-      payResult = await this.nodeService.payViaRoutes(accountId, {
-        id: decoded.id,
-        routes: [route],
+    const ignoredPairs: NonNullable<GetRouteToDestinationOptions['ignore']> =
+      [];
+
+    for (let attempt = 1; attempt <= BUY_ROUTE_MAX_ATTEMPTS; attempt++) {
+      let baseRoute:
+        | NonNullable<
+            Awaited<ReturnType<NodeService['getRouteToDestination']>>['route']
+          >
+        | undefined;
+      let routeError: unknown;
+      let btcChannelId: string | undefined;
+
+      for (const candidate of sortedBtcCandidates) {
+        const [routeResult, error] = await toWithError(
+          this.nodeService.getRouteToDestination(accountId, {
+            destination: input.peer_pubkey,
+            mtokens: String(mtokensToPeer),
+            outgoing_channel: candidate.id,
+            cltv_delta: invoiceCltvDelta + taCltvDelta + CLTV_BLOCK_BUFFER,
+            ignore: ignoredPairs.length ? ignoredPairs : undefined,
+          })
+        );
+
+        if (error) {
+          routeError = error;
+          this.logger.warn('Failed to find BTC route to trade peer', {
+            error,
+            peerPubkey: input.peer_pubkey,
+            outgoingChannel: candidate.id,
+            ignoredPairs,
+          });
+          continue;
+        }
+
+        if (routeResult?.route) {
+          if (candidate.local_balance < routeResult.route.safe_tokens) {
+            routeError = new Error('Route exceeds outbound liquidity');
+            this.logger.warn('BTC route exceeds outbound liquidity', {
+              peerPubkey: input.peer_pubkey,
+              outgoingChannel: candidate.id,
+              localBalance: candidate.local_balance,
+              routeTokens: routeResult.route.safe_tokens,
+            });
+            continue;
+          }
+
+          baseRoute = routeResult.route;
+          btcChannelId = candidate.id;
+          break;
+        }
+      }
+
+      if (!baseRoute) {
+        this.logger.error('No BTC route to trade peer for buy trade', {
+          routeError,
+          peerPubkey: input.peer_pubkey,
+          mtokensToPeer: String(mtokensToPeer),
+          ignoredPairs,
+        });
+        throw new GraphQLError(
+          'No BTC route to trade partner with sufficient outbound liquidity'
+        );
+      }
+
+      const lastBaseHop = baseRoute.hops[baseRoute.hops.length - 1];
+      if (!lastBaseHop || lastBaseHop.public_key !== input.peer_pubkey) {
+        this.logger.error('BTC route did not terminate at trade peer', {
+          peerPubkey: input.peer_pubkey,
+          route: baseRoute,
+        });
+        throw new GraphQLError('Route to trade peer was invalid');
+      }
+
+      const finalHopTimeout =
+        heightResult.current_block_height +
+        invoiceCltvDelta +
+        CLTV_BLOCK_BUFFER;
+      const peerForwardingHop = {
+        ...lastBaseHop,
+        fee: peerFee,
+        fee_mtokens: String(peerFeeMtokens),
+        forward: decoded.tokens,
+        forward_mtokens: decoded.mtokens,
+        timeout: finalHopTimeout,
+      };
+
+      const taHop = {
+        channel: routeHint.channel,
+        channel_capacity: Math.max(
+          tokensToPeer,
+          decoded.safe_tokens ?? 0,
+          100_000
+        ),
+        fee: 0,
+        fee_mtokens: '0',
+        forward: decoded.tokens,
+        forward_mtokens: decoded.mtokens,
+        public_key: identity.public_key,
+        timeout: finalHopTimeout,
+      };
+
+      const fullHops = [
+        ...baseRoute.hops.slice(0, -1),
+        peerForwardingHop,
+        taHop,
+      ];
+      const feeMtokens = BigInt(baseRoute.fee_mtokens) + peerFeeMtokens;
+      const route = {
+        fee: Number((feeMtokens + BigInt(999)) / BigInt(1000)),
+        fee_mtokens: String(feeMtokens),
+        hops: fullHops,
+        mtokens: baseRoute.mtokens,
+        payment: decoded.payment,
+        timeout: baseRoute.timeout,
+        tokens: baseRoute.tokens,
+        total_mtokens: decoded.mtokens,
+      };
+
+      this.logger.info('Executing buy trade via explicit route', {
+        assetAmount: input.asset_amount,
+        invoicePrefix: paymentRequest.slice(0, 20),
+        virtualScid: routeHint.channel,
+        btcChannelId,
+        invoiceCltvDelta,
+        taCltvDelta,
+        finalHopTimeout,
+        peerFeeMtokens: String(peerFeeMtokens),
+        mtokensToPeer: String(mtokensToPeer),
+        hopCount: fullHops.length,
+        attempt,
       });
-    } catch (err: unknown) {
-      // payViaRoutes throws [code, message, {failures}] on failure.
-      // Log the full failure chain for debugging CLTV/routing issues.
-      const rawErr = err as unknown[];
-      const failures = Array.isArray(rawErr) ? rawErr[2] : undefined;
-      this.logger.error('Failed to pay asset invoice via route', {
-        error: Array.isArray(rawErr) ? rawErr[1] : String(err),
-        failures: JSON.stringify(failures),
-        paymentRequest,
-      });
-      throw new GraphQLError('Failed to pay asset invoice with sats');
+
+      try {
+        payResult = await this.nodeService.payViaRoutes(accountId, {
+          id: decoded.id,
+          routes: [route],
+        });
+        break;
+      } catch (err: unknown) {
+        // payViaRoutes throws [code, message, {failures}] on failure.
+        // Log the full failure chain for debugging CLTV/routing issues.
+        const rawErr = err as unknown[];
+        const failures = Array.isArray(rawErr) ? rawErr[2] : undefined;
+        const error = Array.isArray(rawErr) ? rawErr[1] : String(err);
+        const lastFailure = this.getLastRouteFailureDetails(err);
+        const ignorePair = lastFailure
+          ? this.ignorePairForBuyRouteFailure(
+              fullHops,
+              identity.public_key,
+              routeHint.channel,
+              lastFailure
+            )
+          : undefined;
+
+        if (ignorePair && attempt < BUY_ROUTE_MAX_ATTEMPTS) {
+          ignoredPairs.push(ignorePair);
+          this.logger.warn(
+            'Buy trade route failed; retrying with failed pair ignored',
+            {
+              error,
+              lastFailure,
+              ignorePair,
+              attempt,
+            }
+          );
+          continue;
+        }
+
+        this.logger.error('Failed to pay asset invoice via route', {
+          error,
+          failures: JSON.stringify(failures),
+          paymentRequest,
+          ignoredPairs,
+        });
+        throw new GraphQLError(
+          error === 'TemporaryChannelFailure'
+            ? 'Temporary channel failure while routing sats to trade partner'
+            : 'Failed to pay asset invoice with sats'
+        );
+      }
     }
 
     if (!payResult?.is_confirmed) {
@@ -1224,6 +1272,61 @@ export class TradeResolver {
       };
     }
     return undefined;
+  }
+
+  private getLastRouteFailureDetails(err: unknown):
+    | {
+        channel?: string;
+        index?: number;
+        public_key?: string;
+      }
+    | undefined {
+    if (!Array.isArray(err)) return undefined;
+
+    const details = err[2] as
+      | {
+          failures?: Array<
+            [
+              number,
+              string,
+              {
+                channel?: string;
+                index?: number;
+                public_key?: string;
+              },
+            ]
+          >;
+        }
+      | undefined;
+
+    const failures = details?.failures;
+    if (!failures?.length) return undefined;
+
+    return failures[failures.length - 1][2];
+  }
+
+  private ignorePairForBuyRouteFailure(
+    hops: Array<{ channel: string; public_key?: string }>,
+    sourcePubkey: string,
+    virtualScid: string,
+    failure: { channel?: string; index?: number }
+  ): NonNullable<GetRouteToDestinationOptions['ignore']>[number] | undefined {
+    if (failure.index == null || failure.index < 0) return undefined;
+
+    const failedHop = hops[failure.index];
+    if (!failedHop?.public_key || failedHop.channel === virtualScid) {
+      return undefined;
+    }
+
+    const fromPublicKey =
+      failure.index === 0 ? sourcePubkey : hops[failure.index - 1]?.public_key;
+    if (!fromPublicKey) return undefined;
+
+    return {
+      channel: failure.channel || failedHop.channel,
+      from_public_key: fromPublicKey,
+      to_public_key: failedHop.public_key,
+    };
   }
 
   /**
