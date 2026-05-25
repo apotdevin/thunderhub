@@ -6,6 +6,7 @@ import { useGetNodeBalancesQuery } from '../../graphql/queries/__generated__/get
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { usePriceState } from '../../context/PriceContext';
 import { TapBalanceGroupBy } from '../../graphql/types';
+import { formatNativeAsset } from '@/lib/formatNativeAsset';
 
 const COLORS = [
   'bg-orange-500',
@@ -119,17 +120,10 @@ export const TradingDistribution: FC = () => {
           : rawBalance;
       const assetSats = displayBalance * info.usdPrice * satsPerUsd;
       if (assetSats > 0) {
-        const formatted =
-          displayBalance % 1 === 0
-            ? displayBalance.toLocaleString()
-            : displayBalance.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              });
         items.push({
           name: info.symbol,
           sats: assetSats,
-          nativeDisplay: `${formatted} ${info.symbol}`,
+          nativeDisplay: formatNativeAsset(displayBalance, info.symbol),
         });
       }
     }
