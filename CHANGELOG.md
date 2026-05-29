@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.4](https://github.com/apotdevin/thunderhub/compare/v0.18.3...v0.18.4) (2026-05-29)
+
+
+### Bug Fixes
+
+* **assets:** add native display formatting to trading distribution view [AMB-2611] ([#765](https://github.com/apotdevin/thunderhub/issues/765)) ([42a4501](https://github.com/apotdevin/thunderhub/commit/42a4501059c421f7177e51f1d3d864b97c87922f))
+* update buy execution path to not build a route with too little final CLTV headroom ([#764](https://github.com/apotdevin/thunderhub/issues/764)) ([6616f2a](https://github.com/apotdevin/thunderhub/commit/6616f2a19cf92c82169a47207a5b51e75cd4acab))
+
 ## [0.18.3](https://github.com/apotdevin/thunderhub/compare/v0.18.2...v0.18.3) (2026-05-15)
 
 
