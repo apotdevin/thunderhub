@@ -300,6 +300,7 @@ describe('MagmaResolver', () => {
     const mockTapdNodeService = {
       fundAssetChannel: jest.fn(),
       getAssetChannelBalances: jest.fn(),
+      getInfo: jest.fn(),
     };
 
     let setupResolver: MagmaResolver;
@@ -321,40 +322,6 @@ describe('MagmaResolver', () => {
       error: undefined,
     });
 
-    // Offer the seller-compatibility check (assertOfferSupportsAssetChannels)
-    // re-fetches before placing an asset-channel order. Matches purchaseInput.
-    const offersResponse = (list?: unknown[]) => ({
-      data: {
-        public: {
-          offers: {
-            list: list ?? [
-              {
-                id: 'offer-1',
-                magma_offer_id: 'offer-1',
-                node: { pubkey: swapPubkey },
-                asset: {
-                  id: 'marketplace-asset-1',
-                  taproot_asset_details: {
-                    asset_id: 'deadbeef'.repeat(8),
-                    group_key: 'cafebabe'.repeat(8),
-                  },
-                },
-              },
-            ],
-            total_count: 1,
-          },
-        },
-      },
-      error: undefined,
-    });
-
-    // Route fetches by URL: the trade URL serves offers (compatibility check),
-    // the Magma URL serves order creation.
-    const routeFetch = (orderResponse = magmaOrderResponse()) =>
-      mockFetchService.graphqlFetchWithProxy.mockImplementation((url: string) =>
-        Promise.resolve(url === tradeUrl ? offersResponse() : orderResponse)
-      );
-
     beforeEach(() => {
       jest.clearAllMocks();
 
@@ -375,13 +342,17 @@ describe('MagmaResolver', () => {
         pending_channels: [],
       });
       mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([]);
+      // Buyer node has a reachable Taproot Assets daemon by default.
+      mockTapdNodeService.getInfo.mockResolvedValue({ version: '1.0' });
 
       mockTapdNodeService.fundAssetChannel.mockResolvedValue({
         txid: 'asset-txid',
         outputIndex: 1,
       });
 
-      routeFetch();
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue(
+        magmaOrderResponse()
+      );
 
       mockAmbossService.resolveMagmaUrl.mockResolvedValue(magmaUrl);
       mockAmbossService.resolveTradeUrl.mockResolvedValue(tradeUrl);
@@ -621,7 +592,10 @@ describe('MagmaResolver', () => {
     // ── Error cases ──
 
     it('throws when Magma order creation fails', async () => {
-      routeFetch({ data: undefined, error: new Error('service unavailable') });
+      mockFetchService.graphqlFetchWithProxy.mockResolvedValue({
+        data: undefined,
+        error: new Error('service unavailable'),
+      });
 
       await expect(
         setupResolver.setupTradeCapacity(userId, purchaseInput)
@@ -665,9 +639,9 @@ describe('MagmaResolver', () => {
       ).rejects.toThrow('Asset amount must be greater than zero');
     });
 
-    // ── Seller asset-channel compatibility (PURCHASE) ──
+    // ── Buyer asset-channel capability ──
 
-    it('PURCHASE: tags the Magma order with the thunderhub referrer', async () => {
+    it('tags the Magma order with the thunderhub referrer', async () => {
       await setupResolver.setupTradeCapacity(userId, purchaseInput);
 
       expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
@@ -680,65 +654,29 @@ describe('MagmaResolver', () => {
       );
     });
 
-    it('PURCHASE: rejects when the seller offer is not found', async () => {
-      mockFetchService.graphqlFetchWithProxy.mockImplementation((url: string) =>
-        Promise.resolve(
-          url === tradeUrl ? offersResponse([]) : magmaOrderResponse()
-        )
+    it('rejects when the buyer node has no reachable Taproot Assets daemon', async () => {
+      mockTapdNodeService.getInfo.mockRejectedValue(
+        new Error('tapd unreachable')
       );
 
       await expect(
         setupResolver.setupTradeCapacity(userId, purchaseInput)
       ).rejects.toThrow('does not support asset channels');
 
-      // Order is never placed against the incompatible seller.
+      // No order is placed and no invoice is paid from an incapable node.
+      expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
       expect(mockNodeService.pay).not.toHaveBeenCalled();
     });
 
-    it('PURCHASE: rejects when the seller offer has no taproot asset details', async () => {
-      mockFetchService.graphqlFetchWithProxy.mockImplementation((url: string) =>
-        Promise.resolve(
-          url === tradeUrl
-            ? offersResponse([
-                {
-                  id: 'offer-1',
-                  magma_offer_id: 'offer-1',
-                  node: { pubkey: swapPubkey },
-                  asset: { id: 'marketplace-asset-1' },
-                },
-              ])
-            : magmaOrderResponse()
-        )
+    it('rejects a SALE too when the buyer node has no Taproot Assets daemon', async () => {
+      mockTapdNodeService.getInfo.mockRejectedValue(
+        new Error('tapd unreachable')
       );
 
       await expect(
-        setupResolver.setupTradeCapacity(userId, purchaseInput)
+        setupResolver.setupTradeCapacity(userId, saleInput)
       ).rejects.toThrow('does not support asset channels');
-      expect(mockNodeService.pay).not.toHaveBeenCalled();
-    });
-
-    it('PURCHASE: rejects when the offer belongs to a different seller node', async () => {
-      mockFetchService.graphqlFetchWithProxy.mockImplementation((url: string) =>
-        Promise.resolve(
-          url === tradeUrl
-            ? offersResponse([
-                {
-                  id: 'offer-1',
-                  magma_offer_id: 'offer-1',
-                  node: { pubkey: 'ef'.repeat(33) },
-                  asset: {
-                    id: 'marketplace-asset-1',
-                    taproot_asset_details: { asset_id: 'deadbeef'.repeat(8) },
-                  },
-                },
-              ])
-            : magmaOrderResponse()
-        )
-      );
-
-      await expect(
-        setupResolver.setupTradeCapacity(userId, purchaseInput)
-      ).rejects.toThrow('does not support asset channels');
+      expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
     });
 
     // ── Idempotency: skip steps when capacity already exists ──

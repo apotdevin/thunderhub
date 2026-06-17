@@ -143,6 +143,24 @@ export class MagmaResolver {
             'Either tapdAssetId or tapdGroupKey must be provided'
           );
         }
+
+        // The buyer (this ThunderHub node) must run a reachable Taproot Assets
+        // daemon to open or receive asset channels. Enforce it here so an asset
+        // order can't be placed from a node that can't fulfil it — e.g. a plain
+        // LND node whose YAML was relabelled as `litd`. The client-side
+        // readiness UI (`has_tapd`) is advisory and can be bypassed.
+        const [, tapdErr] = await toWithError(
+          this.tapdNodeService.getInfo({ id: user.id })
+        );
+        if (tapdErr) {
+          this.logger.warn(
+            'Rejecting trade setup — node has no reachable Taproot Assets daemon',
+            { err: tapdErr }
+          );
+          throw new GraphQLError(
+            'This node does not support asset channels (no Taproot Assets daemon reachable)'
+          );
+        }
       },
 
       nodeInfo: async (): Promise<SetupTradeCapacityAuto['nodeInfo']> => {
@@ -304,10 +322,6 @@ export class MagmaResolver {
               );
               return undefined;
             }
-
-            // We're about to place a real asset-channel order — confirm the
-            // seller actually supports asset channels for this asset first.
-            await this.assertOfferSupportsAssetChannels(user, input);
           }
 
           const magmaUrl = await this.ambossService.resolveMagmaUrl(user);
@@ -591,71 +605,6 @@ export class MagmaResolver {
         (result.payMagma as { channelOpenPending?: boolean } | undefined)
           ?.channelOpenPending || undefined,
     };
-  }
-
-  /**
-   * Guards an asset-channel purchase: re-fetches the selected offer from the
-   * Amboss trade API and confirms the seller actually advertises asset-channel
-   * support for the requested Taproot asset. Without this, a manually crafted
-   * order (e.g. one that bypassed the client-side readiness UI) could be placed
-   * against a seller that cannot open asset channels — the order is paid but the
-   * channel never opens. Throws a GraphQLError when the offer is unsuitable.
-   */
-  private async assertOfferSupportsAssetChannels(
-    user: UserId,
-    input: SetupTradeCapacityInput
-  ): Promise<void> {
-    const tradeUrl = await this.ambossService.resolveTradeUrl(user);
-
-    const { data, error } = await this.fetchService.graphqlFetchWithProxy<{
-      public: { offers: { list: TradeApiOffer[] } };
-    }>(tradeUrl, getOffersQuery, {
-      input: {
-        asset_id: input.ambossAssetId,
-        transaction_type: input.transactionType,
-        page: { limit: 100, offset: 0 },
-      },
-    });
-
-    if (error || !data?.public?.offers) {
-      this.logger.error('Failed to verify seller asset-channel support', {
-        error,
-        magmaOfferId: input.magmaOfferId,
-      });
-      throw new GraphQLError(
-        'Could not verify that the seller supports asset channels — try again'
-      );
-    }
-
-    const offer = data.public.offers.list.find(
-      o => o.magma_offer_id === input.magmaOfferId
-    );
-
-    const details = offer?.asset?.taproot_asset_details;
-    const matchesAsset = input.tapdGroupKey
-      ? details?.group_key === input.tapdGroupKey
-      : details?.asset_id === input.tapdAssetId;
-
-    if (
-      !offer ||
-      offer.node?.pubkey !== input.swapNodePubkey ||
-      !matchesAsset
-    ) {
-      this.logger.warn(
-        'Rejecting Magma order — seller does not support asset channels for this asset',
-        {
-          magmaOfferId: input.magmaOfferId,
-          swapNodePubkey: input.swapNodePubkey,
-          ambossAssetId: input.ambossAssetId,
-          offerFound: !!offer,
-          offerPubkey: offer?.node?.pubkey,
-          hasAssetDetails: !!details,
-        }
-      );
-      throw new GraphQLError(
-        'The selected seller does not support asset channels for this asset'
-      );
-    }
   }
 }
 
