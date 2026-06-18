@@ -6,6 +6,7 @@ import { useGetNodeBalancesQuery } from '../../graphql/queries/__generated__/get
 import { useGetTapSupportedAssetsQuery } from '../../graphql/queries/__generated__/getTapSupportedAssets.generated';
 import { usePriceState } from '../../context/PriceContext';
 import { TapBalanceGroupBy } from '../../graphql/types';
+import { formatNativeAsset } from '@/lib/formatNativeAsset';
 
 const COLORS = [
   'bg-orange-500',
@@ -23,6 +24,7 @@ type Slice = {
   sats: number;
   pct: number;
   color: string;
+  nativeDisplay?: string;
 };
 
 const formatSats = (sats: number): string => {
@@ -104,7 +106,7 @@ export const TradingDistribution: FC = () => {
     // asset sats value = (assetUsdValue / btcPriceUsd) * 1e8
     const satsPerUsd = 1e8 / btcPriceUsd;
 
-    const items: { name: string; sats: number }[] = [];
+    const items: { name: string; sats: number; nativeDisplay?: string }[] = [];
     if (btcTotalSats > 0) {
       items.push({ name: 'BTC', sats: btcTotalSats });
     }
@@ -118,7 +120,11 @@ export const TradingDistribution: FC = () => {
           : rawBalance;
       const assetSats = displayBalance * info.usdPrice * satsPerUsd;
       if (assetSats > 0) {
-        items.push({ name: info.symbol, sats: assetSats });
+        items.push({
+          name: info.symbol,
+          sats: assetSats,
+          nativeDisplay: formatNativeAsset(displayBalance, info.symbol),
+        });
       }
     }
 
@@ -132,6 +138,7 @@ export const TradingDistribution: FC = () => {
         sats: item.sats,
         pct: (item.sats / totalSats) * 100,
         color: COLORS[i % COLORS.length],
+        nativeDisplay: item.nativeDisplay,
       }));
   }, [balancesData, channelData, btcTotalSats, btcPriceUsd, supportedData]);
 
@@ -184,7 +191,7 @@ export const TradingDistribution: FC = () => {
             <div className={`w-2.5 h-2.5 rounded-sm shrink-0 ${s.color}`} />
             <span className="text-xs truncate">{s.name}</span>
             <span className="text-xs tabular-nums text-muted-foreground">
-              {s.pct.toFixed(1)}% · {formatSats(s.sats)}
+              {s.pct.toFixed(1)}% · {s.nativeDisplay || formatSats(s.sats)}
             </span>
           </div>
         ))}
