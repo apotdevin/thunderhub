@@ -300,6 +300,7 @@ describe('MagmaResolver', () => {
     const mockTapdNodeService = {
       fundAssetChannel: jest.fn(),
       getAssetChannelBalances: jest.fn(),
+      getInfo: jest.fn(),
     };
 
     let setupResolver: MagmaResolver;
@@ -341,6 +342,8 @@ describe('MagmaResolver', () => {
         pending_channels: [],
       });
       mockTapdNodeService.getAssetChannelBalances.mockResolvedValue([]);
+      // Buyer node has a reachable Taproot Assets daemon by default.
+      mockTapdNodeService.getInfo.mockResolvedValue({ version: '1.0' });
 
       mockTapdNodeService.fundAssetChannel.mockResolvedValue({
         txid: 'asset-txid',
@@ -634,6 +637,46 @@ describe('MagmaResolver', () => {
           assetAmount: '0',
         })
       ).rejects.toThrow('Asset amount must be greater than zero');
+    });
+
+    // ── Buyer asset-channel capability ──
+
+    it('tags the Magma order with the thunderhub referrer', async () => {
+      await setupResolver.setupTradeCapacity(userId, purchaseInput);
+
+      expect(mockFetchService.graphqlFetchWithProxy).toHaveBeenCalledWith(
+        magmaUrl,
+        expect.anything(),
+        expect.objectContaining({
+          input: expect.objectContaining({ referrer: 'thunderhub' }),
+        }),
+        expect.any(Object)
+      );
+    });
+
+    it('rejects when the buyer node has no reachable Taproot Assets daemon', async () => {
+      mockTapdNodeService.getInfo.mockRejectedValue(
+        new Error('tapd unreachable')
+      );
+
+      await expect(
+        setupResolver.setupTradeCapacity(userId, purchaseInput)
+      ).rejects.toThrow('does not support asset channels');
+
+      // No order is placed and no invoice is paid from an incapable node.
+      expect(mockFetchService.graphqlFetchWithProxy).not.toHaveBeenCalled();
+      expect(mockNodeService.pay).not.toHaveBeenCalled();
+    });
+
+    it('rejects a SALE too when the buyer node has no Taproot Assets daemon', async () => {
+      mockTapdNodeService.getInfo.mockRejectedValue(
+        new Error('tapd unreachable')
+      );
+
+      await expect(
+        setupResolver.setupTradeCapacity(userId, saleInput)
+      ).rejects.toThrow('does not support asset channels');
+      expect(mockTapdNodeService.fundAssetChannel).not.toHaveBeenCalled();
     });
 
     // ── Idempotency: skip steps when capacity already exists ──

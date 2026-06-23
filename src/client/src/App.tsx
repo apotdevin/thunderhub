@@ -27,6 +27,7 @@ import { Navigation } from './layouts/navigation/Navigation';
 import { RightSidebar } from './layouts/sidebar/RightSidebar';
 import { TradingProvider } from './context/TradingContext';
 import { NodeSlugProvider } from './hooks/useNodeSlug';
+import { RequireTapd } from './components/RequireTapd';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -238,12 +239,54 @@ const AUTHENTICATED_ROUTES = (
       }
     />
     <Route path="amboss" element={<AmbossPage />} />
-    <Route path="assets" element={<AssetsPage />} />
-    <Route path="asset-channels" element={<AssetChannelsPage />} />
-    <Route path="asset-channels/pending" element={<AssetChannelsPage />} />
-    <Route path="asset-transactions" element={<AssetTransactionsPage />} />
-    <Route path="asset-tools" element={<AssetToolsPage />} />
-    <Route path="trading" element={<TradingPage />} />
+    <Route
+      path="assets"
+      element={
+        <RequireTapd>
+          <AssetsPage />
+        </RequireTapd>
+      }
+    />
+    <Route
+      path="asset-channels"
+      element={
+        <RequireTapd>
+          <AssetChannelsPage />
+        </RequireTapd>
+      }
+    />
+    <Route
+      path="asset-channels/pending"
+      element={
+        <RequireTapd>
+          <AssetChannelsPage />
+        </RequireTapd>
+      }
+    />
+    <Route
+      path="asset-transactions"
+      element={
+        <RequireTapd>
+          <AssetTransactionsPage />
+        </RequireTapd>
+      }
+    />
+    <Route
+      path="asset-tools"
+      element={
+        <RequireTapd>
+          <AssetToolsPage />
+        </RequireTapd>
+      }
+    />
+    <Route
+      path="trading"
+      element={
+        <RequireTapd>
+          <TradingPage />
+        </RequireTapd>
+      }
+    />
     <Route path="magma" element={<MagmaPage />} />
     <Route path="magma/sales" element={<MagmaPage />} />
     <Route path="*" element={<Navigate to="home" replace />} />
