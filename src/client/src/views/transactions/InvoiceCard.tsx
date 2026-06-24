@@ -27,7 +27,7 @@ interface InvoiceCardProps {
   indexOpen: number;
 }
 
-const ChannelAlias: FC<{ id: string }> = ({ id }) => {
+const ChannelPeer: FC<{ id: string }> = ({ id }) => {
   const { data, loading, error } = useGetChannelQuery({
     variables: { id },
   });
@@ -35,10 +35,20 @@ const ChannelAlias: FC<{ id: string }> = ({ id }) => {
   if (loading) return <LoadingCard noCard={true} />;
   if (error) return <span className="text-muted-foreground">Unknown</span>;
 
-  const alias =
-    data?.getChannel.partner_node_policies?.node?.node?.alias || 'Unknown';
+  const peer = data?.getChannel.partner_node_policies?.node?.node;
+  const alias = peer?.alias || 'Unknown';
+  const pubkey = peer?.public_key;
 
-  return <span>{alias}</span>;
+  return (
+    <div className="flex flex-col items-end gap-0.5">
+      <span>{alias}</span>
+      {pubkey && (
+        <span className="font-mono text-[10px] text-muted-foreground break-all">
+          {pubkey}
+        </span>
+      )}
+    </div>
+  );
 };
 
 const StatusBadge = ({
@@ -166,46 +176,6 @@ export const InvoiceCard = ({
       {isOpen && (
         <div className="px-3 pb-3">
           <Separator className="mb-3" />
-          {payments.length > 0 && (
-            <div className="mb-3 space-y-2">
-              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Payments
-              </div>
-              {payments.map((p, idx) => {
-                const message = getTradeMemoText(
-                  p.messages?.message,
-                  tradeDisplayMode
-                );
-                const messageDisplay = getTradeMemoDisplay(p.messages?.message);
-                return (
-                  <div key={idx} className="rounded bg-muted/50 p-2">
-                    <DetailTable>
-                      <DetailRow label="Amount">
-                        <Price amount={p.tokens} />
-                      </DetailRow>
-                      <DetailRow label="Channel">{p.in_channel}</DetailRow>
-                      <DetailRow label="Peer">
-                        <ChannelAlias id={p.in_channel} />
-                      </DetailRow>
-                      {messageDisplay?.isTradeMemo && (
-                        <DetailRow label="Parsed Message">
-                          <div className="inline-flex items-start gap-1">
-                            <span>{messageDisplay.computed}</span>
-                            <ComputedMarker />
-                          </div>
-                        </DetailRow>
-                      )}
-                      {message && (
-                        <DetailRow label="Message">
-                          {messageDisplay?.raw ?? message}
-                        </DetailRow>
-                      )}
-                    </DetailTable>
-                  </div>
-                );
-              })}
-            </div>
-          )}
           <DetailTable>
             {descriptionDisplay?.isTradeMemo && (
               <DetailRow label="Parsed Description">
@@ -244,6 +214,76 @@ export const InvoiceCard = ({
             {secret && <DetailRow label="Secret">{secret}</DetailRow>}
             {request && <DetailRow label="Request">{request}</DetailRow>}
           </DetailTable>
+          {payments.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                HTLCs
+              </div>
+              {payments.map((p, idx) => {
+                const message = getTradeMemoText(
+                  p.messages?.message,
+                  tradeDisplayMode
+                );
+                const messageDisplay = getTradeMemoDisplay(p.messages?.message);
+                return (
+                  <div key={idx} className="rounded bg-muted/50 p-2">
+                    <DetailTable>
+                      <DetailRow label="State">
+                        <StatusBadge
+                          confirmed={p.is_confirmed}
+                          canceled={p.is_canceled}
+                        />
+                      </DetailRow>
+                      {p.pending_index != null && (
+                        <DetailRow label="HTLC Index">
+                          {p.pending_index}
+                        </DetailRow>
+                      )}
+                      <DetailRow label="Amount">
+                        <Price amount={p.tokens} />
+                      </DetailRow>
+                      <DetailRow label="Amount (msat)">{p.mtokens}</DetailRow>
+                      {p.total_mtokens && (
+                        <DetailRow label="MPP Total (msat)">
+                          {p.total_mtokens}
+                        </DetailRow>
+                      )}
+                      <DetailRow label="Channel">{p.in_channel}</DetailRow>
+                      <DetailRow label="Peer">
+                        <ChannelPeer id={p.in_channel} />
+                      </DetailRow>
+                      <DetailRow label="Accepted">
+                        {`${getDateDif(p.created_at)} ago (${getFormatDate(p.created_at)})`}
+                      </DetailRow>
+                      <DetailRow label="Accept Height">
+                        {p.created_height}
+                      </DetailRow>
+                      {p.is_confirmed && p.confirmed_at && (
+                        <DetailRow label="Resolved">
+                          {`${getDateDif(p.confirmed_at)} ago (${getFormatDate(p.confirmed_at)})`}
+                        </DetailRow>
+                      )}
+                      <DetailRow label="Expiry Height">{p.timeout}</DetailRow>
+                      {p.is_held && <DetailRow label="Held">Yes</DetailRow>}
+                      {messageDisplay?.isTradeMemo && (
+                        <DetailRow label="Parsed Message">
+                          <div className="inline-flex items-start gap-1">
+                            <span>{messageDisplay.computed}</span>
+                            <ComputedMarker />
+                          </div>
+                        </DetailRow>
+                      )}
+                      {message && (
+                        <DetailRow label="Message">
+                          {messageDisplay?.raw ?? message}
+                        </DetailRow>
+                      )}
+                    </DetailTable>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>

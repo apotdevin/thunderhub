@@ -948,6 +948,7 @@ export type OfferReadinessResult = {
   onchain_asset_balance: Scalars['String']['output'];
   onchain_balance_sats: Scalars['String']['output'];
   pending_order_id?: Maybe<Scalars['String']['output']>;
+  pending_order_status?: Maybe<Scalars['String']['output']>;
 };
 
 export type OnChainBalance = {
@@ -1157,6 +1158,7 @@ export type Query = {
   getConfigState: ConfigState;
   getForwards: GetForwards;
   getHello: Scalars['String']['output'];
+  getInvoice: InvoiceType;
   getInvoiceStatusChange: Scalars['String']['output'];
   getInvoices: GetInvoicesType;
   getLatestVersion: Scalars['String']['output'];
@@ -1167,6 +1169,7 @@ export type Query = {
   getNodeBalances: Balances;
   getNodeInfo: NodeInfo;
   getNodeSocialInfo: LightningNodeSocialInfo;
+  getPayment: PaymentType;
   getPayments: GetPaymentsType;
   getPeers: Array<Peer>;
   getPendingChannels: Array<PendingChannel>;
@@ -1206,6 +1209,10 @@ export type QueryGetForwardsArgs = {
   days: Scalars['Float']['input'];
 };
 
+export type QueryGetInvoiceArgs = {
+  id: Scalars['String']['input'];
+};
+
 export type QueryGetInvoiceStatusChangeArgs = {
   id: Scalars['String']['input'];
 };
@@ -1225,6 +1232,10 @@ export type QueryGetNodeArgs = {
 
 export type QueryGetNodeSocialInfoArgs = {
   pubkey: Scalars['String']['input'];
+};
+
+export type QueryGetPaymentArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type QueryGetPaymentsArgs = {

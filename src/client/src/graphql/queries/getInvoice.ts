@@ -1,0 +1,45 @@
+import { gql } from '@apollo/client';
+
+export const GET_INVOICE = gql`
+  query GetInvoice($id: String!) {
+    getInvoice(id: $id) {
+      chain_address
+      confirmed_at
+      created_at
+      description
+      description_hash
+      expires_at
+      id
+      is_canceled
+      is_confirmed
+      is_held
+      is_private
+      is_push
+      received
+      received_mtokens
+      request
+      secret
+      tokens
+      type
+      date
+      payments {
+        canceled_at
+        confirmed_at
+        created_at
+        created_height
+        is_canceled
+        is_confirmed
+        is_held
+        mtokens
+        pending_index
+        timeout
+        tokens
+        total_mtokens
+        in_channel
+        messages {
+          message
+        }
+      }
+    }
+  }
+`;

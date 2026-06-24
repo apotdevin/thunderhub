@@ -210,6 +210,10 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
     );
   }
 
+  async getPayment(connection: LitdConnection, options: { id: string }) {
+    return this.lndService.getPayment(this.getLnd(connection), options);
+  }
+
   async getPayments(connection: LitdConnection, options: GetPaymentsOptions) {
     return this.lndService.getPayments(this.getLnd(connection), options);
   }
@@ -221,6 +225,10 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
     options: CreateInvoiceOptions
   ) {
     return this.lndService.createInvoice(this.getLnd(connection), options);
+  }
+
+  async getInvoice(connection: LitdConnection, options: { id: string }) {
+    return this.lndService.getInvoice(this.getLnd(connection), options);
   }
 
   async getInvoices(connection: LitdConnection, options: GetInvoicesOptions) {

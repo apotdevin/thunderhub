@@ -294,10 +294,12 @@ export interface LightningProvider {
     options: GetRouteToDestinationOptions
   ): Promise<GetRouteToDestinationResult>;
   decodePaymentRequest(connection: any, request: string): Promise<any>;
+  getPayment(connection: any, options: { id: string }): Promise<any>;
   getPayments(connection: any, options: GetPaymentsOptions): Promise<any>;
 
   // ── Invoices ──
   createInvoice(connection: any, options: CreateInvoiceOptions): Promise<any>;
+  getInvoice(connection: any, options: { id: string }): Promise<any>;
   getInvoices(connection: any, options: GetInvoicesOptions): Promise<any>;
   subscribeToInvoice(connection: any, id: string): EventEmitter;
 
