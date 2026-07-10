@@ -20,6 +20,26 @@ export const SignMessage = () => {
     }
   }, [loading, data]);
 
+  const copySignature = async () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(signed);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = signed;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      toast.success('Signature Copied');
+    } catch {
+      toast.error('Failed to copy signature');
+    }
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex gap-2">
@@ -41,15 +61,7 @@ export const SignMessage = () => {
         <div className="rounded border border-border bg-muted/50 p-3 text-center space-y-2">
           <p className="text-xs text-muted-foreground">Signature</p>
           <div className="text-sm font-mono break-all">{signed}</div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              navigator.clipboard
-                .writeText(signed)
-                .then(() => toast.success('Signature Copied'))
-            }
-          >
+          <Button variant="outline" size="sm" onClick={copySignature}>
             <Copy size={14} />
             Copy
           </Button>
