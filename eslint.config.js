@@ -69,4 +69,5 @@ module.exports = defineConfig([{
     "**/dist",
     "**/*.generated.tsx",
     "drizzle.config.ts",
+    "**/ldk-server/proto/**",
 ])]);
