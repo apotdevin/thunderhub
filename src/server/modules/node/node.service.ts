@@ -253,9 +253,19 @@ export class NodeService {
     return provider.getForwards(account.connection, options);
   }
 
+  async getPayment(id: string, options: { id: string }) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getPayment(account.connection, options);
+  }
+
   async getPayments(id: string, options: GetPaymentsOptions) {
     const { account, provider } = this.getAccountAndProvider(id);
     return provider.getPayments(account.connection, options);
+  }
+
+  async getInvoice(id: string, options: { id: string }) {
+    const { account, provider } = this.getAccountAndProvider(id);
+    return provider.getInvoice(account.connection, options);
   }
 
   async getInvoices(id: string, options: GetInvoicesOptions) {

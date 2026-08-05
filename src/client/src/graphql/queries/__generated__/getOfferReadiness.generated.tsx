@@ -17,6 +17,7 @@ export type GetOfferReadinessQuery = {
       is_peer_connected: boolean;
       has_pending_order: boolean;
       pending_order_id?: string | null;
+      pending_order_status?: string | null;
       onchain_balance_sats: string;
       onchain_asset_balance: string;
       btc_channels: {
@@ -47,6 +48,7 @@ export const GetOfferReadinessDocument = gql`
         is_peer_connected
         has_pending_order
         pending_order_id
+        pending_order_status
         onchain_balance_sats
         onchain_asset_balance
         btc_channels {

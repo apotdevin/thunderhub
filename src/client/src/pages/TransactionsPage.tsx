@@ -1,8 +1,8 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { InvoiceCard } from '../views/transactions/InvoiceCard';
 import { GridWrapper } from '../components/gridWrapper/GridWrapper';
-import { Settings, Loader2 } from 'lucide-react';
+import { Settings, Loader2, Search, X } from 'lucide-react';
 import { useLocalStorage } from '../hooks/UseLocalStorage';
 import { useNodeInfo } from '../hooks/UseNodeInfo';
 import {
@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { getErrorContent } from '../utils/error';
 import { PaymentsCard } from '../views/transactions/PaymentsCards';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { FlowBox } from '../views/home/reports/flow';
 import {
   GetInvoicesQuery,
@@ -22,6 +23,8 @@ import {
   GetPaymentsQuery,
   useGetPaymentsQuery,
 } from '../graphql/queries/__generated__/getPayments.generated';
+import { useGetInvoiceLazyQuery } from '../graphql/queries/__generated__/getInvoice.generated';
+import { useGetPaymentLazyQuery } from '../graphql/queries/__generated__/getPayment.generated';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { TradeDisplayMode } from '../views/transactions/tradeMemo';
@@ -32,6 +35,41 @@ const TransactionsView = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [graphShow, setGraphShow] = useState('invoices');
   const [graphType, setGraphType] = useState('count');
+  const [lookupValue, setLookupValue] = useState('');
+  const [lookupOpen, setLookupOpen] = useState(1);
+
+  const [lookupInvoice, invoiceLookup] = useGetInvoiceLazyQuery({
+    onError: error => toast.error(getErrorContent(error)),
+  });
+  const [lookupPayment, paymentLookup] = useGetPaymentLazyQuery({
+    onError: error => toast.error(getErrorContent(error)),
+  });
+
+  const activeLookup = activeTab === 'invoices' ? invoiceLookup : paymentLookup;
+
+  const handleLookupSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const id = lookupValue.trim();
+    if (!id) return;
+    setLookupOpen(1);
+    if (activeTab === 'invoices') {
+      lookupInvoice({ variables: { id } });
+    } else {
+      lookupPayment({ variables: { id } });
+    }
+  };
+
+  const handleLookupClear = () => {
+    setLookupValue('');
+    invoiceLookup.reset();
+    paymentLookup.reset();
+  };
+
+  const handleTabChange = (v: string) => {
+    if (!v) return;
+    setActiveTab(v);
+    handleLookupClear();
+  };
 
   const { publicKey } = useNodeInfo();
 
@@ -250,7 +288,7 @@ const TransactionsView = () => {
           variant="outline"
           size="sm"
           value={activeTab}
-          onValueChange={v => v && setActiveTab(v)}
+          onValueChange={handleTabChange}
         >
           <ToggleGroupItem value="invoices">Invoices</ToggleGroupItem>
           <ToggleGroupItem value="payments">Payments</ToggleGroupItem>
@@ -263,6 +301,81 @@ const TransactionsView = () => {
           <Settings size={14} />
         </Button>
       </div>
+
+      <Card>
+        <CardContent>
+          <form
+            onSubmit={handleLookupSubmit}
+            className="flex flex-col gap-2 sm:flex-row sm:items-center"
+          >
+            <div className="relative flex-1">
+              <Search
+                size={14}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <Input
+                value={lookupValue}
+                onChange={e => setLookupValue(e.target.value)}
+                placeholder={
+                  activeTab === 'invoices'
+                    ? 'Lookup invoice by r-hash (payment hash)'
+                    : 'Lookup payment by payment hash'
+                }
+                className="pl-8 pr-8 font-mono text-xs"
+                spellCheck={false}
+              />
+              {lookupValue && (
+                <button
+                  type="button"
+                  onClick={handleLookupClear}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="Clear"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            <Button
+              type="submit"
+              size="sm"
+              disabled={!lookupValue.trim() || activeLookup.loading}
+            >
+              {activeLookup.loading ? (
+                <Loader2 className="animate-spin" size={14} />
+              ) : (
+                'Lookup'
+              )}
+            </Button>
+          </form>
+          {activeLookup.called && !activeLookup.loading && (
+            <div className="mt-3">
+              {activeTab === 'invoices' && invoiceLookup.data?.getInvoice ? (
+                <InvoiceCard
+                  invoice={invoiceLookup.data.getInvoice as any}
+                  tradeDisplayMode={tradeDisplayMode}
+                  index={1}
+                  setIndexOpen={setLookupOpen}
+                  indexOpen={lookupOpen}
+                />
+              ) : activeTab === 'payments' && paymentLookup.data?.getPayment ? (
+                <PaymentsCard
+                  payment={paymentLookup.data.getPayment as any}
+                  tradeDisplayMode={tradeDisplayMode}
+                  index={1}
+                  setIndexOpen={setLookupOpen}
+                  indexOpen={lookupOpen}
+                />
+              ) : activeLookup.error ? (
+                <div className="text-center text-sm text-muted-foreground py-3">
+                  {activeTab === 'invoices'
+                    ? 'No invoice found for that hash.'
+                    : 'No payment found for that hash.'}
+                </div>
+              ) : null}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {settingsOpen && (
         <Card>

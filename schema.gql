@@ -867,6 +867,7 @@ type Query {
   getConfigState: ConfigState!
   getForwards(days: Float!): GetForwards!
   getHello: String!
+  getInvoice(id: String!): InvoiceType!
   getInvoiceStatusChange(id: String!): String!
   getInvoices(token: String): GetInvoicesType!
   getLatestVersion: String!
@@ -877,6 +878,7 @@ type Query {
   getNodeBalances: Balances!
   getNodeInfo: NodeInfo!
   getNodeSocialInfo(pubkey: String!): LightningNodeSocialInfo!
+  getPayment(id: String!): PaymentType!
   getPayments(token: String): GetPaymentsType!
   getPeers: [Peer!]!
   getPendingChannels: [PendingChannel!]!

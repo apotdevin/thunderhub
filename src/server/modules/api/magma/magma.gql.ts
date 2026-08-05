@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+/**
+ * Identifies ThunderHub as the source of a Magma order. Passed as the
+ * `referrer` on every order so Amboss can attribute the order to ThunderHub
+ * and avoid double-counting liquidity orders.
+ *
+ * NOTE: requires the Amboss `CreateManualOrderInput` schema to accept a
+ * `referrer` field — coordinate deployment with the Rails/API change.
+ */
+export const MAGMA_ORDER_REFERRER = 'thunderhub';
+
 export const getOffersQuery = gql`
   query GetOffers($input: OfferInput!) {
     public {

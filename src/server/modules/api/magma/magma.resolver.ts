@@ -48,6 +48,7 @@ import {
   getOrdersQuery,
   getOrderPaymentQuery,
   cancelMagmaOrderMutation,
+  MAGMA_ORDER_REFERRER,
 } from './magma.gql';
 
 /**
@@ -140,6 +141,24 @@ export class MagmaResolver {
         if (!input.tapdAssetId && !input.tapdGroupKey) {
           throw new GraphQLError(
             'Either tapdAssetId or tapdGroupKey must be provided'
+          );
+        }
+
+        // The buyer (this ThunderHub node) must run a reachable Taproot Assets
+        // daemon to open or receive asset channels. Enforce it here so an asset
+        // order can't be placed from a node that can't fulfil it — e.g. a plain
+        // LND node whose YAML was relabelled as `litd`. The client-side
+        // readiness UI (`has_tapd`) is advisory and can be bypassed.
+        const [, tapdErr] = await toWithError(
+          this.tapdNodeService.getInfo({ id: user.id })
+        );
+        if (tapdErr) {
+          this.logger.warn(
+            'Rejecting trade setup — node has no reachable Taproot Assets daemon',
+            { err: tapdErr }
+          );
+          throw new GraphQLError(
+            'This node does not support asset channels (no Taproot Assets daemon reachable)'
           );
         }
       },
@@ -346,6 +365,7 @@ export class MagmaResolver {
                   pubkey: nodeInfo.publicKey,
                   size: magmaSize,
                   payment_method: 'SATS',
+                  referrer: MAGMA_ORDER_REFERRER,
                   options: {
                     asset_id:
                       input.transactionType === TapTransactionType.PURCHASE

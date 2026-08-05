@@ -26,7 +26,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '../../components/ui/tooltip';
-import { useGetNodeCapabilitiesQuery } from '../../graphql/queries/__generated__/getNodeCapabilities.generated';
+import { useTapdAvailable } from '../../hooks/useTapdAvailable';
 import { Badge } from '../../components/ui/badge';
 import { SideSettings } from './sideSettings/SideSettings';
 import { LITD_SETUP_DOCS_URL } from '../../utils/externalLinks';
@@ -141,9 +141,7 @@ export const Navigation = ({ isBurger, setOpen }: NavigationProps) => {
   const nodePath = useNodePath();
   const { sidebar } = useConfigState();
 
-  const { data: capData } = useGetNodeCapabilitiesQuery();
-  const tapdAvailable =
-    capData?.node?.capabilities?.list?.includes('taproot_assets') ?? false;
+  const { available: tapdAvailable } = useTapdAvailable();
 
   const sections: NavSection[] = [
     AMBOSS_SECTION,

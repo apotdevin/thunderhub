@@ -32,11 +32,13 @@ import {
   payViaRoutes,
   getRouteToDestination,
   createInvoice,
+  getInvoice,
   getChannel,
   closeChannel,
   openChannel,
   updateRoutingFees,
   getForwards,
+  getPayment,
   getPayments,
   getInvoices,
   subscribeToInvoice,
@@ -304,8 +306,16 @@ export class LndService implements LightningProvider {
     return to(getForwards({ lnd, ...options } as any));
   }
 
+  async getPayment(lnd: AuthenticatedLnd, options: { id: string }) {
+    return to(getPayment({ lnd, ...options } as any));
+  }
+
   async getPayments(lnd: AuthenticatedLnd, options: GetPaymentsOptions) {
     return to(getPayments({ lnd, ...options } as any));
+  }
+
+  async getInvoice(lnd: AuthenticatedLnd, options: { id: string }) {
+    return to(getInvoice({ lnd, ...options } as any));
   }
 
   async getInvoices(lnd: AuthenticatedLnd, options: GetInvoicesOptions) {
