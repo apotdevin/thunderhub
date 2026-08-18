@@ -47,6 +47,17 @@ import { BlockstreamService } from '../../blockstream/blockstream.service';
 
 const ECPair: ECPairAPI = ECPairFactory(ecc);
 
+/**
+ * Boltz disabled their swap service until further notice, so new swaps must not
+ * be created. Claims and refunds stay enabled: their API still serves
+ * cooperative refunds, and unilateral refunds do not need them at all.
+ *
+ * Official status: https://boltz.exchange/
+ */
+const BOLTZ_SWAPS_DISABLED: boolean = true;
+const BOLTZ_SWAPS_DISABLED_MESSAGE =
+  'Boltz disabled their swap service until further notice, so new swaps cannot be created. Existing swaps can still be claimed. Check https://boltz.exchange/ for the official status.';
+
 @Resolver(CreateBoltzReverseSwapType)
 export class CreateBoltzReverseSwapTypeResolver {
   constructor(private nodeService: NodeService) {}
@@ -284,6 +295,10 @@ export class BoltzResolver {
     @Args('amount') amount: number,
     @Args('address', { nullable: true }) address: string
   ) {
+    if (BOLTZ_SWAPS_DISABLED) {
+      throw new GraphQLError(BOLTZ_SWAPS_DISABLED_MESSAGE);
+    }
+
     if (address && !validateAddress(address)) {
       this.logger.error(`Invalid bitcoin address: ${address}`);
       throw new GraphQLError('InvalidBitcoinAddress');
