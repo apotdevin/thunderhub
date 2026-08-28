@@ -22,6 +22,7 @@ import {
   useBoltzSwapActions,
   SwapEntry,
 } from '../../context/BoltzSwapContext';
+import { BOLTZ_SWAPS_DISABLED } from './boltzDisabled';
 
 const CREATED = 'swap.created';
 export const MEMPOOL = 'transaction.mempool';
@@ -270,7 +271,9 @@ export const SwapStatus = () => {
           <CardContent>
             {!swaps.length && (
               <p className="text-xs text-muted-foreground py-4 text-center">
-                No swaps yet. Create one above to get started.
+                {BOLTZ_SWAPS_DISABLED
+                  ? 'No swaps to show.'
+                  : 'No swaps yet. Create one above to get started.'}
               </p>
             )}
 
