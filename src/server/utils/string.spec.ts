@@ -3,6 +3,7 @@ import {
   buildXCoordToFullKeyMap,
   resolveFullGroupKey,
   isValidNodeSlug,
+  toHexEncoded,
 } from './string';
 
 describe('bufToHex', () => {
@@ -155,5 +156,25 @@ describe('isValidNodeSlug', () => {
 
   it('accepts uppercase hex (case-insensitive)', () => {
     expect(isValidNodeSlug('ABCD1234')).toBe(true);
+  });
+});
+
+describe('toHexEncoded', () => {
+  const macaroon = Buffer.from([0x02, 0x01, 0x03, 0xde, 0xad, 0xbe, 0xef]);
+
+  it('converts a base64 macaroon to hex', () => {
+    expect(toHexEncoded(macaroon.toString('base64'))).toBe(
+      macaroon.toString('hex')
+    );
+  });
+
+  it('leaves an already hex-encoded macaroon untouched', () => {
+    const hex = macaroon.toString('hex');
+    expect(toHexEncoded(hex)).toBe(hex);
+  });
+
+  it('passes an absent credential through unchanged', () => {
+    expect(toHexEncoded(undefined)).toBeUndefined();
+    expect(toHexEncoded('')).toBe('');
   });
 });

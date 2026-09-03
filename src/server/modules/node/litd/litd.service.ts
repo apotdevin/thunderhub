@@ -27,6 +27,7 @@ import {
 } from '../lightning.types';
 import { LndService } from '../lnd/lnd.service';
 import { TaprootAssetsProvider } from '../tapd/taproot-assets.types';
+import { toHexEncoded } from '../../../utils/string';
 import { LitdConnection } from './litd.types';
 import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
@@ -54,10 +55,12 @@ export class LitdService implements LightningProvider, TaprootAssetsProvider {
       macaroon: config.macaroon,
     });
 
+    // tapd requires hex-encoded credentials, while the node setup form accepts
+    // hex or base64 (which authenticatedLndGrpc normalizes on its own).
     const tapd = TapClient.create({
       socket: config.socket,
-      macaroon: config.macaroon || '',
-      cert: config.cert,
+      macaroon: toHexEncoded(config.macaroon) || '',
+      cert: toHexEncoded(config.cert),
     });
 
     return { lnd, tapd, mode: 'grpc' };
