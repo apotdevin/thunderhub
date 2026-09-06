@@ -340,7 +340,7 @@ const SidebarSwapWidget = () => {
 
           <div className="mt-2 text-center">
             <a
-              href="https://boltz.exchange/"
+              href="https://satsrouting.exchange/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"

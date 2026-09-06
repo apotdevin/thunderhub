@@ -13,7 +13,7 @@ async function bootstrap() {
       contentSecurityPolicy: {
         directives: {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-          'connect-src': ["'self'", 'wss://api.boltz.exchange'],
+          'connect-src': ["'self'", 'wss://api.satsrouting.exchange'],
           ...(!useHttps && { 'upgrade-insecure-requests': null }),
         },
       },
