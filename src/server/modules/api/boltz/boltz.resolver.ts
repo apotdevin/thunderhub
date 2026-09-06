@@ -52,11 +52,11 @@ const ECPair: ECPairAPI = ECPairFactory(ecc);
  * be created. Claims and refunds stay enabled: their API still serves
  * cooperative refunds, and unilateral refunds do not need them at all.
  *
- * Official status: https://boltz.exchange/
+ * Official status: https://satsrouting.exchange/
  */
 const BOLTZ_SWAPS_DISABLED: boolean = true;
 const BOLTZ_SWAPS_DISABLED_MESSAGE =
-  'Boltz disabled their swap service until further notice, so new swaps cannot be created. Existing swaps can still be claimed. Check https://boltz.exchange/ for the official status.';
+  'Boltz disabled their swap service until further notice, so new swaps cannot be created. Existing swaps can still be claimed. Check https://satsrouting.exchange/ for the official status.';
 
 @Resolver(CreateBoltzReverseSwapType)
 export class CreateBoltzReverseSwapTypeResolver {
