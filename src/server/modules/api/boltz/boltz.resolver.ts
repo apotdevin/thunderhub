@@ -56,7 +56,7 @@ const ECPair: ECPairAPI = ECPairFactory(ecc);
  */
 const BOLTZ_SWAPS_DISABLED: boolean = true;
 const BOLTZ_SWAPS_DISABLED_MESSAGE =
-  'Boltz disabled their swap service until further notice, so new swaps cannot be created. Existing swaps can still be claimed. Check https://satsrouting.exchange/ for the official status.';
+  'Satsrouting(Boltz) disabled, so new swaps cannot be created. Existing swaps can still be claimed. Check https://satsrouting.exchange/ for the official status.';
 
 @Resolver(CreateBoltzReverseSwapType)
 export class CreateBoltzReverseSwapTypeResolver {
