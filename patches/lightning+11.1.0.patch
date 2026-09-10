@@ -1,0 +1,26 @@
+diff --git a/node_modules/lightning/lnd_methods/offchain/subscribe_to_channels.js b/node_modules/lightning/lnd_methods/offchain/subscribe_to_channels.js
+--- a/node_modules/lightning/lnd_methods/offchain/subscribe_to_channels.js
++++ b/node_modules/lightning/lnd_methods/offchain/subscribe_to_channels.js
+@@ -167,7 +167,12 @@
+     }
+
+     if (!update.type || !update.type.toLowerCase) {
+-      return emitError(asError('ExpectedEventTypeInChannelSubscription'));
++      const detected = [updateActive, updateInactive, updateClosed, updateOpened, updateOpening].find(k => !!update[k]);
++      if (detected) {
++        update.type = detected;
++      } else {
++        return;
++      }
+     }
+
+     const updateType = update.type.toLowerCase();
+@@ -175,7 +180,7 @@
+     const details = update[updateType];
+
+     if (!details) {
+-      return emitError(asError('ExpectedEventDetailsForTypeInChannelSub'));
++      return;
+     }
+
+     try {
