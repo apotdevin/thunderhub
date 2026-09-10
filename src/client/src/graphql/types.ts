@@ -446,13 +446,45 @@ export type Forward = {
   tokens: Scalars['Float']['output'];
 };
 
+export type ForwardSummary = {
+  __typename?: 'ForwardSummary';
+  count: Scalars['Float']['output'];
+  day: ForwardTimeSummary;
+  month: ForwardTimeSummary;
+  week: ForwardTimeSummary;
+  year: ForwardTimeSummary;
+};
+
+export type ForwardTimeSeries = {
+  __typename?: 'ForwardTimeSeries';
+  count: Scalars['Float']['output'];
+  date: Scalars['String']['output'];
+  fee: Scalars['Float']['output'];
+  tokens: Scalars['Float']['output'];
+};
+
+export type ForwardTimeSummary = {
+  __typename?: 'ForwardTimeSummary';
+  count: Scalars['Float']['output'];
+  fee: Scalars['Float']['output'];
+  fee_mtokens: Scalars['String']['output'];
+  tokens: Scalars['Float']['output'];
+};
+
 export type GetForwards = {
   __typename?: 'GetForwards';
   by_channel: Array<AggregatedChannelForwards>;
   by_incoming: Array<AggregatedChannelSideForwards>;
   by_outgoing: Array<AggregatedChannelSideForwards>;
   by_route: Array<AggregatedRouteForwards>;
+  by_time: Array<ForwardTimeSeries>;
   list: Array<Forward>;
+  summary: ForwardSummary;
+};
+
+export type GetForwardsListArgs = {
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  offset?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type GetInvoicesType = {

@@ -1,9 +1,8 @@
 import { FC } from 'react';
 import { BarChart } from '../../../../components/chart/BarChart';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
-import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
+import { useGetForwardsGraphQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { useChartColors } from '../../../../lib/chart-colors';
-import { getByTime } from '../../../../views/dashboard/widgets/helpers';
 
 type DayOptionProps = {
   label: string;
@@ -22,7 +21,7 @@ type ForwardGraphProps = {
 
 export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
   const chartColors = useChartColors();
-  const { data, loading } = useGetForwardsQuery({
+  const { data, loading } = useGetForwardsGraphQuery({
     variables: { days: days.value },
     errorPolicy: 'ignore',
   });
@@ -37,7 +36,7 @@ export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
     );
   }
 
-  if (!data?.getForwards.list.length) {
+  if (!data?.getForwards?.summary?.count) {
     return (
       <div className="w-full h-80">
         <div className="w-full h-full flex justify-center items-center">
@@ -47,14 +46,14 @@ export const ForwardsGraph: FC<ForwardGraphProps> = ({ days, type }) => {
     );
   }
 
-  const forwards = getByTime(data.getForwards.list, days.value);
+  const timeSeries = data.getForwards.by_time || [];
 
   return (
     <div className="w-full h-80">
       <div className="w-full px-4 h-[calc(100%-40px)] overflow-auto">
         <BarChart
           title="Forwards"
-          data={forwards.map(f => ({
+          data={timeSeries.map((f: any) => ({
             Forward: f[type.value] || 0,
             date: f.date,
           }))}

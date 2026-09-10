@@ -376,12 +376,36 @@ type Forward {
   tokens: Float!
 }
 
+type ForwardTimeSummary {
+  count: Float!
+  fee: Float!
+  fee_mtokens: String!
+  tokens: Float!
+}
+
+type ForwardSummary {
+  count: Float!
+  day: ForwardTimeSummary!
+  month: ForwardTimeSummary!
+  week: ForwardTimeSummary!
+  year: ForwardTimeSummary!
+}
+
+type ForwardTimeSeries {
+  count: Float!
+  date: String!
+  fee: Float!
+  tokens: Float!
+}
+
 type GetForwards {
   by_channel: [AggregatedChannelForwards!]!
   by_incoming: [AggregatedChannelSideForwards!]!
   by_outgoing: [AggregatedChannelSideForwards!]!
   by_route: [AggregatedRouteForwards!]!
-  list: [Forward!]!
+  by_time: [ForwardTimeSeries!]!
+  list(limit: Float = 50, offset: Float = 0): [Forward!]!
+  summary: ForwardSummary!
 }
 
 type GetInvoicesType {

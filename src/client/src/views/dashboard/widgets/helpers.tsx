@@ -5,7 +5,6 @@ import {
   subHours,
 } from 'date-fns';
 import { groupBy } from 'lodash';
-import { GetForwardsQuery } from '../../../graphql/queries/__generated__/getForwards.generated';
 import { defaultGrid } from '../../../utils/gridConstants';
 import { StoredWidget } from '..';
 import { widgetList, WidgetProps } from './widgetList';
@@ -70,7 +69,6 @@ export const getWidgets = (
 };
 
 type ArrayType =
-  | GetForwardsQuery['getForwards']['list']
   | GetInvoicesQuery['getInvoices']['invoices']
   | GetPaymentsQuery['getPayments']['payments'];
 
@@ -130,23 +128,6 @@ export const getByTime = (array: ArrayType, time: number): any[] => {
         difference,
         date: new Date(transaction.created_at).toISOString(),
         tokens: Number(transaction.tokens),
-      });
-    } else if (transaction.__typename === 'Forward') {
-      const difference = isDay
-        ? differenceInHours(
-            today,
-            new Date(transaction.created_at).setMinutes(0, 0, 0)
-          )
-        : differenceInDays(
-            today,
-            new Date(transaction.created_at).setHours(0, 0, 0, 0)
-          );
-
-      transactions.push({
-        difference,
-        date: new Date(transaction.created_at).toISOString(),
-        tokens: Number(transaction.tokens),
-        fee: Number(transaction.fee),
       });
     }
   });

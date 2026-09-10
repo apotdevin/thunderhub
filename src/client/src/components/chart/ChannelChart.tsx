@@ -1,4 +1,4 @@
-import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
+import { useGetForwardsListQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../../utils/error';
 import ReactEChartsCore from 'echarts-for-react/lib/core';
@@ -23,11 +23,11 @@ const getMaxHeight = (arr: number[], rounding?: number): number => {
 export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   const chartColors = useChartColors();
   const { foreground } = useThemeColors();
-  const { data } = useGetForwardsQuery({
-    variables: { days: days },
+  const { data } = useGetForwardsListQuery({
+    variables: { days: days, limit: 10000 },
     onError: error => toast.error(getErrorContent(error)),
   });
-  const filteredData = data
+  const filteredData = data?.getForwards?.list
     ? data.getForwards.list.filter(it =>
         channelId
           ? it.incoming_channel === channelId ||
@@ -42,14 +42,14 @@ export const ChannelCart = ({ channelId, days }: ChannelCartProps) => {
   const columnSize = days === 1 ? 24 : days;
   const now = new Date();
 
+  const nowMs = now.getTime();
+  const isOneDay = days === 1;
+  const msUnit = isOneDay ? MILLISECONDS_PER_HOUR : MILLISECONDS_PER_HOUR * 24;
+
   // Helper functions
   const calculateColumnIndex = (createdAt: string): number => {
-    const diffInHour = Math.floor(
-      (now.getTime() - new Date(createdAt).getTime()) / MILLISECONDS_PER_HOUR
-    );
-    const columnIndex =
-      columnSize - 1 - (days === 1 ? diffInHour : Math.floor(diffInHour / 24));
-    //sometimes tx created before 10 min. FE: current time - createdAt = 24h10m
+    const diff = Math.floor((nowMs - new Date(createdAt).getTime()) / msUnit);
+    const columnIndex = columnSize - 1 - diff;
     return columnIndex < 0 ? 0 : columnIndex;
   };
 

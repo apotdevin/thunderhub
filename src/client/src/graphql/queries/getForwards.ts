@@ -1,9 +1,12 @@
 import { gql } from '@apollo/client';
 
-export const GET_FORWARDS = gql`
-  query GetForwards($days: Float!) {
+export const GET_FORWARDS_LIST = gql`
+  query GetForwardsList($days: Float!, $limit: Float, $offset: Float) {
     getForwards(days: $days) {
-      list {
+      summary {
+        count
+      }
+      list(limit: $limit, offset: $offset) {
         id
         created_at
         fee
@@ -13,25 +16,29 @@ export const GET_FORWARDS = gql`
         outgoing_channel
         tokens
       }
-      by_incoming {
-        id
+    }
+  }
+`;
+
+export const GET_FORWARDS_GRAPH = gql`
+  query GetForwardsGraph($days: Float!) {
+    getForwards(days: $days) {
+      summary {
         count
-        fee
-        fee_mtokens
-        mtokens
-        tokens
-        channel
-        channel_info {
-          node1_info {
-            alias
-            public_key
-          }
-          node2_info {
-            alias
-            public_key
-          }
-        }
       }
+      by_time {
+        date
+        tokens
+        fee
+        count
+      }
+    }
+  }
+`;
+
+export const GET_FORWARDS_CHANNELS = gql`
+  query GetForwardsChannels($days: Float!) {
+    getForwards(days: $days) {
       by_channel {
         id
         incoming {
@@ -52,15 +59,20 @@ export const GET_FORWARDS = gql`
         }
         channel
         channel_info {
-          node1_info {
-            alias
-            public_key
-          }
           node2_info {
             alias
             public_key
           }
         }
+      }
+      by_incoming {
+        id
+        count
+        fee
+        fee_mtokens
+        mtokens
+        tokens
+        channel
       }
       by_outgoing {
         id
@@ -70,16 +82,6 @@ export const GET_FORWARDS = gql`
         mtokens
         tokens
         channel
-        channel_info {
-          node1_info {
-            alias
-            public_key
-          }
-          node2_info {
-            alias
-            public_key
-          }
-        }
       }
       by_route {
         id
@@ -91,43 +93,40 @@ export const GET_FORWARDS = gql`
         route
         incoming_channel
         outgoing_channel
-        incoming_channel_info {
-          node1_info {
-            alias
-            public_key
-          }
-          node2_info {
-            alias
-            public_key
-          }
-        }
-        outgoing_channel_info {
-          node1_info {
-            alias
-            public_key
-          }
-          node2_info {
-            alias
-            public_key
-          }
-        }
       }
     }
   }
 `;
 
-export const GET_FORWARDS_LIST = gql`
-  query GetForwardsList($days: Float!) {
+export const GET_FORWARDS_SUMMARY = gql`
+  query GetForwardsSummary($days: Float!) {
     getForwards(days: $days) {
-      list {
-        id
-        created_at
-        fee
-        fee_mtokens
-        incoming_channel
-        mtokens
-        outgoing_channel
-        tokens
+      summary {
+        count
+        day {
+          count
+          fee
+          fee_mtokens
+          tokens
+        }
+        week {
+          count
+          fee
+          fee_mtokens
+          tokens
+        }
+        month {
+          count
+          fee
+          fee_mtokens
+          tokens
+        }
+        year {
+          count
+          fee
+          fee_mtokens
+          tokens
+        }
       }
     }
   }

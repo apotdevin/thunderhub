@@ -25,39 +25,61 @@ export type ChannelType = {
   amount: number;
 };
 
+export type PartnerInfo = {
+  alias?: string | null;
+  public_key?: string | null;
+};
+
+export type ChannelMap = Map<string, PartnerInfo>;
+
 type RouteTableProps = {
   forwardArray: AggregatedRouteForwards[];
+  channelMap?: ChannelMap;
 };
 
 type ChannelTableProps = {
   forwardArray: AggregatedChannelSideForwards[];
+  channelMap?: ChannelMap;
 };
 
-export const RouteTable: FC<RouteTableProps> = ({ forwardArray }) => {
+export const RouteTable: FC<RouteTableProps> = ({
+  forwardArray,
+  channelMap,
+}) => {
   const columns = [
     {
       header: 'In',
       accessorKey: 'incoming_alias',
-      cell: ({ row }: any) => (
-        <div style={{ whiteSpace: 'nowrap' }}>
-          {getNodeLink(
-            row.original.incoming_channel_info?.node2_info?.public_key,
-            row.original.incoming_channel_info?.node2_info?.alias
-          )}
-        </div>
-      ),
+      cell: ({ row }: any) => {
+        const info = channelMap?.get(row.original.incoming_channel);
+        const pubkey =
+          info?.public_key ??
+          row.original.incoming_channel_info?.node2_info?.public_key;
+        const alias =
+          info?.alias ?? row.original.incoming_channel_info?.node2_info?.alias;
+        return (
+          <div style={{ whiteSpace: 'nowrap' }}>
+            {getNodeLink(pubkey, alias)}
+          </div>
+        );
+      },
     },
     {
       header: 'Out',
       accessorKey: 'outgoing_alias',
-      cell: ({ row }: any) => (
-        <div style={{ whiteSpace: 'nowrap' }}>
-          {getNodeLink(
-            row.original.outgoing_channel_info?.node2_info?.public_key,
-            row.original.outgoing_channel_info?.node2_info?.alias
-          )}
-        </div>
-      ),
+      cell: ({ row }: any) => {
+        const info = channelMap?.get(row.original.outgoing_channel);
+        const pubkey =
+          info?.public_key ??
+          row.original.outgoing_channel_info?.node2_info?.public_key;
+        const alias =
+          info?.alias ?? row.original.outgoing_channel_info?.node2_info?.alias;
+        return (
+          <div style={{ whiteSpace: 'nowrap' }}>
+            {getNodeLink(pubkey, alias)}
+          </div>
+        );
+      },
     },
     {
       header: 'Count',
@@ -79,19 +101,26 @@ export const RouteTable: FC<RouteTableProps> = ({ forwardArray }) => {
   return <Table data={forwardArray} columns={columns} withSorting={true} />;
 };
 
-export const ChannelTable: FC<ChannelTableProps> = ({ forwardArray }) => {
+export const ChannelTable: FC<ChannelTableProps> = ({
+  forwardArray,
+  channelMap,
+}) => {
   const columns = [
     {
       header: 'Alias',
       accessorKey: 'alias',
-      cell: ({ row }: any) => (
-        <div style={{ whiteSpace: 'nowrap' }}>
-          {getNodeLink(
-            row.original.channel_info?.node2_info?.public_key,
-            row.original.channel_info?.node2_info?.alias
-          )}
-        </div>
-      ),
+      cell: ({ row }: any) => {
+        const info = channelMap?.get(row.original.channel);
+        const pubkey =
+          info?.public_key ?? row.original.channel_info?.node2_info?.public_key;
+        const alias =
+          info?.alias ?? row.original.channel_info?.node2_info?.alias;
+        return (
+          <div style={{ whiteSpace: 'nowrap' }}>
+            {getNodeLink(pubkey, alias)}
+          </div>
+        );
+      },
     },
     {
       header: 'Id',

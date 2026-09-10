@@ -1,9 +1,6 @@
 import { FC, useMemo } from 'react';
-import { differenceInDays } from 'date-fns';
 import { Price } from '../../../../components/price/Price';
-import { useGetForwardsListQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
-
-type ArrayType = { fee: number; fee_mtokens: string; tokens: number };
+import { useGetForwardsSummaryQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 
 type TypeOptionProps = {
   label: string;
@@ -15,50 +12,38 @@ type ForwardResumeProps = {
 };
 
 export const ForwardResume: FC<ForwardResumeProps> = ({ type }) => {
-  const { data, loading } = useGetForwardsListQuery({
+  const { data, loading } = useGetForwardsSummaryQuery({
     variables: { days: 365 },
     errorPolicy: 'ignore',
   });
 
   const values = useMemo(() => {
-    const day: ArrayType[] = [];
-    const week: ArrayType[] = [];
-    const month: ArrayType[] = [];
+    const summary = data?.getForwards.summary;
+    if (!summary) return { day: 0, week: 0, month: 0, year: 0 };
 
-    const forwards = data?.getForwards.list || [];
+    if (type.value === 'fee') {
+      return {
+        day: Number.parseInt(summary.day.fee_mtokens) || 0,
+        week: Number.parseInt(summary.week.fee_mtokens) || 0,
+        month: Number.parseInt(summary.month.fee_mtokens) || 0,
+        year: Number.parseInt(summary.year.fee_mtokens) || 0,
+      };
+    }
 
-    if (!forwards.length) return { day: 0, week: 0, month: 0, year: 0 };
-
-    const today = new Date();
-
-    forwards.forEach(f => {
-      if (!f) return;
-      const forwardDate = new Date(f.created_at);
-
-      if (differenceInDays(today, forwardDate) < 1) {
-        day.push(f);
-      }
-      if (differenceInDays(today, forwardDate) < 7) {
-        week.push(f);
-      }
-      if (differenceInDays(today, forwardDate) < 30) {
-        month.push(f);
-      }
-    });
-
-    const reduce = (arr: ArrayType[]) =>
-      arr.reduce((p, c) => {
-        if (!c) return p;
-        if (type.value === 'fee') return p + Number.parseInt(c.fee_mtokens);
-        if (type.value === 'tokens') return p + c.tokens;
-        return p + 1;
-      }, 0);
+    if (type.value === 'tokens') {
+      return {
+        day: summary.day.tokens,
+        week: summary.week.tokens,
+        month: summary.month.tokens,
+        year: summary.year.tokens,
+      };
+    }
 
     return {
-      day: reduce(day),
-      week: reduce(week),
-      month: reduce(month),
-      year: reduce(forwards as ArrayType[]),
+      day: summary.day.count,
+      week: summary.week.count,
+      month: summary.month.count,
+      year: summary.year.count,
     };
   }, [data, type]);
 
