@@ -107,7 +107,7 @@ export type PayViaPaymentDetailsOptions = {
 
 export type PayViaRoutesHop = {
   channel: string;
-  channel_capacity: number;
+  channel_capacity?: number;
   fee: number;
   fee_mtokens: string;
   forward: number;
@@ -168,7 +168,6 @@ export type GetRouteToDestinationResult = {
     fee_mtokens: string;
     hops: {
       channel: string;
-      channel_capacity: number;
       fee: number;
       fee_mtokens: string;
       forward: number;
