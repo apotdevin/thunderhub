@@ -17,6 +17,9 @@ import { UserConfigService } from '../api/userConfig/userConfig.service';
 import { getAmbossSpaceUrl, getNetwork } from 'src/server/utils/network';
 import { AmbossService } from '../api/amboss/amboss.service';
 import { ProviderRegistryService } from '../node/provider-registry.service';
+import { NodeType } from '../node/lightning.types';
+import { mapLdkServerEvent } from '../node/ldk-server/ldk-server.events';
+import { LdkServerService } from '../node/ldk-server/ldk-server.service';
 
 const restartSubscriptionTimeMs = 1000 * 30;
 
@@ -30,6 +33,8 @@ type SubscriptionNode = {
 @Injectable()
 export class SubService implements OnApplicationBootstrap {
   subscriptions = [];
+  ldkSubscriptions: Array<{ stop?: () => void; removeAllListeners(): void }> =
+    [];
   retryCount = 0;
 
   constructor(
@@ -51,6 +56,49 @@ export class SubService implements OnApplicationBootstrap {
     }
 
     this.startSubscription();
+    this.startLdkServerSubscriptions();
+  }
+
+  async startLdkServerSubscriptions() {
+    const accounts = this.accountsService.getAllAccounts();
+
+    for (const key in accounts) {
+      if (!Object.prototype.hasOwnProperty.call(accounts, key)) continue;
+
+      const account = accounts[key];
+      if (account.type !== NodeType.LDK_SERVER || account.encrypted) continue;
+
+      try {
+        const info = await this.nodeService.getWalletInfo(account.hash);
+        const sliced = info.public_key.slice(0, 10);
+        const name = `${info.alias || 'ldk-server'}(${sliced})`;
+        const provider = this.providerRegistry.getProvider(
+          account.type
+        ) as unknown as LdkServerService;
+        const sub = provider.subscribeEvents(account.connection);
+
+        this.logger.info(`Starting gRPC event stream for ldk-server: ${name}`);
+
+        sub.on('data', envelope => {
+          const event = mapLdkServerEvent(envelope);
+          if (!event) return;
+          this.logger.info(`ldk-server event: ${event.name}`, { node: name });
+          this.sseService.emit(account.hash, event.name, event.data);
+        });
+
+        sub.on('error', err => {
+          sub.removeAllListeners();
+          this.logger.error(`ErrorInLdkServerEventStream: ${name}`, { err });
+        });
+
+        this.ldkSubscriptions.push(sub);
+      } catch (err) {
+        this.logger.error(
+          `Failed to start gRPC event stream for ldk-server account ${account.name}`,
+          { err }
+        );
+      }
+    }
   }
 
   async startSubscription() {
@@ -70,6 +118,7 @@ export class SubService implements OnApplicationBootstrap {
 
                   if (
                     !account.encrypted &&
+                    account.type !== NodeType.LDK_SERVER &&
                     this.providerRegistry.hasProvider(account.type)
                   ) {
                     const provider = this.providerRegistry.getProvider(

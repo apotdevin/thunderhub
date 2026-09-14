@@ -117,6 +117,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "postgres": "^3.4.8",
+    "protobufjs": "^8.0.0",
     "qrcode.react": "^4.2.0",
     "radix-ui": "^1.4.3",
     "react": "^18.2.0",

@@ -1,4 +1,12 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src/server"
+  "sourceRoot": "src/server",
+  "compilerOptions": {
+    "assets": [
+      {
+        "include": "modules/node/ldk-server/proto/*.js",
+        "outDir": "dist"
+      }
+    ]
+  }
 }
