@@ -117,16 +117,20 @@ export const TradingOffers: FC = () => {
   };
 
   const allOffers = useMemo<TaggedOffer[]>(() => {
-    const tagged: TaggedOffer[] = [
-      ...buyOffers.map(o => ({
+    const byKey = new Map<string, TaggedOffer>();
+    for (const o of buyOffers) {
+      byKey.set(`${TapTransactionType.Purchase}-${o.id}`, {
         ...o,
-        _side: TapTransactionType.Purchase as TapTransactionType,
-      })),
-      ...sellOffers.map(o => ({
+        _side: TapTransactionType.Purchase,
+      });
+    }
+    for (const o of sellOffers) {
+      byKey.set(`${TapTransactionType.Sale}-${o.id}`, {
         ...o,
-        _side: TapTransactionType.Sale as TapTransactionType,
-      })),
-    ];
+        _side: TapTransactionType.Sale,
+      });
+    }
+    const tagged = Array.from(byKey.values());
 
     tagged.sort((a, b) => {
       let cmp = 0;

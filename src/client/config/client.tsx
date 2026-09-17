@@ -61,6 +61,7 @@ function createApolloClient(authToken: string) {
     cache: new InMemoryCache({
       ...possibleTypes,
       typePolicies: {
+        TapTradeOffer: { keyFields: false },
         Query: {
           fields: {
             getInvoices: {
