@@ -16,6 +16,7 @@ type State = {
   forwards: boolean;
   forwardAttempts: boolean;
   autoClose: boolean;
+  persistentChannelErrors: boolean;
 };
 
 type ActionType = {
@@ -26,6 +27,7 @@ type ActionType = {
   forwards?: boolean;
   forwardAttempts?: boolean;
   autoClose?: boolean;
+  persistentChannelErrors?: boolean;
 };
 
 type Dispatch = (action: ActionType) => void;
@@ -40,6 +42,7 @@ const initialState: State = {
   forwards: false,
   forwardAttempts: false,
   autoClose: true,
+  persistentChannelErrors: false,
 };
 
 const stateReducer = (state: State, action: ActionType): State => {

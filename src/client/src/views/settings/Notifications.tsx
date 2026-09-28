@@ -6,8 +6,15 @@ import {
 } from '../../context/NotificationContext';
 
 export const NotificationSettings = () => {
-  const { channels, forwardAttempts, forwards, invoices, payments, autoClose } =
-    useNotificationState();
+  const {
+    channels,
+    forwardAttempts,
+    forwards,
+    invoices,
+    payments,
+    autoClose,
+    persistentChannelErrors,
+  } = useNotificationState();
 
   const dispatch = useNotificationDispatch();
 
@@ -25,6 +32,11 @@ export const NotificationSettings = () => {
       value: forwardAttempts,
     },
     { label: 'Auto Close', property: 'autoClose', value: autoClose },
+    {
+      label: 'Persistent Channel Errors',
+      property: 'persistentChannelErrors',
+      value: persistentChannelErrors,
+    },
   ];
 
   return (
