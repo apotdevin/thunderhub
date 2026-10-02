@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
@@ -8,7 +8,7 @@ import { GqlAuthGuard } from './guards/graphql.guard';
 import { NodeSlugGuard } from './guards/node-slug.guard';
 import { GqlThrottlerGuard as ThrottlerGuard } from './guards/throttler.guard';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { AccountsModule } from '../accounts/accounts.module';
+import { TrustedHeaderMiddleware } from './trusted-header.middleware';
 
 @Module({
   imports: [
@@ -22,15 +22,19 @@ import { AccountsModule } from '../accounts/accounts.module';
         },
       ],
     }),
-    AccountsModule,
   ],
 
   providers: [
     JwtStrategy,
+    TrustedHeaderMiddleware,
     { provide: APP_GUARD, useClass: GqlAuthGuard },
     { provide: APP_GUARD, useClass: NodeSlugGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
-export class AuthenticationModule {}
+export class AuthenticationModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TrustedHeaderMiddleware).forRoutes('{*splat}');
+  }
+}

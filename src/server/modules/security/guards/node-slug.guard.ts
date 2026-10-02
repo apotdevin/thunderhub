@@ -2,14 +2,19 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { IS_PUBLIC_KEY } from '../security.decorators';
 import { Reflector } from '@nestjs/core';
-import { AccountsService } from '../../accounts/accounts.service';
-import { AuthType } from '../security.types';
+import { PrincipalService } from '../../principal/principal.service';
+import { UserId } from '../security.types';
 
+/**
+ * Resolves the `x-node-slug` header to a node the session may open and puts
+ * that node's hash in `req.user.id`, which is what resolvers hand to
+ * `NodeService`. A slug the principal is not allowed to open is refused.
+ */
 @Injectable()
 export class NodeSlugGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private accountsService: AccountsService
+    private principalService: PrincipalService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,25 +30,18 @@ export class NodeSlugGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const { nodeSlug } = ctx.getContext();
     const req = ctx.getContext().req;
+    const user: UserId | undefined = req?.user;
 
-    if (!req?.user || !nodeSlug) return true;
+    if (!user?.principal || !nodeSlug) return true;
 
-    if (req.user.authType === AuthType.YAML) {
-      const account = this.accountsService.getAccountBySlug(nodeSlug);
-      if (account) {
-        req.user.id = account.hash;
-      }
-    } else if (req.user.authType === AuthType.USER) {
-      const account = await this.accountsService.getDbNodeBySlug(
-        nodeSlug,
-        req.user.id
-      );
-      if (account) {
-        req.user.userId = req.user.id;
-        req.user.id = account.hash;
-      }
-    }
+    const account = await this.principalService.resolveNode(
+      user.principal,
+      nodeSlug
+    );
 
+    if (!account) return false;
+
+    user.id = account.hash;
     return true;
   }
 }

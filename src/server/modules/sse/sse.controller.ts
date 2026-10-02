@@ -29,17 +29,19 @@ export class SseController {
     const cookies = parse(req.headers.cookie || '');
     const authToken = cookies[appConstants.cookieName] || '';
 
-    const userId = await this.authService.getUserFromAuthToken(authToken);
+    const channels =
+      await this.authService.getSseChannelsFromAuthToken(authToken);
 
-    if (!userId) {
+    if (!channels.length) {
       throw new UnauthorizedException();
     }
 
-    this.logger.info(`SSE client connected: ${userId}`);
+    const label = channels.join(', ');
+    this.logger.info(`SSE client connected: ${label}`);
 
     const subject = new Subject<MessageEvent>();
 
-    this.sseService.register(userId, subject);
+    channels.forEach(channel => this.sseService.register(channel, subject));
 
     // Send heartbeat every 30s to keep connection alive
     const heartbeat = setInterval(() => {
@@ -48,9 +50,9 @@ export class SseController {
 
     req.on('close', () => {
       clearInterval(heartbeat);
-      this.sseService.unregister(userId, subject);
+      channels.forEach(channel => this.sseService.unregister(channel, subject));
       subject.complete();
-      this.logger.info(`SSE client disconnected: ${userId}`);
+      this.logger.info(`SSE client disconnected: ${label}`);
     });
 
     return subject.asObservable();

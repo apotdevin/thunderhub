@@ -922,6 +922,7 @@ type Route {
 }
 
 type ServerAccount {
+  canManageNodes: Boolean!
   hasNode: Boolean
   id: String!
   name: String!

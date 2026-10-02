@@ -9,6 +9,7 @@ import * as cookieLib from 'cookie';
 import { ContextType } from 'src/server/app.module';
 import { appConstants } from 'src/server/utils/appConstants';
 import { NodeService } from '../../node/node.service';
+import { PrincipalService } from '../../principal/principal.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import {
@@ -27,11 +28,22 @@ export class AuthResolver {
     private accountsService: AccountsService,
     private filesService: FilesService,
     private nodeService: NodeService,
+    private principalService: PrincipalService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
+  /** TOTP protects the password login, so only password sessions manage it. */
+  private assertCanUseTwofa(user: UserId): void {
+    if (!this.principalService.capabilities(user.principal).canUseTwofa) {
+      throw new Error('2FA is only available for password-protected accounts');
+    }
+  }
+
   @Query(() => TwofaResult)
-  async getTwofaSecret(@CurrentUser() { id }: UserId) {
+  async getTwofaSecret(@CurrentUser() user: UserId) {
+    this.assertCanUseTwofa(user);
+
+    const { id } = user;
     const account = this.accountsService.getAccount(id);
 
     if (!account) {
@@ -40,10 +52,6 @@ export class AuthResolver {
 
     if (!!account.twofaSecret) {
       throw new Error('2FA is already enabled for this account.');
-    }
-
-    if (account.hash === 'sso') {
-      throw new Error('2FA can not be enabled for SSO accounts');
     }
 
     const node = await this.nodeService.getWalletInfo(id);
@@ -61,10 +69,13 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async updateTwofaSecret(
-    @CurrentUser() { id }: UserId,
+    @CurrentUser() user: UserId,
     @Args('secret') secret: string,
     @Args('token') token: string
   ) {
+    this.assertCanUseTwofa(user);
+
+    const { id } = user;
     const account = this.accountsService.getAccount(id);
 
     if (!account) {
@@ -73,10 +84,6 @@ export class AuthResolver {
 
     if (!!account.twofaSecret) {
       throw new Error('2FA is already enabled for this account.');
-    }
-
-    if (account.hash === 'sso') {
-      throw new Error('2FA can not be enabled for SSO accounts');
     }
 
     try {
@@ -111,9 +118,12 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   async removeTwofaSecret(
-    @CurrentUser() { id }: UserId,
+    @CurrentUser() user: UserId,
     @Args('token') token: string
   ) {
+    this.assertCanUseTwofa(user);
+
+    const { id } = user;
     const account = this.accountsService.getAccount(id);
 
     if (!account) {

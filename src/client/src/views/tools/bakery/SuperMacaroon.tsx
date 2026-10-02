@@ -28,7 +28,7 @@ export const SuperMacaroon = () => {
   const { data: nodeData } = useGetCurrentNodeQuery();
   const { data: accountData } = useGetAccountQuery();
 
-  const isDbUser = accountData?.getAccount?.type === 'db';
+  const canManageNodes = accountData?.getAccount?.canManageNodes ?? false;
 
   const [addNode, { loading: addingNode }] = useAddNodeMutation({
     refetchQueries: [{ query: GetUserNodesDocument }],
@@ -156,7 +156,7 @@ export const SuperMacaroon = () => {
               </div>
             ))}
 
-            {isDbUser && (
+            {canManageNodes && (
               <Button
                 className="w-full"
                 onClick={() =>

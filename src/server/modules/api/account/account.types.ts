@@ -44,6 +44,9 @@ export class ServerAccount {
   twofaEnabled: boolean;
   @Field({ nullable: true })
   hasNode?: boolean;
+  /** Whether the session may add, edit and delete nodes from the UI. */
+  @Field()
+  canManageNodes: boolean;
 }
 
 @ObjectType()
