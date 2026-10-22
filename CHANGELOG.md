@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.19.1](https://github.com/apotdevin/thunderhub/compare/v0.19.0...v0.19.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* bump Node to 24.22.1 for October 2026 security releases ([#785](https://github.com/apotdevin/thunderhub/issues/785)) ([9213958](https://github.com/apotdevin/thunderhub/commit/9213958674cd923b48cb352ac5c26a641a2e1a96))
+* **litd:** normalize hex-or-base64 credentials for the tapd client ([#773](https://github.com/apotdevin/thunderhub/issues/773)) ([cc8f5a9](https://github.com/apotdevin/thunderhub/commit/cc8f5a9f94908b4471aa1ab7704d9a76e511220a))
+
 ## [0.19.0](https://github.com/apotdevin/thunderhub/compare/v0.18.4...v0.19.0) (2026-08-28)
 
 
