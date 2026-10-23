@@ -125,7 +125,61 @@ export type EdgeInfoWithPubkey = EdgeInfo & {
 };
 
 @ObjectType()
+export class ForwardTimeSummary {
+  @Field()
+  count: number;
+
+  @Field()
+  tokens: number;
+
+  @Field()
+  fee: number;
+
+  @Field()
+  fee_mtokens: string;
+}
+
+@ObjectType()
+export class ForwardSummary {
+  @Field(() => ForwardTimeSummary)
+  day: ForwardTimeSummary;
+
+  @Field(() => ForwardTimeSummary)
+  week: ForwardTimeSummary;
+
+  @Field(() => ForwardTimeSummary)
+  month: ForwardTimeSummary;
+
+  @Field(() => ForwardTimeSummary)
+  year: ForwardTimeSummary;
+
+  @Field()
+  count: number;
+}
+
+@ObjectType()
+export class ForwardTimeSeries {
+  @Field()
+  date: string;
+
+  @Field()
+  tokens: number;
+
+  @Field()
+  fee: number;
+
+  @Field()
+  count: number;
+}
+
+@ObjectType()
 export class GetForwards {
+  @Field(() => ForwardSummary)
+  summary: ForwardSummary;
+
+  @Field(() => [ForwardTimeSeries])
+  by_time: ForwardTimeSeries[];
+
   @Field(() => [Forward])
   list: Forward[];
 

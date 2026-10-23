@@ -158,7 +158,7 @@ export const useListener = (disabled?: boolean) => {
             { label: 'Out Channel', value: out_channel },
           ],
         });
-        handleRefetchQueries(['GetForwards']);
+        handleRefetchQueries([]);
       }
     },
     [handleRefetchQueries, forwardAttempts, forwards, addEvent]

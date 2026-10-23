@@ -1,11 +1,9 @@
-import { forOwn, mapValues, orderBy } from 'lodash';
+import { forOwn } from 'lodash';
 import {
   AggregatedByChannelSide,
   AggregatedByRoute,
   ForwardsWithPubkey,
 } from './forwards.types';
-import Big from 'big.js';
-import { v5 as uuidv5 } from 'uuid';
 
 export const reduceByChannel = (
   currentPubkey: string,
@@ -13,46 +11,37 @@ export const reduceByChannel = (
     [key: string]: ForwardsWithPubkey[];
   }
 ): AggregatedByChannelSide[] => {
-  const aggregated = [];
+  const aggregated: AggregatedByChannelSide[] = [];
 
   forOwn(forwards, (value, key) => {
-    const reduced = value.reduce(
-      (p, c) => {
-        if (!c) return p;
+    let count = 0;
+    let fee = 0;
+    let fee_mtokens = 0;
+    let mtokens = 0;
+    let tokens = 0;
 
-        return {
-          count: p.count.plus(1),
-          fee: p.fee.plus(c.fee),
-          fee_mtokens: p.fee_mtokens.plus(c.fee_mtokens),
-          mtokens: p.mtokens.plus(c.mtokens),
-          tokens: p.tokens.plus(c.tokens),
-        };
-      },
-      {
-        count: new Big(0),
-        fee: new Big(0),
-        fee_mtokens: new Big(0),
-        mtokens: new Big(0),
-        tokens: new Big(0),
-      }
-    );
-
-    const { count, fee, fee_mtokens, mtokens, tokens } = reduced;
+    for (let i = 0; i < value.length; i++) {
+      const c = value[i];
+      if (!c) continue;
+      count++;
+      fee += c.fee || 0;
+      fee_mtokens += Number(c.fee_mtokens) || 0;
+      mtokens += Number(c.mtokens) || 0;
+      tokens += c.tokens || 0;
+    }
 
     aggregated.push({
-      count: count.toNumber(),
-      fee: fee.toNumber(),
-      fee_mtokens: fee_mtokens.toNumber(),
-      mtokens: mtokens.toNumber(),
-      tokens: tokens.toNumber(),
+      count,
+      fee,
+      fee_mtokens,
+      mtokens,
+      tokens,
       channel: key,
       currentPubkey,
     });
   });
 
-  const ordered = orderBy(aggregated, 'count', 'desc');
-
-  return ordered;
+  return aggregated.sort((a, b) => b.count - a.count);
 };
 
 export const reduceByRoute = (
@@ -61,51 +50,35 @@ export const reduceByRoute = (
     [key: string]: ForwardsWithPubkey[];
   }
 ): AggregatedByRoute[] => {
-  const aggregated = [];
+  const aggregated: AggregatedByRoute[] = [];
 
   forOwn(forwards, (value, key) => {
-    const reduced = value.reduce(
-      (p, c) => {
-        if (!c) return p;
+    let count = 0;
+    let fee = 0;
+    let fee_mtokens = 0;
+    let mtokens = 0;
+    let tokens = 0;
+    let incoming_channel = '';
+    let outgoing_channel = '';
 
-        return {
-          count: p.count.plus(1),
-          fee: p.fee.plus(c.fee),
-          fee_mtokens: p.fee_mtokens.plus(c.fee_mtokens),
-          mtokens: p.mtokens.plus(c.mtokens),
-          tokens: p.tokens.plus(c.tokens),
-          incoming_channel: c.incoming_channel,
-          outgoing_channel: c.outgoing_channel,
-        };
-      },
-      {
-        count: new Big(0),
-        fee: new Big(0),
-        fee_mtokens: new Big(0),
-        mtokens: new Big(0),
-        tokens: new Big(0),
-        incoming_channel: '',
-        outgoing_channel: '',
-      }
-    );
+    for (let i = 0; i < value.length; i++) {
+      const c = value[i];
+      if (!c) continue;
+      count++;
+      fee += c.fee || 0;
+      fee_mtokens += Number(c.fee_mtokens) || 0;
+      mtokens += Number(c.mtokens) || 0;
+      tokens += c.tokens || 0;
+      if (!incoming_channel) incoming_channel = c.incoming_channel;
+      if (!outgoing_channel) outgoing_channel = c.outgoing_channel;
+    }
 
-    const {
+    aggregated.push({
       count,
       fee,
       fee_mtokens,
       mtokens,
       tokens,
-      incoming_channel,
-      outgoing_channel,
-    } = reduced;
-
-    aggregated.push({
-      id: uuidv5(key, uuidv5.URL),
-      count: count.toNumber(),
-      fee: fee.toNumber(),
-      fee_mtokens: fee_mtokens.toNumber(),
-      mtokens: mtokens.toNumber(),
-      tokens: tokens.toNumber(),
       route: key,
       incoming_channel,
       outgoing_channel,
@@ -113,42 +86,42 @@ export const reduceByRoute = (
     });
   });
 
-  return orderBy(aggregated, 'count', 'desc');
+  return aggregated.sort((a, b) => b.count - a.count);
 };
 
 export const mapByChannel = (forwards: {
   [key: string]: ForwardsWithPubkey[];
 }) => {
-  return mapValues(forwards, value => {
-    const reduced = value.reduce(
-      (p, c) => {
-        if (!c) return p;
+  const result: Record<
+    string,
+    {
+      count: number;
+      fee: number;
+      fee_mtokens: number;
+      mtokens: number;
+      tokens: number;
+    }
+  > = {};
 
-        return {
-          count: p.count.plus(1),
-          fee: p.fee.plus(c.fee),
-          fee_mtokens: p.fee_mtokens.plus(c.fee_mtokens),
-          mtokens: p.mtokens.plus(c.mtokens),
-          tokens: p.tokens.plus(c.tokens),
-        };
-      },
-      {
-        count: new Big(0),
-        fee: new Big(0),
-        fee_mtokens: new Big(0),
-        mtokens: new Big(0),
-        tokens: new Big(0),
-      }
-    );
+  forOwn(forwards, (value, key) => {
+    let count = 0;
+    let fee = 0;
+    let fee_mtokens = 0;
+    let mtokens = 0;
+    let tokens = 0;
 
-    const { count, fee, fee_mtokens, mtokens, tokens } = reduced;
+    for (let i = 0; i < value.length; i++) {
+      const c = value[i];
+      if (!c) continue;
+      count++;
+      fee += c.fee || 0;
+      fee_mtokens += Number(c.fee_mtokens) || 0;
+      mtokens += Number(c.mtokens) || 0;
+      tokens += c.tokens || 0;
+    }
 
-    return {
-      count: count.toNumber(),
-      fee: fee.toNumber(),
-      fee_mtokens: fee_mtokens.toNumber(),
-      mtokens: mtokens.toNumber(),
-      tokens: tokens.toNumber(),
-    };
+    result[key] = { count, fee, fee_mtokens, mtokens, tokens };
   });
+
+  return result;
 };

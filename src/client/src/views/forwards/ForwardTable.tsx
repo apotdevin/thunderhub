@@ -1,19 +1,19 @@
 import { FC } from 'react';
 import toast from 'react-hot-toast';
 import { Price } from '../../components/price/Price';
-import { useGetForwardsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
+import { useGetForwardsChannelsQuery } from '../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../utils/error';
 import Table from '../../components/table';
 import { getChannelLink, getNodeLink } from '../../components/generic/helpers';
 import { numberWithCommas } from '../../utils/number';
 
 export const ForwardTable: FC<{ days: number }> = ({ days }) => {
-  const { data, loading } = useGetForwardsQuery({
+  const { data, loading } = useGetForwardsChannelsQuery({
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });
 
-  if (loading || !data?.getForwards?.list.length) {
+  if (loading || !data?.getForwards?.by_channel?.length) {
     return null;
   }
 

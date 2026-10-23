@@ -61,8 +61,20 @@ function createApolloClient(authToken: string) {
     cache: new InMemoryCache({
       ...possibleTypes,
       typePolicies: {
+        Forward: {
+          keyFields: false,
+        },
+        GetForwards: {
+          merge: true,
+        },
+        ForwardSummary: {
+          merge: true,
+        },
         Query: {
           fields: {
+            getForwards: {
+              merge: true,
+            },
             getInvoices: {
               keyArgs: false,
               merge(existing = { next: '', invoices: [] }, incoming) {

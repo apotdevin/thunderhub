@@ -13,7 +13,7 @@ import { ForwardResume } from '../views/home/reports/forwardReport/ForwardResume
 import { ForwardSankey } from '../views/forwards/forwardSankey';
 import { ChannelCart } from '../components/chart/ChannelChart';
 import { useGetChannelsQuery } from '../graphql/queries/__generated__/getChannels.generated';
-import { useGetForwardsListQuery } from '../graphql/queries/__generated__/getForwards.generated';
+import { useGetForwardsSummaryQuery } from '../graphql/queries/__generated__/getForwards.generated';
 import toast from 'react-hot-toast';
 import { getErrorContent } from '../utils/error';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,21 +25,28 @@ const ForwardsView = () => {
   const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
   const [view, setView] = useState('graph');
-  const channelOptions = useGetChannelsQuery().data?.getChannels.map(it => ({
-    label: `${it.id}, ${it.partner_node_info.node ? it.partner_node_info.node.alias : ''}`,
-    value: it.id,
-  }));
+  const { data: channelsData } = useGetChannelsQuery({
+    skip: view !== 'byChannel',
+  });
+  const channelOptions = useMemo(
+    () =>
+      channelsData?.getChannels.map(it => ({
+        label: `${it.id}, ${it.partner_node_info.node ? it.partner_node_info.node.alias : ''}`,
+        value: it.id,
+      })),
+    [channelsData]
+  );
   const [channel, setChannel] = useState(emptyChannel);
   const [breakdown, setBreakdown] = useState<BreakdownType>('incoming');
 
-  const { data, loading } = useGetForwardsListQuery({
+  const { data, loading } = useGetForwardsSummaryQuery({
     variables: { days: days.value },
     onError: error => toast.error(getErrorContent(error)),
   });
 
   const amountForwards = useMemo(() => {
-    if (loading || !data?.getForwards.list.length) return 0;
-    return data.getForwards.list.length;
+    if (loading || !data?.getForwards) return 0;
+    return data.getForwards.summary?.count ?? 0;
   }, [data, loading]);
 
   return (

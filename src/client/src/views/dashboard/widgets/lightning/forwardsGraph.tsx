@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { SmallSelectWithValue } from '../../../../components/select';
-import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
+import { useGetForwardsGraphQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { useChartColors } from '../../../../lib/chart-colors';
-import { getByTime } from '../helpers';
 import { BarChart } from '../../../../components/chart/BarChart';
 
 const options = [
@@ -26,7 +25,7 @@ export const ForwardsGraph = () => {
   const [days, setDays] = useState(options[0]);
   const [type, setType] = useState(typeOptions[0]);
 
-  const { data, loading } = useGetForwardsQuery({
+  const { data, loading } = useGetForwardsGraphQuery({
     variables: { days: days.value },
     errorPolicy: 'ignore',
   });
@@ -64,7 +63,7 @@ export const ForwardsGraph = () => {
     );
   }
 
-  if (!data?.getForwards.list.length) {
+  if (!data?.getForwards?.summary?.count) {
     return (
       <div className="w-full h-full">
         <Header />
@@ -75,7 +74,7 @@ export const ForwardsGraph = () => {
     );
   }
 
-  const forwards = getByTime(data.getForwards.list, days.value);
+  const timeSeries = data.getForwards.by_time || [];
 
   return (
     <div className="w-full h-full">
@@ -85,7 +84,7 @@ export const ForwardsGraph = () => {
         style={{ height: 'calc(100% - 40px)' }}
       >
         <BarChart
-          data={forwards.map(f => ({
+          data={timeSeries.map((f: any) => ({
             Forward: f[type.value] || 0,
             date: f.date,
           }))}

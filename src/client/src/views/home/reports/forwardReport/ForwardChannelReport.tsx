@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { useGetForwardsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
+import { useGetForwardsChannelsQuery } from '../../../../graphql/queries/__generated__/getForwards.generated';
 import { getErrorContent } from '../../../../utils/error';
 import { LoadingCard } from '../../../../components/loading/LoadingCard';
 import { ChannelTable, RouteTable } from './ForwardReportTables';
@@ -12,16 +13,32 @@ type Props = {
 };
 
 export const ForwardChannelsReport = ({ days, type }: Props) => {
-  const { data, loading } = useGetForwardsQuery({
+  const { data, loading } = useGetForwardsChannelsQuery({
     variables: { days },
     onError: error => toast.error(getErrorContent(error)),
   });
+
+  const { by_channel, by_incoming, by_outgoing, by_route } =
+    data?.getForwards || {};
+
+  const channelMap = useMemo(() => {
+    const map = new Map<
+      string,
+      { alias?: string | null; public_key?: string | null }
+    >();
+    for (const c of by_channel || []) {
+      if (c.channel && c.channel_info?.node2_info) {
+        map.set(c.channel, c.channel_info.node2_info);
+      }
+    }
+    return map;
+  }, [by_channel]);
 
   if (loading) {
     return <LoadingCard noCard={true} title={'Forward Report'} />;
   }
 
-  if (!data?.getForwards.list.length) {
+  if (!by_route?.length && !by_incoming?.length) {
     return (
       <div className="text-sm text-muted-foreground text-center py-4">
         No forwards for this period.
@@ -29,15 +46,17 @@ export const ForwardChannelsReport = ({ days, type }: Props) => {
     );
   }
 
-  const { by_incoming, by_outgoing, by_route } = data.getForwards;
-
   switch (type) {
     case 'route':
-      return <RouteTable forwardArray={by_route} />;
+      return <RouteTable forwardArray={by_route} channelMap={channelMap} />;
     case 'incoming':
-      return <ChannelTable forwardArray={by_incoming} />;
+      return (
+        <ChannelTable forwardArray={by_incoming} channelMap={channelMap} />
+      );
     case 'outgoing':
-      return <ChannelTable forwardArray={by_outgoing} />;
+      return (
+        <ChannelTable forwardArray={by_outgoing} channelMap={channelMap} />
+      );
     default:
       return null;
   }
