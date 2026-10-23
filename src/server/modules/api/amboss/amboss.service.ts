@@ -64,8 +64,48 @@ type ChannelBalanceInputType = {
   channels: { balance: string; capacity: string; chan_id: string }[];
 };
 
+const EDGE_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours - channel topology is immutable on-chain
+const NODE_ALIAS_CACHE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours - node aliases rarely change
+const MAX_CACHE_SIZE = 5000;
+
+interface CacheEntry<T> {
+  data: T;
+  expiresAt: number;
+}
+
 @Injectable()
 export class AmbossService {
+  private readonly edgeCache = new Map<string, CacheEntry<EdgeInfo | null>>();
+  private readonly nodeAliasCache = new Map<
+    string,
+    CacheEntry<NodeAlias | null>
+  >();
+  private readonly inFlightEdgeFetches = new Map<
+    string,
+    Promise<EdgeInfo | null>
+  >();
+  private readonly inFlightNodeFetches = new Map<
+    string,
+    Promise<NodeAlias | null>
+  >();
+
+  private pruneCache<T>(
+    cache: Map<string, CacheEntry<T>>,
+    maxSize = MAX_CACHE_SIZE
+  ) {
+    if (cache.size <= maxSize) return;
+    const now = Date.now();
+    for (const [key, entry] of cache) {
+      if (entry.expiresAt <= now) {
+        cache.delete(key);
+      }
+    }
+    while (cache.size > maxSize) {
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey !== undefined) cache.delete(oldestKey);
+      else break;
+    }
+  }
   constructor(
     private nodeService: NodeService,
     private fetchService: FetchService,
@@ -219,19 +259,101 @@ export class AmbossService {
   }
 
   async getNodeAliasBatch(pubkeys: string[]): Promise<(NodeAlias | null)[]> {
-    this.logger.info('Fetching information for nodes', {
-      amount: pubkeys.length,
-    });
+    if (!pubkeys?.length) return [];
 
-    const start = new Date();
-    const nodes = await this.getNodeAliasBatchQuery(pubkeys);
-    const end = new Date();
+    const now = Date.now();
+    const missingPubkeys: string[] = [];
+    const resultMap = new Map<string, NodeAlias | null>();
 
-    this.logger.debug('Time to fetch node info', {
-      duration: end.getTime() - start.getTime() + ' ms',
-    });
+    for (const pk of pubkeys) {
+      const entry = this.nodeAliasCache.get(pk);
+      if (entry && entry.expiresAt > now) {
+        resultMap.set(pk, entry.data);
+      } else if (!missingPubkeys.includes(pk)) {
+        missingPubkeys.push(pk);
+      }
+    }
 
-    return mapNodeResult(pubkeys, nodes);
+    if (missingPubkeys.length === 0) {
+      this.logger.debug('All node aliases resolved from cache', {
+        count: pubkeys.length,
+      });
+      return pubkeys.map(pk => resultMap.get(pk) ?? null);
+    }
+
+    const pksToFetch: string[] = [];
+    const inFlightPromises: Promise<void>[] = [];
+
+    for (const pk of missingPubkeys) {
+      const inFlight = this.inFlightNodeFetches.get(pk);
+      if (inFlight) {
+        inFlightPromises.push(
+          inFlight.then(node => {
+            resultMap.set(pk, node);
+          })
+        );
+      } else {
+        pksToFetch.push(pk);
+      }
+    }
+
+    if (pksToFetch.length > 0) {
+      this.logger.info('Fetching information for nodes', {
+        total_requested: pubkeys.length,
+        from_cache: pubkeys.length - missingPubkeys.length,
+        to_fetch: pksToFetch.length,
+      });
+
+      const resolvers = new Map<string, (node: NodeAlias | null) => void>();
+      for (const pk of pksToFetch) {
+        const promise = new Promise<NodeAlias | null>(resolve => {
+          resolvers.set(pk, resolve);
+        });
+        this.inFlightNodeFetches.set(pk, promise);
+      }
+
+      const fetchPromise = (async () => {
+        const start = Date.now();
+        try {
+          const nodes = await this.getNodeAliasBatchQuery(pksToFetch);
+          const duration = Date.now() - start;
+          this.logger.debug('Time to fetch node info', {
+            duration: `${duration} ms`,
+            fetched: nodes?.length || 0,
+          });
+
+          const mapped = mapNodeResult(pksToFetch, nodes);
+          const cacheTime = Date.now();
+
+          for (let i = 0; i < pksToFetch.length; i++) {
+            const pk = pksToFetch[i];
+            const node = mapped[i] ?? null;
+
+            this.nodeAliasCache.set(pk, {
+              data: node,
+              expiresAt: cacheTime + NODE_ALIAS_CACHE_TTL_MS,
+            });
+            resultMap.set(pk, node);
+
+            resolvers.get(pk)?.(node);
+            this.inFlightNodeFetches.delete(pk);
+          }
+          this.pruneCache(this.nodeAliasCache);
+        } catch (error) {
+          this.logger.error('Error fetching node alias batch', { error });
+          for (const pk of pksToFetch) {
+            resolvers.get(pk)?.(null);
+            this.inFlightNodeFetches.delete(pk);
+          }
+        }
+      })();
+
+      inFlightPromises.push(fetchPromise);
+    }
+
+    await Promise.all(inFlightPromises);
+
+    return pubkeys.map(pk => resultMap.get(pk) ?? null);
   }
 
   async getEdgeInfoBatchQuery(ids: string[]) {
@@ -247,19 +369,114 @@ export class AmbossService {
   }
 
   async getEdgeInfoBatch(ids: string[]): Promise<(EdgeInfo | null)[]> {
-    this.logger.info('Fetching information for edges', {
-      amount: ids.length,
-    });
+    if (!ids?.length) return [];
 
-    const start = new Date();
-    const edges = await this.getEdgeInfoBatchQuery(ids);
-    const end = new Date();
+    const now = Date.now();
+    const missingIds: string[] = [];
+    const resultMap = new Map<string, EdgeInfo | null>();
 
-    this.logger.debug('Time to fetch edge info', {
-      duration: end.getTime() - start.getTime() + ' ms',
-    });
+    for (const id of ids) {
+      const entry = this.edgeCache.get(id);
+      if (entry && entry.expiresAt > now) {
+        resultMap.set(id, entry.data);
+      } else if (!missingIds.includes(id)) {
+        missingIds.push(id);
+      }
+    }
 
-    return mapEdgeResult(ids, edges);
+    if (missingIds.length === 0) {
+      this.logger.debug('All edges resolved from cache', { count: ids.length });
+      return ids.map(id => resultMap.get(id) ?? null);
+    }
+
+    const idsToFetch: string[] = [];
+    const inFlightPromises: Promise<void>[] = [];
+
+    for (const id of missingIds) {
+      const inFlight = this.inFlightEdgeFetches.get(id);
+      if (inFlight) {
+        inFlightPromises.push(
+          inFlight.then(edge => {
+            resultMap.set(id, edge);
+          })
+        );
+      } else {
+        idsToFetch.push(id);
+      }
+    }
+
+    if (idsToFetch.length > 0) {
+      this.logger.info('Fetching information for edges', {
+        total_requested: ids.length,
+        from_cache: ids.length - missingIds.length,
+        to_fetch: idsToFetch.length,
+      });
+
+      const resolvers = new Map<string, (edge: EdgeInfo | null) => void>();
+      for (const id of idsToFetch) {
+        const promise = new Promise<EdgeInfo | null>(resolve => {
+          resolvers.set(id, resolve);
+        });
+        this.inFlightEdgeFetches.set(id, promise);
+      }
+
+      const fetchPromise = (async () => {
+        const start = Date.now();
+        try {
+          const edges = await this.getEdgeInfoBatchQuery(idsToFetch);
+          const duration = Date.now() - start;
+          this.logger.debug('Time to fetch edge info', {
+            duration: `${duration} ms`,
+            fetched: edges?.length || 0,
+          });
+
+          const mapped = mapEdgeResult(idsToFetch, edges);
+          const cacheTime = Date.now();
+
+          for (let i = 0; i < idsToFetch.length; i++) {
+            const id = idsToFetch[i];
+            const edge = mapped[i] ?? null;
+
+            this.edgeCache.set(id, {
+              data: edge,
+              expiresAt: cacheTime + EDGE_CACHE_TTL_MS,
+            });
+            resultMap.set(id, edge);
+
+            // Pre-populate node alias cache from edge data
+            if (edge?.info?.node1_info?.node?.pub_key) {
+              this.nodeAliasCache.set(edge.info.node1_info.node.pub_key, {
+                data: edge.info.node1_info.node,
+                expiresAt: cacheTime + NODE_ALIAS_CACHE_TTL_MS,
+              });
+            }
+            if (edge?.info?.node2_info?.node?.pub_key) {
+              this.nodeAliasCache.set(edge.info.node2_info.node.pub_key, {
+                data: edge.info.node2_info.node,
+                expiresAt: cacheTime + NODE_ALIAS_CACHE_TTL_MS,
+              });
+            }
+
+            resolvers.get(id)?.(edge);
+            this.inFlightEdgeFetches.delete(id);
+          }
+          this.pruneCache(this.edgeCache);
+          this.pruneCache(this.nodeAliasCache);
+        } catch (error) {
+          this.logger.error('Error fetching edge info batch', { error });
+          for (const id of idsToFetch) {
+            resolvers.get(id)?.(null);
+            this.inFlightEdgeFetches.delete(id);
+          }
+        }
+      })();
+
+      inFlightPromises.push(fetchPromise);
+    }
+
+    await Promise.all(inFlightPromises);
+
+    return ids.map(id => resultMap.get(id) ?? null);
   }
 
   async pushBackup(spaceUrl: string, backup: string, signature: string) {
