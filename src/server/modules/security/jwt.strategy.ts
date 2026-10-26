@@ -37,8 +37,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new Error('Unauthorized token');
     }
 
-    const { authType, id } = parseSubject(payload.sub);
+    const principal = parseSubject(payload.sub);
 
-    return { id, authType };
+    // `id` starts as the principal id; NodeSlugGuard swaps in the node hash.
+    return { id: principal.id, principal };
   }
 }

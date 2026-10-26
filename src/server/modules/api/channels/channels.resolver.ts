@@ -6,6 +6,7 @@ import { Logger } from 'winston';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
+import { PrincipalService } from '../../principal/principal.service';
 import { getChannelAge } from './channels.helpers';
 import {
   Channel,
@@ -487,7 +488,18 @@ export class OffchainMutationsResolver {
 
 @Resolver(() => ChannelsMutations)
 export class ChannelsMutationsResolver {
-  constructor(private channelMetadataService: ChannelMetadataService) {}
+  constructor(
+    private channelMetadataService: ChannelMetadataService,
+    private principalService: PrincipalService
+  ) {}
+
+  /** Notes belong to a database user; other sessions have nowhere to keep them. */
+  private requireDatabaseUser(user: UserId): string {
+    if (!this.principalService.capabilities(user.principal).hasDatabaseUser) {
+      throw new GraphQLError('Channel notes require a database account.');
+    }
+    return user.principal.id;
+  }
 
   @ResolveField(() => ChannelMetadata)
   async upsert_note(
@@ -495,6 +507,7 @@ export class ChannelsMutationsResolver {
     @Args('channelId') channelId: string,
     @Args('note') note: string
   ): Promise<ChannelMetadata> {
+    const dbUserId = this.requireDatabaseUser(user);
     if (!/^\d+x\d+x\d+$/.test(channelId)) {
       throw new GraphQLError('Invalid channel ID format.');
     }
@@ -504,7 +517,6 @@ export class ChannelsMutationsResolver {
     if (note.length > 500) {
       throw new GraphQLError('Note must be 500 characters or fewer.');
     }
-    const dbUserId = user.userId ?? user.id;
     const nodeId = user.id;
     return this.channelMetadataService.upsertNote(
       dbUserId,
@@ -519,10 +531,10 @@ export class ChannelsMutationsResolver {
     @CurrentUser() user: UserId,
     @Args('channelId') channelId: string
   ): Promise<boolean> {
+    const dbUserId = this.requireDatabaseUser(user);
     if (!/^\d+x\d+x\d+$/.test(channelId)) {
       throw new GraphQLError('Invalid channel ID format.');
     }
-    const dbUserId = user.userId ?? user.id;
     const nodeId = user.id;
     return this.channelMetadataService.deleteNote(dbUserId, nodeId, channelId);
   }

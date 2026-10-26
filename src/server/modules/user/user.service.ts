@@ -83,8 +83,9 @@ export class UserService {
     return userRows[0];
   }
 
-  async getUserNodeSlugs(userId: string): Promise<
+  async getUserNodes(userId: string): Promise<
     {
+      id: string;
       slug: string;
       name: string;
       network?: string;
@@ -111,6 +112,7 @@ export class UserService {
 
     return rows.map(
       (r: { id: string; name: string; network?: string; type?: string }) => ({
+        id: r.id,
         slug: r.id.slice(0, 8),
         name: r.name,
         network: r.network,
@@ -159,6 +161,22 @@ export class UserService {
       .limit(1);
 
     return rows[0] || null;
+  }
+
+  async findUserIdByEmail(email: string): Promise<string | null> {
+    if (!this.drizzle) return null;
+
+    const normalized = email.trim().toLowerCase();
+    if (!normalized) return null;
+
+    const { db, schema } = this.drizzle;
+    const rows = await (db as any)
+      .select({ id: schema.users.id })
+      .from(schema.users)
+      .where(sql`lower(${schema.users.email}) = ${normalized}`)
+      .limit(1);
+
+    return rows[0]?.id || null;
   }
 
   async verifyPassword(

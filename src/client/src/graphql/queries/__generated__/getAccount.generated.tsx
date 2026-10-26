@@ -15,6 +15,7 @@ export type GetAccountQuery = {
     type: string;
     twofaEnabled: boolean;
     hasNode?: boolean | null;
+    canManageNodes: boolean;
   };
 };
 
@@ -27,6 +28,7 @@ export const GetAccountDocument = gql`
       type
       twofaEnabled
       hasNode
+      canManageNodes
     }
   }
 `;

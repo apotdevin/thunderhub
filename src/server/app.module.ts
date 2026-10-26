@@ -26,6 +26,7 @@ import {
 import { DataloaderModule } from './modules/dataloader/dataloader.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { UserModule } from './modules/user/user.module';
+import { PrincipalModule } from './modules/principal/principal.module';
 
 const { combine, timestamp, prettyPrint, json } = format;
 
@@ -58,6 +59,7 @@ export type JwtObjectType = {
     FetchModule,
     DatabaseModule,
     UserModule,
+    PrincipalModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,

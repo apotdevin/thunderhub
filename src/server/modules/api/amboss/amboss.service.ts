@@ -13,7 +13,7 @@ import { Logger } from 'winston';
 import { AccountsService } from '../../accounts/accounts.service';
 import { FetchService } from '../../fetch/fetch.service';
 import { UserService } from '../../user/user.service';
-import { AuthType, UserId } from '../../security/security.types';
+import { UserId } from '../../security/security.types';
 import {
   CreateApiKey,
   NodeLogin,
@@ -85,12 +85,19 @@ export class AmbossService {
    *   2. Fallback: live `getWalletInfo` on the node and derive from `chains[0]`.
    */
   async resolveNetwork(user: UserId): Promise<string | undefined> {
-    if (user.authType === AuthType.USER) {
-      const stored = await this.userService.getNodeNetwork(user.id);
-      if (stored === 'btc' || stored === 'btcsignet') return stored;
-    }
+    const stored = await this.getStoredNetwork(user);
+    if (stored) return stored;
     const walletInfo = await this.nodeService.getWalletInfo(user.id);
     return getNetwork(walletInfo?.chains?.[0] || '');
+  }
+
+  /** The network recorded in the database for a database-managed node. */
+  private async getStoredNetwork(user: UserId): Promise<string | undefined> {
+    if (this.accountsService.getAccount(user.id)?.source !== 'db') {
+      return undefined;
+    }
+    const stored = await this.userService.getNodeNetwork(user.id);
+    return stored === 'btc' || stored === 'btcsignet' ? stored : undefined;
   }
 
   /** Amboss Account/Auth URL for the user's network, or env override. */
@@ -133,11 +140,9 @@ export class AmbossService {
 
     const override = this.configService.get<string>('urls.amboss.auth');
     let authUrl = override;
-    if (!authUrl && user.authType === AuthType.USER) {
-      const stored = await this.userService.getNodeNetwork(user.id);
-      if (stored === 'btc' || stored === 'btcsignet') {
-        authUrl = getAmbossAuthUrl(stored);
-      }
+    if (!authUrl) {
+      const stored = await this.getStoredNetwork(user);
+      if (stored) authUrl = getAmbossAuthUrl(stored);
     }
     if (!authUrl) {
       authUrl = getAmbossAuthUrl(getNetwork(walletInfo.chains?.[0] || ''));

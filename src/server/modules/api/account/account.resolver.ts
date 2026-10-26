@@ -25,9 +25,10 @@ import {
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { Inject } from '@nestjs/common';
-import { UserId, AuthType, parseSubject } from '../../security/security.types';
+import { UserId } from '../../security/security.types';
 import { Throttle, seconds } from '@nestjs/throttler';
 import { UserService } from '../../user/user.service';
+import { PrincipalService } from '../../principal/principal.service';
 import { ProviderRegistryService } from '../../node/provider-registry.service';
 import { getNetwork } from '../../../utils/network';
 import { v5 as uuidv5 } from 'uuid';
@@ -59,61 +60,46 @@ const obfuscateName = (name: string): string => {
 @Resolver()
 export class AccountResolver {
   constructor(
-    private accountsService: AccountsService,
-    private userService: UserService,
+    private principalService: PrincipalService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
+  /**
+   * The current session and the node it is looking at. When the request
+   * carries no node slug, the first node the principal may open is reported.
+   */
   @Query(() => ServerAccount)
   async getAccount(@CurrentUser() user: UserId): Promise<ServerAccount> {
-    if (user.authType === AuthType.USER) {
-      const dbUserId = user.userId ?? user.id;
-      const nodes = await this.userService.getUserNodeSlugs(dbUserId);
+    const info = await this.principalService.describe(user.principal);
 
-      if (!nodes.length) {
-        return {
-          name: 'Account',
-          id: user.id,
-          slug: 'db',
-          type: 'db',
-          twofaEnabled: false,
-          hasNode: false,
-        };
-      }
-
-      return {
-        name: nodes[0].name,
-        id: user.id,
-        slug: nodes[0].slug,
-        type: 'db',
-        twofaEnabled: false,
-        hasNode: true,
-      };
-    }
-
-    const currentAccount = this.accountsService.getAccount(user.id);
-
-    if (!currentAccount) {
+    if (!info) {
       this.logger.error(`No account found for id ${user.id}`);
       throw new Error('NoAccountFound');
     }
 
-    if (user.id === 'sso') {
+    const nodes = await this.principalService.getNodes(user.principal);
+    const current = nodes.find(node => node.hash === user.id) ?? nodes[0];
+
+    if (!current) {
       return {
-        name: 'SSO Account',
-        id: 'sso',
-        slug: 'sso',
-        type: 'sso',
+        name: info.displayName,
+        id: user.principal.id,
+        slug: 'db',
+        type: info.kind,
         twofaEnabled: false,
+        hasNode: false,
+        canManageNodes: info.canManageNodes,
       };
     }
 
     return {
-      name: currentAccount.name,
+      name: current.name,
       id: user.id,
-      slug: currentAccount.slug || user.id.slice(0, 8),
-      type: 'server',
-      twofaEnabled: !!currentAccount.twofaSecret,
+      slug: current.slug,
+      type: info.kind,
+      twofaEnabled: info.twofaEnabled,
+      hasNode: true,
+      canManageNodes: info.canManageNodes,
     };
   }
 
@@ -128,20 +114,19 @@ export class AccountResolver {
 @Resolver()
 export class UserQueryRoot {
   @Query(() => UserQueries)
-  async user(@CurrentUser() user: UserId): Promise<UserQueries> {
-    if (user.authType !== AuthType.USER) {
-      throw new Error('Only database accounts can access user queries');
-    }
+  async user(): Promise<UserQueries> {
     return {} as any;
   }
 }
 
 @Resolver()
 export class TeamMutationRoot {
+  constructor(private principalService: PrincipalService) {}
+
   @Mutation(() => TeamMutations)
   async team(@CurrentUser() user: UserId): Promise<TeamMutations> {
-    if (user.authType !== AuthType.USER) {
-      throw new Error('Only database accounts can access team mutations');
+    if (!this.principalService.capabilities(user.principal).canManageNodes) {
+      throw new Error('This session cannot manage nodes');
     }
     return {} as any;
   }
@@ -192,7 +177,7 @@ export class TeamMutationsResolver {
       );
     }
 
-    const dbUserId = user.userId ?? user.id;
+    const dbUserId = user.principal.id;
 
     this.logger.info('Adding node for DB user', {
       userId: dbUserId,
@@ -223,7 +208,7 @@ export class TeamMutationsResolver {
     @CurrentUser() user: UserId,
     @Args('input') input: EditNodeInput
   ): Promise<EditNodeResult> {
-    const dbUserId = user.userId ?? user.id;
+    const dbUserId = user.principal.id;
 
     // Re-detect the node's network from its live connection so the stored
     // value stays truthful (e.g. a mis-detected mainnet node that's actually
@@ -263,7 +248,7 @@ export class TeamMutationsResolver {
     @CurrentUser() user: UserId,
     @Args('slug') slug: string
   ): Promise<DeleteNodeResult> {
-    const dbUserId = user.userId ?? user.id;
+    const dbUserId = user.principal.id;
 
     this.logger.info('Deleting node for DB user', {
       userId: dbUserId,
@@ -281,17 +266,17 @@ export class TeamMutationsResolver {
 
 @Resolver(() => UserQueries)
 export class UserQueriesResolver {
-  constructor(private userService: UserService) {}
+  constructor(private principalService: PrincipalService) {}
 
   @ResolveField(() => String)
   id(): string {
     return uuidv5(UserQueriesResolver.name, uuidv5.URL);
   }
 
+  /** Every node the session may open, whatever kind of login created it. */
   @ResolveField(() => [UserNode])
   async get_nodes(@CurrentUser() user: UserId): Promise<UserNode[]> {
-    const dbUserId = user.userId ?? user.id;
-    const nodes = await this.userService.getUserNodeSlugs(dbUserId);
+    const nodes = await this.principalService.getNodes(user.principal);
     return nodes.map(n => ({
       id: n.slug,
       slug: n.slug,
@@ -306,45 +291,72 @@ export class UserQueriesResolver {
 export class PublicQueriesResolver {
   constructor(
     private accountsService: AccountsService,
-    private userService: UserService
+    private userService: UserService,
+    private principalService: PrincipalService
   ) {}
 
+  /** Login options shown on the login page. */
   @ResolveField(() => [ServerAccount])
   async get_server_accounts(
     @Context() { authToken }: ContextType
   ): Promise<ServerAccount[]> {
-    const parsed = authToken?.sub ? parseSubject(authToken.sub) : undefined;
-    const currentAccount = this.accountsService.getAccount(parsed?.id);
+    const current = authToken?.sub
+      ? this.principalService.fromSubject(authToken.sub)
+      : undefined;
+    const showSso = current?.id === 'sso';
     const accounts = this.accountsService.getAllAccounts();
 
     const mapped: ServerAccount[] = [];
 
     for (const key in accounts) {
-      if (Object.prototype.hasOwnProperty.call(accounts, key)) {
-        const account = accounts[key];
-        const { name, hash } = account;
+      if (!Object.prototype.hasOwnProperty.call(accounts, key)) continue;
 
-        if (currentAccount?.hash === 'sso' || key !== 'sso') {
+      const account = accounts[key];
+
+      // Database nodes are opened through their user, not from this list.
+      if (account.source !== 'yaml') continue;
+
+      // The SSO account has no password; it is only shown to its own session.
+      if (key === 'sso') {
+        if (showSso) {
           mapped.push({
-            name,
-            id: hash,
-            slug: key === 'sso' ? 'sso' : account.slug || hash.slice(0, 8),
-            type: key === 'sso' ? 'sso' : 'server',
+            name: account.name,
+            id: account.hash,
+            slug: 'sso',
+            type: 'sso',
             twofaEnabled: false,
+            canManageNodes: false,
           });
         }
+        continue;
       }
+
+      // Accounts reachable only through their users have nothing to type here.
+      if (!account.password) continue;
+
+      mapped.push({
+        name: account.name,
+        id: account.hash,
+        slug: account.slug || account.hash.slice(0, 8),
+        type: 'server',
+        twofaEnabled: false,
+        canManageNodes: false,
+      });
     }
 
-    // Add a DB account entry when the database has users
-    const dbHasUsers = await this.userService.hasUsers();
-    if (dbHasUsers) {
+    // Offer the identifier + password form when someone can use it: a
+    // database user or a YAML user with a password.
+    const hasUserLogin =
+      this.accountsService.hasYamlUserPasswords() ||
+      (await this.userService.hasUsers());
+    if (hasUserLogin) {
       mapped.push({
         name: 'Account Login',
         id: 'db',
         slug: 'db',
         type: 'db',
         twofaEnabled: false,
+        canManageNodes: true,
       });
     }
 
@@ -362,43 +374,32 @@ export class PublicQueriesResolver {
   async get_session_info(
     @Context() { authToken }: ContextType
   ): Promise<SessionInfo> {
-    const parsed = authToken?.sub ? parseSubject(authToken.sub) : undefined;
-
-    if (!parsed) {
+    if (!authToken?.sub) {
       return { loggedIn: false };
     }
 
-    if (parsed.authType === AuthType.USER) {
-      const user = await this.userService.getUserById(parsed.id);
-      if (!user) {
-        return { loggedIn: false };
-      }
-      return {
-        loggedIn: true,
-        type: 'db',
-        name: obfuscateName(user.email),
-      };
-    }
+    const principal = this.principalService.fromSubject(authToken.sub);
+    const info = await this.principalService.describe(principal);
 
-    const account = this.accountsService.getAccount(parsed.id);
-    if (!account) {
+    if (!info) {
       return { loggedIn: false };
     }
 
-    if (account.hash === 'sso') {
-      return {
-        loggedIn: true,
-        type: 'sso',
-        name: 'SSO Account',
-        slug: 'sso',
-      };
-    }
+    // A password login is bound to one node, so the login page can jump
+    // straight to it. Other sessions pick their node after `/`.
+    const boundNode =
+      info.kind === 'server' || info.kind === 'sso'
+        ? (await this.principalService.getNodes(principal))[0]
+        : undefined;
 
     return {
       loggedIn: true,
-      type: 'server',
-      name: obfuscateName(account.name),
-      slug: account.slug || account.hash.slice(0, 8),
+      type: info.kind,
+      name:
+        info.kind === 'sso'
+          ? info.displayName
+          : obfuscateName(info.displayName),
+      slug: boundNode?.slug,
     };
   }
 }

@@ -23,6 +23,7 @@ export type AccountType = {
   encrypted?: boolean;
   twofaSecret?: string | null;
   authToken?: string;
+  users?: Array<string | { id?: string }>;
 };
 
 export type UnresolvedAccountType = {
@@ -39,6 +40,7 @@ export type UnresolvedAccountType = {
   certificate?: string;
   encrypted?: boolean | string;
   authToken?: string;
+  users?: Array<string | { id?: string }>;
 };
 
 export type ParsedAccount = {
@@ -55,6 +57,7 @@ export type ParsedAccount = {
   encryptedMacaroon: string;
   twofaSecret: string;
   authToken?: string;
+  users?: string[];
 };
 
 export type AccountConfigType = {
@@ -66,6 +69,7 @@ export type AccountConfigType = {
   onchainPushEnabled: boolean | null;
   channelPushEnabled: boolean | null;
   privateChannelPushEnabled: boolean | null;
+  users?: Array<string | { id?: string; name?: string; password?: string }>;
   accounts: AccountType[];
 };
 

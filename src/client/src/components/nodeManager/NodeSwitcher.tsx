@@ -40,10 +40,11 @@ export const NodeSwitcher = () => {
     fetchPolicy: 'cache-first',
   });
 
-  const isDbUser = accountData?.getAccount?.type === 'db';
+  // Whether this session may add, edit and delete nodes (database accounts).
+  const canManageNodes = accountData?.getAccount?.canManageNodes ?? false;
 
   const { data, loading } = useGetUserNodesQuery({
-    skip: !isDbUser,
+    skip: !accountData?.getAccount,
     fetchPolicy: 'cache-and-network',
   });
 
@@ -51,9 +52,10 @@ export const NodeSwitcher = () => {
     refetchQueries: [{ query: GetUserNodesDocument }],
   });
 
-  if (!isDbUser) return null;
-
   const nodes = data?.user?.get_nodes ?? [];
+
+  // A session bound to a single node has nothing to switch to.
+  if (!canManageNodes && nodes.length < 2) return null;
 
   const currentNode = nodes.find(n => n.slug === nodeSlug);
   const currentName = currentNode?.name ?? accountData?.getAccount?.name ?? '';
@@ -228,32 +230,34 @@ export const NodeSwitcher = () => {
                             <Check size={12} className="shrink-0" />
                           )}
                         </button>
-                        <div className="flex shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={e => {
-                              e.stopPropagation();
-                              setOpen(false);
-                              setEditNode({
-                                slug: node.slug,
-                                name: node.name,
-                              });
-                            }}
-                            className="p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                            title="Edit node"
-                          >
-                            <Pencil size={10} />
-                          </button>
-                          <button
-                            onClick={e => {
-                              e.stopPropagation();
-                              setConfirmDelete(node.slug);
-                            }}
-                            className="p-1 rounded-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                            title="Delete node"
-                          >
-                            <Trash2 size={10} />
-                          </button>
-                        </div>
+                        {canManageNodes && (
+                          <div className="flex shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                setOpen(false);
+                                setEditNode({
+                                  slug: node.slug,
+                                  name: node.name,
+                                });
+                              }}
+                              className="p-1 rounded-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                              title="Edit node"
+                            >
+                              <Pencil size={10} />
+                            </button>
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                setConfirmDelete(node.slug);
+                              }}
+                              className="p-1 rounded-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                              title="Delete node"
+                            >
+                              <Trash2 size={10} />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -294,18 +298,20 @@ export const NodeSwitcher = () => {
             </div>
           )}
 
-          <div className="border-t border-border/60 p-2">
-            <button
-              onClick={() => {
-                setOpen(false);
-                setAddNodeOpen(true);
-              }}
-              className="flex items-center gap-2 w-full rounded-sm px-2 py-1.5 text-left text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            >
-              <Plus size={12} className="shrink-0" />
-              <span>Add Node</span>
-            </button>
-          </div>
+          {canManageNodes && (
+            <div className="border-t border-border/60 p-2">
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  setAddNodeOpen(true);
+                }}
+                className="flex items-center gap-2 w-full rounded-sm px-2 py-1.5 text-left text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+              >
+                <Plus size={12} className="shrink-0" />
+                <span>Add Node</span>
+              </button>
+            </div>
+          )}
         </PopoverContent>
       </Popover>
 

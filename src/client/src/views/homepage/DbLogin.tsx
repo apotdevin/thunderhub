@@ -45,12 +45,13 @@ export const DbLogin = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-muted-foreground">
-              Email
+              Email or user ID
             </label>
             <Input
               autoFocus
-              type="email"
-              placeholder="Enter email"
+              type="text"
+              autoComplete="username"
+              placeholder="Enter email or user ID"
               value={email}
               onChange={e => setEmail(e.target.value)}
               onKeyDown={e => {

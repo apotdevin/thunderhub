@@ -7,7 +7,8 @@ import {
   decryptValue,
   encryptValue,
 } from '../../../utils/encryption/field-encryption';
-import { AuthType, UserId } from '../../security/security.types';
+import { UserId } from '../../security/security.types';
+import { AccountsService } from '../../accounts/accounts.service';
 import { AmbossService } from './amboss.service';
 
 /**
@@ -27,8 +28,14 @@ export class AmbossTokenService {
   constructor(
     @Inject(DRIZZLE) private readonly drizzle: DrizzleProvider,
     private readonly configService: ConfigService,
-    private readonly ambossService: AmbossService
+    private readonly ambossService: AmbossService,
+    private readonly accountsService: AccountsService
   ) {}
+
+  /** Where the token lives depends on where the node came from. */
+  private isDbNode(user: UserId): boolean {
+    return this.accountsService.getAccount(user.id)?.source === 'db';
+  }
 
   /** Returns a valid stored token, or null if missing/expired. */
   async get(user: UserId): Promise<string | null> {
@@ -54,7 +61,7 @@ export class AmbossTokenService {
   }
 
   async set(user: UserId, token: string): Promise<void> {
-    if (user.authType === AuthType.USER) {
+    if (this.isDbNode(user)) {
       await this.writeDbToken(user.id, token);
       return;
     }
@@ -63,7 +70,7 @@ export class AmbossTokenService {
 
   /** Removes any stored token, effectively logging the node out of Amboss. */
   async clear(user: UserId): Promise<void> {
-    if (user.authType === AuthType.USER) {
+    if (this.isDbNode(user)) {
       await this.clearDbToken(user.id);
       return;
     }
@@ -71,7 +78,7 @@ export class AmbossTokenService {
   }
 
   private async readStored(user: UserId): Promise<string | null> {
-    if (user.authType === AuthType.USER) {
+    if (this.isDbNode(user)) {
       return this.readDbToken(user.id);
     }
     return this.yamlTokens.get(user.id) ?? null;

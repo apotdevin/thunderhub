@@ -1296,6 +1296,7 @@ export type Route = {
 
 export type ServerAccount = {
   __typename?: 'ServerAccount';
+  canManageNodes: Scalars['Boolean']['output'];
   hasNode?: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];

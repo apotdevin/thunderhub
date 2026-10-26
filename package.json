@@ -51,6 +51,9 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
     "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {

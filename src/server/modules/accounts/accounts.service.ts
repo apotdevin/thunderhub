@@ -8,12 +8,14 @@ import { ProviderRegistryService } from '../node/provider-registry.service';
 import { NodeType } from '../node/lightning.types';
 import { DRIZZLE, DrizzleProvider } from '../database/drizzle.provider';
 import { decryptValue } from '../../utils/encryption/field-encryption';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { isValidNodeSlug } from '../../utils/string';
+import { YamlUser } from '../files/yaml-users';
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
   accounts: { [key: string]: EnrichedAccount } = {};
+  private yamlUsers = new Map<string, YamlUser>();
 
   constructor(
     private configService: ConfigService,
@@ -72,13 +74,19 @@ export class AccountsService implements OnModuleInit {
         ...sso,
         hash: 'sso',
         slug: 'sso',
+        source: 'yaml',
         connection,
       };
     }
 
-    const accounts = this.filesService.getAccounts(accountConfigPath);
+    const { users, accounts } =
+      this.filesService.getAccountFile(accountConfigPath);
+    this.yamlUsers = new Map(users.map(user => [user.id, user]));
 
-    if (!accounts.length) return;
+    if (!accounts.length) {
+      this.warnOnUnusedYamlUsers();
+      return;
+    }
 
     accounts.forEach(account => {
       const nodeType = account.type || NodeType.LND;
@@ -101,25 +109,69 @@ export class AccountsService implements OnModuleInit {
       this.accounts[account.hash] = {
         ...account,
         type: nodeType,
+        source: 'yaml',
         connection,
       };
     });
+
+    this.warnOnUnusedYamlUsers();
+  }
+
+  private warnOnUnusedYamlUsers(): void {
+    const used = new Set<string>();
+
+    for (const account of Object.values(this.accounts)) {
+      if (!account.users?.length) continue;
+
+      if (account.encrypted) {
+        this.logger.warn(
+          `Account ${account.name} lists users, but its macaroon is encrypted. Trusted header login will not open it.`
+        );
+        continue;
+      }
+
+      account.users.forEach(id => used.add(id));
+    }
+
+    for (const user of this.yamlUsers.values()) {
+      if (used.has(user.id)) continue;
+      this.logger.warn(`YAML user "${user.id}" is not allowed on any account.`);
+    }
+  }
+
+  /** A user declared in the `users` list of the YAML account file. */
+  getYamlUser(id: string): YamlUser | null {
+    if (!id) return null;
+    return this.yamlUsers.get(id.trim().toLowerCase()) || null;
+  }
+
+  /** Whether any YAML user can sign in with a password. */
+  hasYamlUserPasswords(): boolean {
+    for (const user of this.yamlUsers.values()) {
+      if (user.password) return true;
+    }
+    return false;
+  }
+
+  /**
+   * YAML accounts that list the user. Encrypted accounts are excluded: their
+   * macaroon can only be unlocked with the account password.
+   */
+  getAccountsForYamlUser(userId: string): EnrichedAccount[] {
+    const id = userId.trim().toLowerCase();
+    return Object.values(this.accounts)
+      .filter(
+        account =>
+          account.source === 'yaml' &&
+          !account.encrypted &&
+          !!account.users?.includes(id)
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   getAccount(id: string) {
     if (!id) return null;
     return this.accounts[id] || null;
-  }
-
-  getAccountBySlug(slug: string): EnrichedAccount | null {
-    if (!slug) return null;
-    for (const key of Object.keys(this.accounts)) {
-      const account = this.accounts[key];
-      if (account.slug === slug) {
-        return account;
-      }
-    }
-    return null;
   }
 
   async getDbNodeBySlug(
@@ -130,14 +182,10 @@ export class AccountsService implements OnModuleInit {
     // dialect-unsafe SUBSTR(uuid, …) query in PostgreSQL.
     if (!isValidNodeSlug(slug) || !this.drizzle) return null;
 
-    // Check cache first (try slug-based lookup)
-    for (const key of Object.keys(this.accounts)) {
-      const acct = this.accounts[key];
-      if (acct.slug === slug) return acct;
-    }
-
     const { db, schema } = this.drizzle;
 
+    // Always confirm ownership in the database, even for cached connections:
+    // the slug alone must never grant another user's node.
     // CAST to TEXT so the SUBSTR call is dialect-safe: PostgreSQL stores
     // nodes.id as uuid (not text), and SUBSTR(uuid, …) is a type error there.
     const rows = await (db as any)
@@ -147,14 +195,22 @@ export class AccountsService implements OnModuleInit {
         schema.userNodes,
         eq(schema.userNodes.node_id, schema.nodes.id)
       )
-      .where(eq(schema.userNodes.user_id, userId))
-      .where(sql`SUBSTR(CAST(${schema.nodes.id} AS TEXT), 1, 8) = ${slug}`)
+      .where(
+        and(
+          eq(schema.userNodes.user_id, userId),
+          sql`SUBSTR(CAST(${schema.nodes.id} AS TEXT), 1, 8) = ${slug}`
+        )
+      )
       .limit(1);
 
     const row = rows[0];
     if (!row) return null;
 
     const node = row.nodes;
+
+    const cached = this.accounts[node.id];
+    if (cached) return cached;
+
     const nodeType = (node.type as NodeType) || NodeType.LND;
 
     if (!this.providerRegistry.hasProvider(nodeType)) {
@@ -198,6 +254,7 @@ export class AccountsService implements OnModuleInit {
       encrypted: false,
       encryptedMacaroon: '',
       twofaSecret: '',
+      source: 'db',
       connection,
     };
 

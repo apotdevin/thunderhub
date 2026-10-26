@@ -6,13 +6,15 @@ import { Logger } from 'winston';
 import { ContextType } from 'src/server/app.module';
 import { NodeService } from '../../node/node.service';
 import { CurrentUser } from '../../security/security.decorators';
-import { AuthType, UserId } from '../../security/security.types';
+import { UserId } from '../../security/security.types';
+import { PrincipalService } from '../../principal/principal.service';
 import { Channel, SingleChannelParentType } from './channels.types';
 
 @Resolver(Channel)
 export class ChannelResolver {
   constructor(
     private nodeService: NodeService,
+    private principalService: PrincipalService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
@@ -109,8 +111,11 @@ export class ChannelResolver {
     @Parent() { id }: Channel,
     @Context() { loaders }: ContextType
   ): Promise<string | null> {
-    if (user.authType !== AuthType.USER) return null;
-    const dbUserId = user.userId ?? user.id;
+    // Notes are stored per database user; other sessions have none.
+    if (!this.principalService.capabilities(user.principal).hasDatabaseUser) {
+      return null;
+    }
+    const dbUserId = user.principal.id;
     const nodeId = user.id;
     return loaders.channelNotesLoader.load({
       userId: dbUserId,
