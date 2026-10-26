@@ -8,6 +8,7 @@ import { CurrentUser } from '../../security/security.decorators';
 import { UserId } from '../../security/security.types';
 import { CreateInvoice, PayInvoice } from './invoices.types';
 import { randomBytes, createHash } from 'crypto';
+import { parsePaymentRequest } from 'invoices';
 
 const KEYSEND_TYPE = '5482373484';
 const MESSAGE_TYPE = '34349334';
@@ -114,10 +115,22 @@ export class InvoicesResolver {
     @Args('out', { nullable: true, type: () => [String] })
     outgoing_channels: string[]
   ) {
+    const cleanRequest = request.trim().replace(/^lightning:/i, '');
+
+    try {
+      parsePaymentRequest({ request: cleanRequest });
+    } catch (err) {
+      this.logger.warn('Rejected invalid payment request', {
+        request: JSON.stringify(request),
+        error: err instanceof Error ? err.message : err,
+      });
+      throw new GraphQLError('Invalid payment request');
+    }
+
     const props = {
       max_fee,
       max_paths,
-      request,
+      request: cleanRequest,
       outgoing_channels,
     };
 
