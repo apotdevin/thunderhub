@@ -27,6 +27,7 @@ import {
 } from '../../views/swap/SwapProgress';
 import { Price } from '../../components/price/Price';
 import { Slider } from '../../components/slider';
+import { BOLTZ_SWAPS_DISABLED } from '../../views/swap/boltzDisabled';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -254,6 +255,14 @@ const SwapWidget = ({ max, min }: { max: number; min: number }) => {
 // --- Outer wrapper ---
 
 export const SidebarSwap = () => {
+  // Boltz disabled their swap service, so there is nothing to start from here.
+  // Existing swaps are still claimable on the swap page.
+  if (BOLTZ_SWAPS_DISABLED) return null;
+
+  return <SidebarSwapWidget />;
+};
+
+const SidebarSwapWidget = () => {
   const { sidebarSwapExpanded } = useConfigState();
   const dispatch = useConfigDispatch();
 

@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.19.1](https://github.com/apotdevin/thunderhub/compare/v0.19.0...v0.19.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* bump Node to 24.22.1 for October 2026 security releases ([#785](https://github.com/apotdevin/thunderhub/issues/785)) ([9213958](https://github.com/apotdevin/thunderhub/commit/9213958674cd923b48cb352ac5c26a641a2e1a96))
+* **litd:** normalize hex-or-base64 credentials for the tapd client ([#773](https://github.com/apotdevin/thunderhub/issues/773)) ([cc8f5a9](https://github.com/apotdevin/thunderhub/commit/cc8f5a9f94908b4471aa1ab7704d9a76e511220a))
+
+## [0.19.0](https://github.com/apotdevin/thunderhub/compare/v0.18.4...v0.19.0) (2026-08-28)
+
+
+### Features
+
+* disable Boltz swaps and show service notice ([#772](https://github.com/apotdevin/thunderhub/issues/772)) ([bfebdea](https://github.com/apotdevin/thunderhub/commit/bfebdea87e1b2586a405a9cc141a28971281810d))
+
+
+### Bug Fixes
+
+* base path url handling ([bf60991](https://github.com/apotdevin/thunderhub/commit/bf6099131e976b978cb7be9034dcfe5ef74e3803))
+* **magma:** add referrer and verify seller asset-channel support [AMB-2708] ([#768](https://github.com/apotdevin/thunderhub/issues/768)) ([28d1aa3](https://github.com/apotdevin/thunderhub/commit/28d1aa376be860b517c395da32e8f0e5b89fea0f))
+
+
+### Improvements
+
+* invoice and payment search ([5e116d7](https://github.com/apotdevin/thunderhub/commit/5e116d7359398fc5323e5c8e3e13e9fcee8a9762))
+
 ## [0.18.4](https://github.com/apotdevin/thunderhub/compare/v0.18.3...v0.18.4) (2026-05-29)
 
 

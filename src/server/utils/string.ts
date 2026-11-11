@@ -85,3 +85,23 @@ export const bufToHex = (val: any): string | undefined => {
 // rejected before being passed into a SUBSTR(nodes.id …) DB query.
 export const isValidNodeSlug = (slug: string): boolean =>
   /^[0-9a-f]{8}$/i.test(slug);
+
+/**
+ * Normalize a hex-or-base64 serialized credential (macaroon, TLS cert) to hex.
+ *
+ * `lightning` accepts either encoding and normalizes internally
+ * (lnd_grpc/decode_serialized.js), but @lightningpolar/tapd-api requires hex
+ * and passes the value through untouched. This mirrors lightning's exact
+ * heuristic so both clients interpret the same user input identically.
+ *
+ * Returns the value unchanged when empty or already hex, so an absent
+ * credential stays absent.
+ */
+export const toHexEncoded = <T extends string | undefined>(value: T): T => {
+  if (!value) return value;
+
+  const isHex = !(value.length % 2) && /^[0-9a-f]*$/i.test(value);
+  if (isHex) return value;
+
+  return Buffer.from(value, 'base64').toString('hex') as T;
+};
