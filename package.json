@@ -92,7 +92,7 @@
     "big.js": "^7.0.1",
     "bip32": "^4.0.0",
     "bip39": "^3.1.0",
-    "bitcoinjs-lib": "^6.1.7",
+    "bitcoinjs-lib": "^6.1.8",
     "boltz-core": "^3.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -187,5 +187,8 @@
   },
   "patchedDependencies": {
     "@lightningpolar/tapd-api@0.7.0-alpha": "patches/@lightningpolar+tapd-api+0.7.0-alpha.patch"
+  },
+  "overrides": {
+    "bitcoinjs-lib": "^6.1.8"
   }
 }
