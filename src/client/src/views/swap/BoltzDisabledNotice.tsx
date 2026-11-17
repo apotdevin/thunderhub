@@ -19,7 +19,7 @@ export const BoltzDisabledNotice = () => (
       </p>
       <p>
         <a href={BOLTZ_STATUS_URL} target="_blank" rel="noreferrer noopener">
-          Check the official status on boltz.exchange
+          Check the official status on satsrouting.exchange
           <ExternalLink className="ml-1 inline size-3 align-[-0.1em]" />
         </a>
       </p>

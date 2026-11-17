@@ -239,7 +239,7 @@ const initialState: State = {
 
 // --- WebSocket Manager ---
 
-const BOLTZ_WS_URL = 'wss://api.boltz.exchange/v2/ws';
+const BOLTZ_WS_URL = 'wss://api.satsrouting.exchange/v2/ws';
 const PING_INTERVAL = 30000;
 const RECONNECT_DELAY = 5000;
 

@@ -163,7 +163,7 @@ export default (): ConfigType => {
     blockHeight: `${mempool}/api/blocks/tip/height`,
     ticker: 'https://blockchain.info/ticker',
     github: 'https://api.github.com/repos/apotdevin/thunderhub/releases/latest',
-    boltz: 'https://api.boltz.exchange',
+    boltz: 'https://api.satsrouting.exchange',
   };
 
   const npmVersion = getPackageVersion();
