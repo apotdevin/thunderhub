@@ -16,15 +16,19 @@ import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBitcoinFees } from '../../../hooks/UseBitcoinFees';
 import { useConfigState } from '../../../context/ConfigContext';
+import { useNotificationState } from '../../../context/NotificationContext';
 import { PeerSelect } from '../../../components/select/specific/PeerSelect';
 import { Separator } from '@/components/ui/separator';
 import { getErrorContent } from '../../../utils/error';
+
+const TRANSIENT_TOAST_DURATION = 4000;
 
 type OpenChannelProps = {
   closeCbk: () => void;
 };
 
 export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
+  const { persistentChannelErrors } = useNotificationState();
   const [useRecommended, setUseRecommended] = useState(true);
 
   const { fetchFees } = useConfigState();
@@ -48,9 +52,14 @@ export const OpenChannel = ({ closeCbk }: OpenChannelProps) => {
   const [confirming, setConfirming] = useState(false);
 
   const [openChannel, { loading }] = useOpenChannelMutation({
-    onError: error => toast.error(getErrorContent(error)),
+    onError: error =>
+      toast.error(getErrorContent(error), {
+        duration: persistentChannelErrors ? Infinity : TRANSIENT_TOAST_DURATION,
+      }),
     onCompleted: () => {
-      toast.success('Channel Opened');
+      toast.success('Channel Opened', {
+        duration: TRANSIENT_TOAST_DURATION,
+      });
       closeCbk();
     },
     refetchQueries: ['GetChannels', 'GetPendingChannels'],
