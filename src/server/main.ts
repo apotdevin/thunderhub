@@ -13,6 +13,8 @@ async function bootstrap() {
       contentSecurityPolicy: {
         directives: {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+          'font-src': ["'self'", 'data:'],
+          'style-src': ["'self'", "'unsafe-inline'"],
           'connect-src': ["'self'", 'wss://api.boltz.exchange'],
           ...(!useHttps && { 'upgrade-insecure-requests': null }),
         },
